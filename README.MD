@@ -33,23 +33,11 @@ O aplicativo da Skilla. Skilla é um projeto desenvilvido por alunos da Unifor p
 Clone Project
 
 ```git
-git clone https://github.com/iury0393/authentication_node_flutter
-cd authentication_node_flutter
+git clone https://github.com/iury0393/skilla-mobile
+cd skilla-mobile
 ```
 
-API
-
 ```ssh
-cd backend
-yarn
-yarn typeorm migrattion:run
-yarn dev:server
-```
-
-Mobile
-
-```ssh
-cd mobile
 pub get
 start the application
 ```
@@ -57,12 +45,14 @@ start the application
 ## Author
 
 ## Iury Vasconcelos Leitão - [GitHub](https://github.com/iury0393) / [Linkedin](https://www.linkedin.com/in/iury-vasconcelos-dev/) / [Email](mailto:iury0393@gmail.com)
+## Vitor Duarte Buchweitz - [GitHub](https://github.com/Vitordb) / [Email](mailto:dbvitor@gmail.com)
+## Natan Macedo Girão - [Email](mailto:natangirao@gmail.com)
 
 Distributed under the MIT license. See `LICENSE` for more information.
 
 ## Contributing
 
-1. Fork it (<https://github.com/iury0393/authentication_node_flutter/fork>)
+1. Fork it (<https://github.com/iury0393/skilla-mobile/fork>)
 2. Create your feature branch (`git checkout -b feature/`)
 3. Commit your changes (`git commit -am 'Add something'`)
 4. Push to the branch (`git push origin feature/`)
