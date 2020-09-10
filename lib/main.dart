@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:skilla/screens/intro_screen.dart';
+import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 
 void main() {
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      home: IntroScreen(),
+      home: SplashPage(),
     );
   }
 }

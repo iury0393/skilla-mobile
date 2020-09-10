@@ -21,7 +21,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
   Widget _buildImage(String assetName) {
     return Align(
-      child: Image.asset('assets/$assetName.jpg', width: 350.0),
+      child: Image.asset('assets/$assetName.jpeg', width: 350.0),
       alignment: Alignment.bottomCenter,
     );
   }
