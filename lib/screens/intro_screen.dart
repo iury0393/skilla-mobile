@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:skilla/utils/text_styles.dart';
 
 class IntroScreen extends StatefulWidget {
   static const String id = '/intro';
@@ -41,23 +42,20 @@ class _IntroScreenState extends State<IntroScreen> {
       key: introKey,
       pages: [
         PageViewModel(
-          title: "Objetivo do Projeto",
-          body:
-              "Projeto criado para treinar autenticação/registro e animações.",
+          title: "Vagas",
+          body: "Encontre vagas nas maiores empresas do Ceará",
           image: _buildImage('intro1'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Tecnologias",
-          body:
-              "Backend: Node.Js/TypeScript,\nDatabase: Postgresql/Docker,\nMobile: Flutter.",
+          title: "Publicacões",
+          body: "Veja notícias de empresas e usuários!",
           image: _buildImage('intro2'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Padrões de Projeto",
-          body:
-              "Foi utilizado nesse projeto os padrões TypeORM, para conexão com a database, e o DDD, para o Node.JS.",
+          title: "Cursos/Estudos",
+          body: "Encontre cursos para agregar ao currículo",
           image: _buildImage('intro3'),
           decoration: pageDecoration,
         ),
@@ -67,9 +65,21 @@ class _IntroScreenState extends State<IntroScreen> {
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
-      skip: Text('Pular'),
+      skip: Text(
+        'Pular',
+        style: TextStyles.paragraph(
+          TextSize.medium,
+          weight: FontWeight.w500,
+        ),
+      ),
       next: Icon(Icons.arrow_forward),
-      done: Text('Feito', style: TextStyle(fontWeight: FontWeight.w600)),
+      done: Text(
+        'Feito',
+        style: TextStyles.paragraph(
+          TextSize.medium,
+          weight: FontWeight.w500,
+        ),
+      ),
       dotsDecorator: DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
