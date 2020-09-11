@@ -8,5 +8,14 @@
   "fieldName": "Nombre completo",
   "fieldNameValidator": "El nombre no puede estar vacío",
   "fieldUsername": "Usuario",
-  "fieldUsernameValidator": "El usuario no puede estar vacío"
+  "fieldUsernameValidator": "El usuario no puede estar vacío",
+  "introOpportunitiesTitle": "Oportunidades",
+  "introOpportunitiesText": "Encuentra oportunidades en las empresas más grandes de Ceará",
+  "introPublicationsTitle": "Publicaciones",
+  "introPublicationsText": "¡Vea noticias de empresas y usuarios!",
+  "introCoursesTitle": "Cursos/Estudios",
+  "introCoursesText": "Encuentre cursos para agregar al plan de estudios",
+  "btnRegisterText" : "¿No hay registro?",
+  "btnLoginText": "¿Ya tienes una cuenta?",
+  "btnLink": "haga clic aquí"
 }

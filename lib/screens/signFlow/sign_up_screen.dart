@@ -72,13 +72,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: RichText(
         overflow: TextOverflow.ellipsis,
         text: TextSpan(
-          text: "Já possui uma conta?",
+          text: AppLocalizations.of(context).translate('btnLoginText'),
           style: TextStyles.paragraph(
             TextSize.medium,
           ),
           children: [
             TextSpan(
-              text: 'Clique Aqui!',
+              text: AppLocalizations.of(context).translate('btnLink'),
               style: TextStyles.paragraph(
                 TextSize.medium,
                 color: kPurpleColor,

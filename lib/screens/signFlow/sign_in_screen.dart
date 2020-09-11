@@ -66,13 +66,13 @@ class _SignInScreenState extends State<SignInScreen> {
       child: RichText(
         overflow: TextOverflow.ellipsis,
         text: TextSpan(
-          text: "Não tem registro?",
+          text: AppLocalizations.of(context).translate('btnRegisterText'),
           style: TextStyles.paragraph(
             TextSize.medium,
           ),
           children: [
             TextSpan(
-              text: 'Clique Aqui!',
+              text: AppLocalizations.of(context).translate('btnLink'),
               style: TextStyles.paragraph(
                 TextSize.medium,
                 color: kPurpleColor,

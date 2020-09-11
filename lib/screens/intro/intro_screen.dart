@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/text_styles.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -52,20 +53,23 @@ class _IntroScreenState extends State<IntroScreen> {
       key: introKey,
       pages: [
         PageViewModel(
-          title: "Vagas",
-          body: "Encontre vagas nas maiores empresas do Ceará",
+          title:
+              AppLocalizations.of(context).translate('introOpportunitiesTitle'),
+          body:
+              AppLocalizations.of(context).translate('introOpportunitiesText'),
           image: _buildImage('intro1'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Publicacões",
-          body: "Veja notícias de empresas e usuários!",
+          title:
+              AppLocalizations.of(context).translate('introPublicationsTitle'),
+          body: AppLocalizations.of(context).translate('introPublicationsText'),
           image: _buildImage('intro2'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Cursos/Estudos",
-          body: "Encontre cursos para agregar ao currículo",
+          title: AppLocalizations.of(context).translate('introCoursesTitle'),
+          body: AppLocalizations.of(context).translate('introCoursesText'),
           image: _buildImage('intro3'),
           decoration: pageDecoration,
         ),
