@@ -1,5 +1,8 @@
 {
   "btnLogin": "Submit",
   "fieldEmail": "E-mail",
-  "fieldPassword": "Password"
+  "fieldEmailValidatorEmpty": "E-mail cannot be empty",
+  "fieldEmailValidatorInvalid": "Invalid email",
+  "fieldPassword": "Password",
+  "fieldPasswordValidator": "Password cannot be empty"
 }

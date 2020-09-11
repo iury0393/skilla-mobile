@@ -1,5 +1,8 @@
 {
   "btnLogin": "Entrar",
   "fieldEmail": "E-mail",
-  "fieldPassword": "Senha"
+  "fieldEmailValidatorEmpty": "O E-mail não pode estar vazio",
+  "fieldEmailValidatorInvalid": "E-mail inválido",
+  "fieldPassword": "Senha",
+  "fieldPasswordValidator": "A senha não pode estar vazia"
 }

@@ -21,6 +21,8 @@ dependencies:
   json_annotation: ^3.0.1
   json_serializable: ^3.3.0
   intl: ^0.16.1
+  event: ^1.1.4
+  flushbar: ^1.10.4
   
 dev_dependencies:
   flutter_test:

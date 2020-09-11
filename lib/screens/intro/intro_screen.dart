@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:skilla/screens/sign_in_screen.dart';
 import 'package:skilla/utils/text_styles.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -12,11 +14,19 @@ class _IntroScreenState extends State<IntroScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
-    // Navigator.pushNamed(context, LoginScreen.id);
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => SignInScreen(),
+      ),
+    );
   }
 
   void _onSkip(context) {
-    // Navigator.pushNamed(context, LoginScreen.id);
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => SignInScreen(),
+      ),
+    );
   }
 
   Widget _buildImage(String assetName) {
