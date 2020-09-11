@@ -4,5 +4,9 @@
   "fieldEmailValidatorEmpty": "El correo electrónico no puede estar vacío",
   "fieldEmailValidatorInvalid": "Email inválido",
   "fieldPassword": "Contraseña",
-  "fieldPasswordValidator": "La contraseña no puede estar vacía"
+  "fieldPasswordValidator": "La contraseña no puede estar vacía",
+  "fieldName": "Nombre completo",
+  "fieldNameValidator": "El nombre no puede estar vacío",
+  "fieldUsername": "Usuario",
+  "fieldUsernameValidator": "El usuario no puede estar vacío"
 }

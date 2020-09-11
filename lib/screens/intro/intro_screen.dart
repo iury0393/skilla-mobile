@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:skilla/screens/sign_in_screen.dart';
+import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/text_styles.dart';
 
 class IntroScreen extends StatefulWidget {

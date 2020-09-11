@@ -1,11 +1,10 @@
-import 'dart:async';
-
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_in_bloc.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/screens/intro/intro_screen.dart';
+import 'package:skilla/screens/signFlow/sign_up_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -78,7 +77,9 @@ class _SignInScreenState extends State<SignInScreen> {
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
       onPressed: () {
-        _doNavigateMainScreen();
+        if (_bloc.formKey.currentState.validate()) {
+          _doNavigateMainScreen();
+        }
       },
     );
   }
@@ -92,6 +93,7 @@ class _SignInScreenState extends State<SignInScreen> {
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context).translate('fieldEmail'),
         hintStyle: TextStyle(color: Colors.grey),
+        prefixIcon: Icon(Icons.email),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         fillColor: Colors.white,
         filled: true,
@@ -135,6 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).translate('fieldPassword'),
               hintStyle: TextStyle(color: Colors.grey),
+              prefixIcon: Icon(Icons.vpn_key),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
               fillColor: Colors.white,
@@ -178,7 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void _doNavigateRegisterScreen() {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => IntroScreen(),
+        builder: (context) => SignUpScreen(),
       ),
     );
   }
