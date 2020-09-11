@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_up_bloc.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/screens/intro/intro_screen.dart';
-import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -23,23 +22,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Image.asset('assets/logo.png'),
-            Form(
-              key: _bloc.formKey,
-              child: Column(
+        child: Padding(
+          padding: Utils.getPaddingDefault(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset('assets/logo.png'),
+              Padding(
+                padding: EdgeInsets.only(bottom: 30),
+                child: Form(
+                  key: _bloc.formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15),
+                        child: _buildEmailTextFormField(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15),
+                        child: _buildNameTextFormField(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15),
+                        child: _buildUsernameTextFormField(),
+                      ),
+                      _buildPasswordTextFormField(),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
                 children: [
-                  _buildEmailTextFormField(),
-                  _buildNameTextFormField(),
-                  _buildUsernameTextFormField(),
-                  _buildPasswordTextFormField(),
+                  _buildSubmitButton(),
+                  _buildLoginButton(),
                 ],
               ),
-            ),
-            _buildSubmitButton(),
-            _buildLoginButton(),
-          ],
+            ],
+          ),
         ),
       ),
     );

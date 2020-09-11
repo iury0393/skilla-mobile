@@ -24,21 +24,35 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Image.asset('assets/logo.png'),
-            Form(
-              key: _bloc.formKey,
-              child: Column(
+        child: Padding(
+          padding: Utils.getPaddingDefault(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset('assets/logo.png'),
+              Padding(
+                padding: EdgeInsets.only(bottom: 30),
+                child: Form(
+                  key: _bloc.formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15),
+                        child: _buildEmailTextFormField(),
+                      ),
+                      _buildPasswordTextFormField(),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
                 children: [
-                  _buildEmailTextFormField(),
-                  _buildPasswordTextFormField(),
+                  _buildSubmitButton(),
+                  _buildRegisterButton(),
                 ],
               ),
-            ),
-            _buildSubmitButton(),
-            _buildRegisterButton(),
-          ],
+            ],
+          ),
         ),
       ),
     );
