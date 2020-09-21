@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:skilla/utils/text_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String titleImg;
   final double progressBar;
   final Color backgroundColor;
   final List<Widget> widgets;
@@ -18,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Key key,
     this.widgets,
     this.iconThemeData,
-    this.title,
+    this.titleImg,
     this.height,
     this.progressBar,
     this.backgroundColor,
@@ -41,11 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: center != null ? center : false,
       title: Padding(
         padding: EdgeInsets.all(10.0),
-        child: Text(
-          title != null ? title : "",
-          style: TextStyles.appBarTitle(textColor: titleColor),
-          maxLines: 2,
-        ),
+        child: Image.asset(titleImg, fit: BoxFit.cover),
       ),
       backgroundColor: backgroundColor != null ? backgroundColor : Colors.white,
       elevation: 0.0,
