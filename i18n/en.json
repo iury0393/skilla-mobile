@@ -1,5 +1,9 @@
 {
   "btnLogin": "Submit",
+  "btnRegisterText" : "No registration?",
+  "btnLoginText": "Already have an account?",
+  "btnLink": "click here",
+
   "fieldEmail": "E-mail",
   "fieldEmailValidatorEmpty": "E-mail cannot be empty",
   "fieldEmailValidatorInvalid": "Invalid email",
@@ -9,13 +13,18 @@
   "fieldNameValidator": "Name cannot be empty",
   "fieldUsername": "User",
   "fieldUsernameValidator": "User cannot be empty",
+
   "introOpportunitiesTitle": "Opportunities",
   "introOpportunitiesText": "Found opportunities with better companies in Ceará",
   "introPublicationsTitle": "Publications",
   "introPublicationsText": "See news of companies and users!",
   "introCoursesTitle": "Courses/Studies",
   "introCoursesText": "Found courses to add to or curriculum",
-  "btnRegisterText" : "No registration?",
-  "btnLoginText": "Already have an account?",
-  "btnLink": "click here"
+
+  "menuFeed": "Feed",
+  "menuProfile": "Profile",
+  "menuOpportunities": "Opportunities",
+  "menuExplore": "Explore",
+  "menuSearch": "Search",
+  "menuExit": "Exit"
 }

@@ -4,14 +4,14 @@ import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/nav_drawer.dart';
 import 'package:skilla/utils/constants.dart';
 
-class FeedScreen extends StatefulWidget {
-  FeedScreen({Key key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  ProfileScreen({Key key}) : super(key: key);
 
   @override
-  _FeedScreenState createState() => _FeedScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +31,7 @@ class _FeedScreenState extends State<FeedScreen> {
           ],
         ),
         body: SafeArea(
-          child: Text('FeedScreen'),
+          child: Text('ProfileScreen'),
         ),
       ),
     );

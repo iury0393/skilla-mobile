@@ -1,5 +1,9 @@
 {
   "btnLogin": "Entrar",
+  "btnRegisterText" : "Não tem registro?",
+  "btnLoginText": "Já possui uma conta?",
+  "btnLink": "clique aqui",
+
   "fieldEmail": "E-mail",
   "fieldEmailValidatorEmpty": "O E-mail não pode estar vazio",
   "fieldEmailValidatorInvalid": "E-mail inválido",
@@ -9,13 +13,18 @@
   "fieldNameValidator": "O nome não pode estar vazio",
   "fieldUsername": "Usuário",
   "fieldUsernameValidator": "O usuário não pode estar vazio",
+  
   "introOpportunitiesTitle": "Vagas",
   "introOpportunitiesText": "Encontre vagas nas maiores empresas do Ceará",
   "introPublicationsTitle": "Publicacões",
   "introPublicationsText": "Veja notícias de empresas e usuários!",
   "introCoursesTitle": "Cursos/Estudos",
   "introCoursesText": "Encontre cursos para agregar ao currículo",
-  "btnRegisterText" : "Não tem registro?",
-  "btnLoginText": "Já possui uma conta?",
-  "btnLink": "clique aqui"
+
+  "menuFeed": "Feed",
+  "menuProfile": "Perfil",
+  "menuOpportunities": "Oportunidades",
+  "menuExplore": "Explorar",
+  "menuSearch": "Procurar",
+  "menuExit": "Sair"
 }

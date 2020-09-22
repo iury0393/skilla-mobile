@@ -6,3 +6,4 @@ const kPurpleLighterColor = Color(0xFFAB97DF);
 const kTransparent = Colors.transparent;
 const kGreyColor = Color(0xFFC5C7CD);
 const kRedColor = Color(0xFFEE6851);
+const kSkillaPurple = Color(0xFF5931bf);
