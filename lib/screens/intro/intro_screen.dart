@@ -6,7 +6,7 @@ import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/text_styles.dart';
 
 class IntroScreen extends StatefulWidget {
-  static const String id = '/intro';
+  static const String id = 'introScreen';
   @override
   _IntroScreenState createState() => _IntroScreenState();
 }

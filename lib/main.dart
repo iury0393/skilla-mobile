@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:skilla/screens/home/explore_screen.dart';
+import 'package:skilla/screens/home/feed_screen.dart';
+import 'package:skilla/screens/home/opportunities_screen.dart';
+import 'package:skilla/screens/home/profile_screen.dart';
+import 'package:skilla/screens/home/search_screen.dart';
+import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 
@@ -34,9 +40,19 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      home: SplashPage(),
+      initialRoute: SplashPage.id,
+      routes: {
+        SplashPage.id: (context) => SplashPage(),
+        IntroScreen.id: (context) => IntroScreen(),
+        ExploreScreen.id: (context) => ExploreScreen(),
+        FeedScreen.id: (context) => FeedScreen(),
+        OpportunitiesScreen.id: (context) => OpportunitiesScreen(),
+        ProfileScreen.id: (context) => ProfileScreen(),
+        SearchScreen.id: (context) => SearchScreen(),
+      },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:skilla/components/nav_drawer.dart';
 import 'package:skilla/utils/constants.dart';
 
 class ExploreScreen extends StatefulWidget {
+  static const String id = 'exploreScreen';
   ExploreScreen({Key key}) : super(key: key);
 
   @override

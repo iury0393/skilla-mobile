@@ -5,6 +5,7 @@ import 'package:splashscreen/splashscreen.dart';
 import 'intro_screen.dart';
 
 class SplashPage extends StatefulWidget {
+  static const String id = 'splashScreen';
   SplashPage({Key key}) : super(key: key);
 
   @override

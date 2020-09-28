@@ -5,6 +5,7 @@ import 'package:skilla/components/nav_drawer.dart';
 import 'package:skilla/utils/constants.dart';
 
 class FeedScreen extends StatefulWidget {
+  static const String id = 'feedScreen';
   FeedScreen({Key key}) : super(key: key);
 
   @override

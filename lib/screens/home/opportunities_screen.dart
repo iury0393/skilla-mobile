@@ -5,6 +5,7 @@ import 'package:skilla/components/nav_drawer.dart';
 import 'package:skilla/utils/constants.dart';
 
 class OpportunitiesScreen extends StatefulWidget {
+  static const String id = 'opportunitiesScreen';
   OpportunitiesScreen({Key key}) : super(key: key);
 
   @override
