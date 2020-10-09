@@ -158,42 +158,7 @@ class _FeedScreenState extends State<FeedScreen> {
             ],
           ),
         ),
-        Container(
-          padding: EdgeInsets.all(8.0),
-          color: Colors.grey[50],
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'iury0393',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyles.paragraph(
-                      TextSize.medium,
-                      weight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15.0,
-                  ),
-                  Container(
-                    width: 180,
-                    child: Text(
-                      'Massa',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.paragraph(
-                        TextSize.medium,
-                        weight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        buildComment(),
         Padding(
           padding: EdgeInsets.only(top: 15.0, bottom: 25.0),
           child: Text(
@@ -214,6 +179,45 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Container buildComment() {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      color: Colors.grey[50],
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                'iury0393',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.paragraph(
+                  TextSize.medium,
+                  weight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(
+                width: 15.0,
+              ),
+              Container(
+                width: 180,
+                child: Text(
+                  'Massa',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyles.paragraph(
+                    TextSize.medium,
+                    weight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

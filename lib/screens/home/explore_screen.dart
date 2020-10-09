@@ -14,6 +14,8 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
       child: Scaffold(
         appBar: CustomAppBar(
@@ -30,9 +32,39 @@ class _ExploreScreenState extends State<ExploreScreen> {
           ],
         ),
         body: SafeArea(
-          child: Text('ExploreScreen'),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                buildExplore(width, height),
+              ],
+            ),
+          ),
         ),
       ),
+    );
+  }
+
+  Column buildExplore(double width, double height) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Image.asset(
+              'assets/post.jpg',
+              width: width / 3,
+              height: height / 5,
+            ),
+            Image.asset(
+              'assets/post.jpg',
+              width: width / 3,
+              height: height / 5,
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 15.0,
+        ),
+      ],
     );
   }
 }
