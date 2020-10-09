@@ -28,6 +28,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
   @override
   void initState() {
     super.initState();
+    isSelectedFeed = true;
     tabs = [
       FeedScreen(),
       OpportunitiesScreen(),
