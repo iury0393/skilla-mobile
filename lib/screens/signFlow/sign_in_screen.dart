@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_in_bloc.dart';
 import 'package:skilla/components/rounded_button.dart';
-import 'package:skilla/screens/home/feed_screen.dart';
+import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/signFlow/sign_up_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
@@ -185,10 +185,9 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _doNavigateMainScreen() {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => FeedScreen(),
-      ),
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      TabBarScreen.id,
+      (route) => false,
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:skilla/screens/home/feed_screen.dart';
 import 'package:skilla/screens/home/opportunities_screen.dart';
 import 'package:skilla/screens/home/profile_screen.dart';
 import 'package:skilla/screens/home/search_screen.dart';
+import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashPage.id: (context) => SplashPage(),
         IntroScreen.id: (context) => IntroScreen(),
+        TabBarScreen.id: (context) => TabBarScreen(),
         ExploreScreen.id: (context) => ExploreScreen(),
         FeedScreen.id: (context) => FeedScreen(),
         OpportunitiesScreen.id: (context) => OpportunitiesScreen(),
