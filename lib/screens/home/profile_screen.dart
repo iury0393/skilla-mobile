@@ -16,19 +16,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        appBar: CustomAppBar(
-          titleImg: 'assets/navlogo.png',
-          center: true,
-          widgets: [
-            FlatButton(
-              onPressed: () {},
-              child: Icon(
-                FeatherIcons.plusSquare,
-                color: kSkillaPurple,
-              ),
-            ),
-          ],
-        ),
         body: SafeArea(
           child: Text('ProfileScreen'),
         ),

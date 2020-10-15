@@ -20,19 +20,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     double height = MediaQuery.of(context).size.height;
     return Container(
       child: Scaffold(
-        appBar: CustomAppBar(
-          titleImg: 'assets/navlogo.png',
-          center: true,
-          widgets: [
-            FlatButton(
-              onPressed: () {},
-              child: Icon(
-                FeatherIcons.plusSquare,
-                color: kSkillaPurple,
-              ),
-            ),
-          ],
-        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(

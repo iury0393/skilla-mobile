@@ -1,6 +1,6 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:skilla/screens/home/explore_screen.dart';
+import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/screens/home/feed_screen.dart';
 import 'package:skilla/screens/home/opportunities_screen.dart';
 import 'package:skilla/screens/home/profile_screen.dart';
@@ -21,7 +21,6 @@ class _TabBarScreenState extends State<TabBarScreen> {
 
   bool isSelectedFeed = false;
   bool isSelectedOpportunities = false;
-  bool isSelectedExplore = false;
   bool isSelectedSearch = false;
   bool isSelectedProfile = false;
 
@@ -32,7 +31,6 @@ class _TabBarScreenState extends State<TabBarScreen> {
     tabs = [
       FeedScreen(),
       OpportunitiesScreen(),
-      ExploreScreen(),
       SearchScreen(),
       ProfileScreen(),
     ];
@@ -41,6 +39,19 @@ class _TabBarScreenState extends State<TabBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(
+        titleImg: 'assets/navlogo.png',
+        center: true,
+        widgets: [
+          FlatButton(
+            onPressed: () {},
+            child: Icon(
+              FeatherIcons.plusSquare,
+              color: kSkillaPurple,
+            ),
+          ),
+        ],
+      ),
       body: Scaffold(
         body: PageView(
           physics: NeverScrollableScrollPhysics(),
@@ -75,7 +86,6 @@ class _TabBarScreenState extends State<TabBarScreen> {
                     setState(() {
                       isSelectedFeed = true;
                       isSelectedOpportunities = false;
-                      isSelectedExplore = false;
                       isSelectedSearch = false;
                       isSelectedProfile = false;
                       _myPage.jumpToPage(0);
@@ -94,28 +104,9 @@ class _TabBarScreenState extends State<TabBarScreen> {
                     setState(() {
                       isSelectedFeed = false;
                       isSelectedOpportunities = true;
-                      isSelectedExplore = false;
                       isSelectedSearch = false;
                       isSelectedProfile = false;
                       _myPage.jumpToPage(1);
-                    });
-                  },
-                ),
-                IconButton(
-                  iconSize: 28.0,
-                  icon: Icon(
-                    FeatherIcons.globe,
-                    color:
-                        isSelectedExplore ? kSkillaPurple : kPurpleLighterColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isSelectedFeed = false;
-                      isSelectedOpportunities = false;
-                      isSelectedExplore = true;
-                      isSelectedSearch = false;
-                      isSelectedProfile = false;
-                      _myPage.jumpToPage(2);
                     });
                   },
                 ),
@@ -130,10 +121,9 @@ class _TabBarScreenState extends State<TabBarScreen> {
                     setState(() {
                       isSelectedFeed = false;
                       isSelectedOpportunities = false;
-                      isSelectedExplore = false;
                       isSelectedSearch = true;
                       isSelectedProfile = false;
-                      _myPage.jumpToPage(3);
+                      _myPage.jumpToPage(2);
                     });
                   },
                 ),
@@ -148,10 +138,9 @@ class _TabBarScreenState extends State<TabBarScreen> {
                     setState(() {
                       isSelectedFeed = false;
                       isSelectedOpportunities = false;
-                      isSelectedExplore = false;
                       isSelectedSearch = false;
                       isSelectedProfile = true;
-                      _myPage.jumpToPage(4);
+                      _myPage.jumpToPage(3);
                     });
                   },
                 ),

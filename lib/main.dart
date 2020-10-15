@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:skilla/screens/home/explore_screen.dart';
 import 'package:skilla/screens/home/feed_screen.dart';
 import 'package:skilla/screens/home/opportunities_screen.dart';
 import 'package:skilla/screens/home/profile_screen.dart';
@@ -49,7 +48,6 @@ class MyApp extends StatelessWidget {
         SplashPage.id: (context) => SplashPage(),
         IntroScreen.id: (context) => IntroScreen(),
         TabBarScreen.id: (context) => TabBarScreen(),
-        ExploreScreen.id: (context) => ExploreScreen(),
         FeedScreen.id: (context) => FeedScreen(),
         OpportunitiesScreen.id: (context) => OpportunitiesScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
