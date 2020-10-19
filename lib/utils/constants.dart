@@ -7,3 +7,7 @@ const kTransparent = Colors.transparent;
 const kGreyColor = Color(0xFFC5C7CD);
 const kRedColor = Color(0xFFEE6851);
 const kSkillaPurple = Color(0xFF5931bf);
+
+const kClientId = "b7c96a89-eb9d-41a5-887f-aeccef11997e";
+const kBaseURL = "https://api-hml.ubiapp.io/";
+const kApiVersion = "v1";

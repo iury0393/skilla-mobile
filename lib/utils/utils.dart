@@ -1,4 +1,10 @@
+import 'dart:io';
+
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
+import 'package:skilla/dao/auth_dao.dart';
+import 'package:skilla/dao/user_dao.dart';
 
 class Utils {
   static String appLanguage;
@@ -20,5 +26,35 @@ class Utils {
         r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d][\w~@#$%^&*+=`|{}:;!.?\"()\[\]-]{7,}$';
     RegExp regex = new RegExp(pattern);
     return regex.hasMatch(value.trim());
+  }
+
+  static Future<String> getUUID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else {
+      AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.androidId; // unique ID on Android
+    }
+  }
+
+  static Future<String> getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+    return '$version.$buildNumber';
+  }
+
+  static Future cleanDataBase() async {
+    await AuthDAO().cleanTable();
+    await UserDAO().cleanTable();
+  }
+
+  static int whenRefreshToken(int expiration) {
+    DateTime now = DateTime.now();
+    Duration timeNow =
+        new Duration(hours: now.hour, minutes: now.minute, seconds: now.second);
+    return (timeNow.inSeconds + expiration) - 300;
   }
 }
