@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      initialRoute: SignInScreen.id,
+      initialRoute: SplashPage.id,
       routes: {
         SplashPage.id: (context) => SplashPage(),
         IntroScreen.id: (context) => IntroScreen(),
@@ -57,7 +57,6 @@ class MyApp extends StatelessWidget {
         OpportunitiesScreen.id: (context) => OpportunitiesScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
         SearchScreen.id: (context) => SearchScreen(),
-        SignInScreen.id: (context) => SignInScreen(),
       },
     );
   }
