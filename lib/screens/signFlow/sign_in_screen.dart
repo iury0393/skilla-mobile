@@ -3,10 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_in_bloc.dart';
 import 'package:skilla/components/rounded_button.dart';
+import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/signFlow/sign_up_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/manager_dialogs.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -19,6 +21,29 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _bloc = SignInBloc();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bloc.loginStreamController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          _doNavigateMainScreen();
+          break;
+        case Status.LOADING:
+          ManagerDialogs.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          ManagerDialogs.showErrorDialog(
+              context, event.status.toString(), event.message);
+          break;
+        default:
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +83,8 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  //BUTTONS
+
   Widget _buildRegisterButton() {
     return FlatButton(
       onPressed: () {
@@ -92,11 +119,13 @@ class _SignInScreenState extends State<SignInScreen> {
       backgroundColor: kPurpleColor,
       onPressed: () {
         if (_bloc.formKey.currentState.validate()) {
-          _doNavigateMainScreen();
+          _bloc.doRequestLogin();
         }
       },
     );
   }
+
+  //TEXT FORM FIELDS
 
   TextFormField _buildEmailTextFormField() {
     return TextFormField(
@@ -184,6 +213,8 @@ class _SignInScreenState extends State<SignInScreen> {
         });
   }
 
+  //NAVIGATION
+
   void _doNavigateMainScreen() {
     Navigator.of(context).pushNamedAndRemoveUntil(
       TabBarScreen.id,
@@ -198,6 +229,8 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+
+  //SNACKBAR
 
   void _showSnackBar(String text) {
     Flushbar(

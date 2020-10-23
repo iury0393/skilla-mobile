@@ -1,6 +1,5 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';

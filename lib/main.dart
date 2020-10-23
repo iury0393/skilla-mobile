@@ -8,6 +8,7 @@ import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
+import 'package:skilla/utils/utils.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         Locale('pt', 'BR'),
         Locale('es', 'ES'),
       ],
+      localeResolutionCallback: (Locale locale, supportedLocales) {
+        return getDeviceLanguage(locale, supportedLocales);
+      },
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -54,5 +58,26 @@ class MyApp extends StatelessWidget {
         SearchScreen.id: (context) => SearchScreen(),
       },
     );
+  }
+
+  Locale getDeviceLanguage(Locale locale, Iterable<Locale> supportedLocales) {
+    if (locale != null) {
+      for (Locale supportedLocale in supportedLocales) {
+        if (supportedLocale.languageCode == locale.languageCode) {
+          if (supportedLocale.languageCode == "pt") {
+            Utils.appLanguage = '${supportedLocale}_BR';
+          } else if (supportedLocale.languageCode == "en") {
+            Utils.appLanguage = 'en';
+          } else {
+            Utils.appLanguage = 'es';
+          }
+          return supportedLocale;
+        }
+      }
+      Utils.appLanguage = 'en';
+      return Locale('en');
+    }
+    Utils.appLanguage = 'en';
+    return Locale('en');
   }
 }

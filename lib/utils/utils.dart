@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:skilla/dao/auth_dao.dart';
-import 'package:skilla/dao/user_dao.dart';
 
 class Utils {
   static String appLanguage;
@@ -44,11 +42,6 @@ class Utils {
     String version = packageInfo.version;
     String buildNumber = packageInfo.buildNumber;
     return '$version.$buildNumber';
-  }
-
-  static Future cleanDataBase() async {
-    await AuthDAO().cleanTable();
-    await UserDAO().cleanTable();
   }
 
   static int whenRefreshToken(int expiration) {
