@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:skilla/dao/auth_dao.dart';
+import 'package:skilla/dao/user_dao.dart';
 
 class Utils {
   static String appLanguage;
@@ -49,5 +51,10 @@ class Utils {
     Duration timeNow =
         new Duration(hours: now.hour, minutes: now.minute, seconds: now.second);
     return (timeNow.inSeconds + expiration) - 300;
+  }
+
+  static Future cleanDataBase() async {
+    await AuthDAO().cleanTable();
+    await UserDAO().cleanTable();
   }
 }

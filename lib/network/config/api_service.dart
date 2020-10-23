@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:skilla/network/config/custom_interceptors.dart';
 import 'package:skilla/utils/constants.dart';
 
 enum HttpMethod { get, post, patch, delete }
@@ -23,7 +24,9 @@ class APIService {
 
   final Duration _timeout = Duration(seconds: 60);
 
-  APIService();
+  APIService() {
+    dio.interceptors.add(CustomInterceptors(dio));
+  }
 
   Future<Map<String, dynamic>> doRequest(RequestConfig config) async {
     String url = kBaseURL;
@@ -37,6 +40,7 @@ class APIService {
         responseJson = _handlerResponse(response);
         break;
       case HttpMethod.post:
+        print(url);
         var body;
         if (config.body is FormData) {
           body = config.body;

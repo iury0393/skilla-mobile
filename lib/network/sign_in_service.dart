@@ -11,6 +11,6 @@ class SignInService {
       RequestConfig('auth/login', HttpMethod.post, body: body),
     );
 
-    return Auth.fromJson(response['data']);
+    return Auth.fromJson(response);
   }
 }

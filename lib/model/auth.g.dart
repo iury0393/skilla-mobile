@@ -8,12 +8,12 @@ part of 'auth.dart';
 
 Auth _$AuthFromJson(Map<String, dynamic> json) {
   return Auth(
-    email: json['email'] as String,
-    password: json['password'] as String,
+    success: json['success'] as bool,
+    token: json['token'] as String,
   );
 }
 
 Map<String, dynamic> _$AuthToJson(Auth instance) => <String, dynamic>{
-      'email': instance.email,
-      'password': instance.password,
+      'success': instance.success,
+      'token': instance.token,
     };

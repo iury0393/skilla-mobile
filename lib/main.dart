@@ -7,6 +7,7 @@ import 'package:skilla/screens/home/search_screen.dart';
 import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
+import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      initialRoute: SplashPage.id,
+      initialRoute: SignInScreen.id,
       routes: {
         SplashPage.id: (context) => SplashPage(),
         IntroScreen.id: (context) => IntroScreen(),
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         OpportunitiesScreen.id: (context) => OpportunitiesScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
         SearchScreen.id: (context) => SearchScreen(),
+        SignInScreen.id: (context) => SignInScreen(),
       },
     );
   }

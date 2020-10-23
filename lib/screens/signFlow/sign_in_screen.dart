@@ -13,6 +13,7 @@ import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
 class SignInScreen extends StatefulWidget {
+  static const String id = 'signInScreen';
   SignInScreen({Key key}) : super(key: key);
 
   @override
