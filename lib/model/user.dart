@@ -38,3 +38,19 @@ class User {
     return "id: $id, avatar: $avatar, bio: $bio, email: $email, followersCount: $followersCount, followingCount: $followingCount, fullname: $fullname, password: $password, postCount: $postCount, username: $username, website: $website";
   }
 }
+
+@JsonSerializable(explicitToJson: true)
+class Users {
+  List<User> data;
+
+  Users({this.data});
+
+  factory Users.fromJson(Map<String, dynamic> json) => _$UsersFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UsersToJson(this);
+
+  @override
+  String toString() {
+    return "data: $data";
+  }
+}

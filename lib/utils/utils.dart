@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:skilla/dao/auth_dao.dart';
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/user.dart';
 
 class Utils {
   static String appLanguage;
+  static List<User> listOfUsers;
 
   static EdgeInsets getPaddingDefault({double left, double top, double right}) {
     return EdgeInsets.fromLTRB(left != null ? left : 20.0,

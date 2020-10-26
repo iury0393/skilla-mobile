@@ -44,3 +44,16 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('postCount', instance.postCount);
   return val;
 }
+
+Users _$UsersFromJson(Map<String, dynamic> json) {
+  return Users(
+    data: (json['data'] as List)
+        ?.map(
+            (e) => e == null ? null : User.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$UsersToJson(Users instance) => <String, dynamic>{
+      'data': instance.data?.map((e) => e?.toJson())?.toList(),
+    };
