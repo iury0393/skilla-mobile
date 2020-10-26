@@ -2,13 +2,13 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_in_bloc.dart';
+import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/signFlow/sign_up_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
-import 'package:skilla/utils/manager_dialogs.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -33,12 +33,11 @@ class _SignInScreenState extends State<SignInScreen> {
           _doNavigateMainScreen();
           break;
         case Status.LOADING:
-          ManagerDialogs.showLoadingDialog(context);
+          NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
           Navigator.pop(context);
-          ManagerDialogs.showErrorDialog(
-              context, event.status.toString(), event.message);
+          NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
           break;

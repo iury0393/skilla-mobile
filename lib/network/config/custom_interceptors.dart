@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:skilla/dao/auth_dao.dart';
 import 'package:skilla/dao/error_message_dao.dart';
 import 'package:skilla/model/auth.dart';
@@ -18,24 +19,26 @@ class CustomInterceptors extends InterceptorsWrapper {
   @override
   Future onRequest(RequestOptions options) async {
     options.headers = await _getDefaultHeaders();
-    if (kDebugMode) {
-      _printRequest(options);
-    }
     return super.onRequest(options);
   }
 
   @override
   Future onResponse(Response response) async {
-    if (kDebugMode) {
-      _printResponse(response);
-    }
     return super.onResponse(response);
   }
 
   @override
   Future onError(DioError err) async {
+    Dio dio = Dio();
     if (kDebugMode) {
-      _printError(err);
+      dio.interceptors.add(PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90));
     }
 
     if (err.response?.statusCode == 401) {
@@ -127,41 +130,6 @@ class CustomInterceptors extends InterceptorsWrapper {
       return result.data.message;
     }
     return code;
-  }
-
-  void _printError(DioError err) {
-    print("\n");
-    print("----------> INIT ERROR RESPONSE <----------");
-    print("ERROR[${err?.response?.statusCode}] => PATH: ${err?.request?.path}");
-    print("BODY => ${err?.response?.data}");
-    print("-----> END ERROR RESPONSE <----------");
-    print("\n");
-  }
-
-  void _printRequest(RequestOptions options, {String method, String url}) {
-    print("\n");
-    print("----------> INIT APP REQUEST <----------");
-    print(
-        "${method != null ? method : options?.method} => ${url != null ? url : options?.path}");
-    print("HEADERS =>");
-    options?.headers?.forEach((key, value) {
-      print("$key => $value");
-    });
-    print("BODY => ${options?.data}");
-    print("----------> END APP REQUEST <----------");
-    print("\n");
-  }
-
-  void _printResponse(Response response) {
-    print("\n");
-    print("----------> INIT API RESPONSE <----------");
-    print("${response?.request?.path}");
-    print("STATUS CODE => ${response?.statusCode}");
-    print("HEADERS =>");
-    response.headers?.forEach((k, v) => print('$k: $v'));
-    print("BODY => ${response?.data}");
-    print("----------> END API RESPONSE <----------");
-    print("\n");
   }
 }
 

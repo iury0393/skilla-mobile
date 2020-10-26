@@ -43,8 +43,10 @@ dependencies:
   device_info: ^0.4.2+7
   # Used to find locations on filesystem
   path_provider: ^1.6.14
-    # Used to logs network calls in a pretty format.
+  # Used to logs network calls in a pretty format.
   pretty_dio_logger: ^1.1.1
+  # Used to load and cache images from url
+  cached_network_image: ^2.2.0+1
   
 dev_dependencies:
   flutter_test:

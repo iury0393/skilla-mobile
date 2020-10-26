@@ -4,10 +4,9 @@ part 'auth.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Auth {
-  bool success;
   String token;
 
-  Auth({this.success, this.token});
+  Auth({this.token});
 
   factory Auth.fromJson(Map<String, dynamic> json) => _$AuthFromJson(json);
 
@@ -15,6 +14,6 @@ class Auth {
 
   @override
   String toString() {
-    return "success: $success, token: $token";
+    return "token: $token";
   }
 }

@@ -19,30 +19,28 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     double height = MediaQuery.of(context).size.height;
     return Container(
       child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: Utils.getPaddingDefault(),
-              child: Column(
-                children: [
-                  buildPost(
-                    width,
-                    height,
-                    'assets/google.jpeg',
-                    'Google',
-                    'assets/googleDev.png',
-                    'Oportunidade para ser um desenvolvedor na Google\nResponda esse comentário para se inscrever.',
-                  ),
-                  buildPost(
-                    width,
-                    height,
-                    'assets/ibm.jpeg',
-                    'IBM',
-                    'assets/ibmDev.png',
-                    'Seja um DevOpsSec na IBM!\nResponda esse comentário para se inscrever.',
-                  ),
-                ],
-              ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: Utils.getPaddingDefault(),
+            child: Column(
+              children: [
+                buildPost(
+                  width,
+                  height,
+                  'assets/google.jpeg',
+                  'Google',
+                  'assets/googleDev.png',
+                  'Oportunidade para ser um desenvolvedor na Google\nResponda esse comentário para se inscrever.',
+                ),
+                buildPost(
+                  width,
+                  height,
+                  'assets/ibm.jpeg',
+                  'IBM',
+                  'assets/ibmDev.png',
+                  'Seja um DevOpsSec na IBM!\nResponda esse comentário para se inscrever.',
+                ),
+              ],
             ),
           ),
         ),

@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:skilla/dao/auth_dao.dart';
-import 'package:skilla/model/auth.dart';
+import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/auth.dart';
 import 'package:skilla/model/auth_data.dart';
+import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/sign_in_service.dart';
 import 'package:skilla/network/user_service.dart';
@@ -70,8 +71,18 @@ class SignInBloc {
     try {
       var response = await UserService().doRequestGetUser();
       response.email = textEmailController.text.toLowerCase();
+      await _saveUserInDB(response);
       loginStreamController.add(BaseResponse.completed());
     } catch (e) {
+      loginStreamController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _saveUserInDB(User user) async {
+    try {
+      await UserDAO().save(user);
+    } catch (e) {
+      await Utils.cleanDataBase();
       loginStreamController.add(BaseResponse.error(e.toString()));
     }
   }

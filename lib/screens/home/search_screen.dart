@@ -15,16 +15,14 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: Utils.getPaddingDefault(),
-              child: Column(
-                children: [
-                  buildRecomendation(),
-                  buildRecomendation(),
-                ],
-              ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: Utils.getPaddingDefault(),
+            child: Column(
+              children: [
+                buildRecomendation(),
+                buildRecomendation(),
+              ],
             ),
           ),
         ),

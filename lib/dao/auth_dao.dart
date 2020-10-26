@@ -10,7 +10,6 @@ class AuthDAO implements BaseDao<Auth> {
 
   @override
   String get createTableQuery => "CREATE TABLE $_tableName("
-      "$_columnSuccess TEXT, "
       "$_columnToken TEXT)";
 
   @override
@@ -39,15 +38,12 @@ class AuthDAO implements BaseDao<Auth> {
 
   @override
   Auth fromMap(Map<String, dynamic> query) {
-    return Auth(success: query[_columnSuccess], token: query[_columnToken]);
+    return Auth(token: query[_columnToken]);
   }
 
   @override
   Map<String, dynamic> toMap(Auth object) {
-    return <String, dynamic>{
-      _columnSuccess: object.success,
-      _columnToken: object.token
-    };
+    return <String, dynamic>{_columnToken: object.token};
   }
 
   Future<BaseResponse<Auth>> save(Auth auth) async {

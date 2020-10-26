@@ -29,10 +29,10 @@ class _TabBarScreenState extends State<TabBarScreen> {
     super.initState();
     isSelectedFeed = true;
     tabs = [
-      FeedScreen(),
-      OpportunitiesScreen(),
-      SearchScreen(),
-      ProfileScreen(),
+      SafeArea(child: FeedScreen()),
+      SafeArea(child: OpportunitiesScreen()),
+      SafeArea(child: SearchScreen()),
+      SafeArea(child: ProfileScreen()),
     ];
   }
 

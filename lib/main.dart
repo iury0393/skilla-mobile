@@ -7,7 +7,6 @@ import 'package:skilla/screens/home/search_screen.dart';
 import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
-import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/utils.dart';
 
