@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
@@ -74,47 +76,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                       return Container();
                     }),
-                IconButton(
-                  icon: Icon(
-                    FeatherIcons.edit,
-                    color: kSkillaPurple,
-                  ),
-                  onPressed: () {},
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        FeatherIcons.edit,
+                        color: kSkillaPurple,
+                      ),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        FeatherIcons.logOut,
+                        color: kSkillaPurple,
+                      ),
+                      onPressed: () async {
+                        await Utils.cleanDataBase();
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          SignInScreen.id,
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      '1 Post',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.paragraph(
-                        TextSize.medium,
-                        weight: FontWeight.w400,
-                      ),
-                    ),
+                    StreamBuilder<BaseResponse<int>>(
+                        stream: _bloc.postCountController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.data.data != null) {
+                            return Text(
+                              snapshot.data?.data == 1
+                                  ? '${snapshot.data?.data} Post'
+                                  : '${snapshot.data?.data} Posts',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyles.paragraph(
+                                TextSize.medium,
+                                weight: FontWeight.w400,
+                              ),
+                            );
+                          }
+                          return Container();
+                        }),
                     GestureDetector(
-                      child: Text(
-                        '5 Seguidores',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.paragraph(
-                          TextSize.medium,
-                          weight: FontWeight.w400,
-                        ),
-                      ),
+                      child: StreamBuilder<BaseResponse<int>>(
+                          stream: _bloc.followerCountController.stream,
+                          builder: (context, snapshot) {
+                            if (snapshot.data.data != null) {
+                              return Text(
+                                snapshot.data?.data == 1
+                                    ? '${snapshot.data?.data} Seguidor'
+                                    : '${snapshot.data?.data} Seguidores',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyles.paragraph(
+                                  TextSize.medium,
+                                  weight: FontWeight.w400,
+                                ),
+                              );
+                            }
+                            return Container();
+                          }),
                       onTap: () {},
                     ),
                     GestureDetector(
-                      child: Text(
-                        '5 Seguindo',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.paragraph(
-                          TextSize.medium,
-                          weight: FontWeight.w400,
-                        ),
-                      ),
+                      child: StreamBuilder<BaseResponse<int>>(
+                          stream: _bloc.followingCountController.stream,
+                          builder: (context, snapshot) {
+                            if (snapshot.data.data != null) {
+                              return Text(
+                                '${snapshot.data?.data} Seguindo',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyles.paragraph(
+                                  TextSize.medium,
+                                  weight: FontWeight.w400,
+                                ),
+                              );
+                            }
+                            return Container();
+                          }),
                       onTap: () {},
                     ),
                   ],

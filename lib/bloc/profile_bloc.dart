@@ -10,6 +10,9 @@ class ProfileBloc {
   StreamController<BaseResponse<String>> avatarController;
   StreamController<BaseResponse<String>> bioController;
   StreamController<BaseResponse<String>> websiteController;
+  StreamController<BaseResponse<int>> postCountController;
+  StreamController<BaseResponse<int>> followerCountController;
+  StreamController<BaseResponse<int>> followingCountController;
 
   ProfileBloc() {
     fullNameController = StreamController();
@@ -18,6 +21,9 @@ class ProfileBloc {
     avatarController = StreamController();
     bioController = StreamController();
     websiteController = StreamController();
+    postCountController = StreamController();
+    followerCountController = StreamController();
+    followingCountController = StreamController();
   }
 
   dispose() {
@@ -27,6 +33,9 @@ class ProfileBloc {
     avatarController.close();
     bioController.close();
     websiteController.close();
+    postCountController.close();
+    followerCountController.close();
+    followingCountController.close();
   }
 
   getUserData() async {
@@ -38,5 +47,10 @@ class ProfileBloc {
     avatarController.add(BaseResponse.completed(data: user.data.avatar));
     bioController.add(BaseResponse.completed(data: user.data.bio));
     websiteController.add(BaseResponse.completed(data: user.data.website));
+    postCountController.add(BaseResponse.completed(data: user.data.postCount));
+    followerCountController
+        .add(BaseResponse.completed(data: user.data.followersCount));
+    followingCountController
+        .add(BaseResponse.completed(data: user.data.followingCount));
   }
 }
