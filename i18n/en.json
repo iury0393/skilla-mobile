@@ -1,5 +1,6 @@
 {
   "btnLogin": "Submit",
+  "btnRegister": "Register",
   "btnRegisterText" : "No registration?",
   "btnLoginText": "Already have an account?",
   "btnLink": "click here",

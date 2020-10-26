@@ -1,7 +1,7 @@
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/api_service.dart';
 
-class UserService {
+class UserNetwork {
   final service = APIService();
 
   Future<User> doRequestGetUser() async {

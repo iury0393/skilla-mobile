@@ -2,8 +2,9 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_up_bloc.dart';
+import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/rounded_button.dart';
-import 'package:skilla/screens/intro/intro_screen.dart';
+import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -18,6 +19,35 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _bloc = SignUpBloc();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bloc.registerController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          _doNavigateLoginScreen();
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,19 +120,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  //BUTTON
+
   Widget _buildSubmitButton() {
     return RoundedButton(
-      title: AppLocalizations.of(context).translate('btnLogin'),
+      title: AppLocalizations.of(context).translate('btnRegister'),
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
       onPressed: () {
         if (_bloc.formKey.currentState.validate()) {
-          _doNavigateMainScreen();
+          _bloc.doRequestRegister();
         }
       },
     );
   }
+  //TEXT FORM FIELDS
 
   TextFormField _buildEmailTextFormField() {
     return TextFormField(
@@ -147,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextFormField _buildNameTextFormField() {
     return TextFormField(
       textCapitalization: TextCapitalization.none,
-      controller: _bloc.textNameController,
+      controller: _bloc.textFullNameController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context).translate('fieldName'),
@@ -179,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextFormField _buildUsernameTextFormField() {
     return TextFormField(
       textCapitalization: TextCapitalization.none,
-      controller: _bloc.textEmailController,
+      controller: _bloc.textUserNameController,
       keyboardType: TextInputType.emailAddress,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
@@ -211,7 +244,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildPasswordTextFormField() {
     return StreamBuilder<bool>(
-        stream: _bloc.obfuscatePasswordStreamController.stream,
+        stream: _bloc.obfuscatePasswordController.stream,
         initialData: true,
         builder: (context, snapshot) {
           return TextFormField(
@@ -231,7 +264,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 icon: Icon(
                     snapshot.data ? Icons.visibility : Icons.visibility_off),
                 onPressed: () {
-                  _bloc.obfuscatePasswordStreamController.add(!snapshot.data);
+                  _bloc.obfuscatePasswordController.add(!snapshot.data);
                 },
               ),
             ),
@@ -255,17 +288,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
   }
 
-  void _doNavigateMainScreen() {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => IntroScreen(),
-      ),
-    );
-  }
+  //NAVIGATION
 
   void _doNavigateLoginScreen() {
     Navigator.of(context).pop();
   }
+
+  //SNACKBAR
 
   void _showSnackBar(String text) {
     Flushbar(

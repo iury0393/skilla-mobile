@@ -27,7 +27,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
 
-    _bloc.loginStreamController.stream.listen((event) {
+    _bloc.loginController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
           _doNavigateMainScreen();
@@ -169,7 +169,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _buildPasswordTextFormField() {
     return StreamBuilder<bool>(
-        stream: _bloc.obfuscatePasswordStreamController.stream,
+        stream: _bloc.obfuscatePasswordController.stream,
         initialData: true,
         builder: (context, snapshot) {
           return TextFormField(
@@ -189,7 +189,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 icon: Icon(
                     snapshot.data ? Icons.visibility : Icons.visibility_off),
                 onPressed: () {
-                  _bloc.obfuscatePasswordStreamController.add(!snapshot.data);
+                  _bloc.obfuscatePasswordController.add(!snapshot.data);
                 },
               ),
             ),

@@ -3,7 +3,7 @@ import 'package:skilla/network/config/api_service.dart';
 
 import 'config/api_service.dart';
 
-class SignInService {
+class SignInNetwork {
   final service = APIService();
 
   Future<Auth> doRequestLogin(Map<String, dynamic> body) async {

@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:skilla/model/user.dart';
+import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/network/sign_up_network.dart';
 
 class SignUpBloc {
   TextEditingController textEmailController;
   TextEditingController textPasswordController;
-  TextEditingController textNameController;
-  TextEditingController textUsernameController;
+  TextEditingController textFullNameController;
+  TextEditingController textUserNameController;
 
-  StreamController<bool> obfuscatePasswordStreamController;
+  StreamController<bool> obfuscatePasswordController;
+  StreamController<BaseResponse<dynamic>> registerController;
 
   GlobalKey<FormState> formKey;
 
@@ -19,16 +23,38 @@ class SignUpBloc {
 
   SignUpBloc() {
     formKey = GlobalKey<FormState>();
+
     textPasswordController = TextEditingController();
     textEmailController = TextEditingController();
-    textNameController = TextEditingController();
-    textUsernameController = TextEditingController();
-    obfuscatePasswordStreamController = StreamController();
+    textFullNameController = TextEditingController();
+    textUserNameController = TextEditingController();
+
+    obfuscatePasswordController = StreamController();
+    registerController = StreamController();
   }
 
   dispose() {
     textEmailController.dispose();
     textPasswordController.dispose();
-    obfuscatePasswordStreamController.close();
+    textFullNameController.dispose();
+    textUserNameController.dispose();
+    obfuscatePasswordController.close();
+    registerController.close();
+  }
+
+  doRequestRegister() async {
+    registerController.add(BaseResponse.loading());
+    try {
+      var body = User(
+              fullname: textFullNameController.text,
+              username: textUserNameController.text,
+              email: textEmailController.text.toLowerCase(),
+              password: textPasswordController.text)
+          .toJson();
+      await SignUpNetwork().doRequestRegister(body);
+      registerController.add(BaseResponse.completed());
+    } catch (e) {
+      registerController.add(BaseResponse.error(e.toString()));
+    }
   }
 }

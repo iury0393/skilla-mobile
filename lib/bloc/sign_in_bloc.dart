@@ -7,8 +7,8 @@ import 'package:skilla/model/auth.dart';
 import 'package:skilla/model/auth_data.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/network/sign_in_service.dart';
-import 'package:skilla/network/user_service.dart';
+import 'package:skilla/network/sign_in_network.dart';
+import 'package:skilla/network/user_network.dart';
 import 'package:skilla/utils/user_auth.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -16,8 +16,8 @@ class SignInBloc {
   TextEditingController textEmailController;
   TextEditingController textPasswordController;
 
-  StreamController<BaseResponse<dynamic>> loginStreamController;
-  StreamController<bool> obfuscatePasswordStreamController;
+  StreamController<BaseResponse<dynamic>> loginController;
+  StreamController<bool> obfuscatePasswordController;
 
   String email;
   String password;
@@ -31,29 +31,29 @@ class SignInBloc {
     formKey = GlobalKey<FormState>();
     textPasswordController = TextEditingController();
     textEmailController = TextEditingController();
-    loginStreamController = StreamController();
-    obfuscatePasswordStreamController = StreamController();
+    loginController = StreamController();
+    obfuscatePasswordController = StreamController();
   }
 
   dispose() {
     textEmailController.dispose();
     textPasswordController.dispose();
-    loginStreamController.close();
-    obfuscatePasswordStreamController.close();
+    loginController.close();
+    obfuscatePasswordController.close();
   }
 
   doRequestLogin() async {
-    loginStreamController.add(BaseResponse.loading());
+    loginController.add(BaseResponse.loading());
     try {
       var body = AuthData(
               email: textEmailController.text.toLowerCase(),
               password: textPasswordController.text)
           .toJson();
-      var response = await SignInService().doRequestLogin(body);
+      var response = await SignInNetwork().doRequestLogin(body);
       await _saveAuthInDB(response);
       await _doRequestGetUserData();
     } catch (e) {
-      loginStreamController.add(BaseResponse.error(e.toString()));
+      loginController.add(BaseResponse.error(e.toString()));
     }
   }
 
@@ -63,18 +63,18 @@ class SignInBloc {
       await AuthDAO().save(auth);
     } catch (e) {
       await Utils.cleanDataBase();
-      loginStreamController.add(BaseResponse.error(e.toString()));
+      loginController.add(BaseResponse.error(e.toString()));
     }
   }
 
   _doRequestGetUserData() async {
     try {
-      var response = await UserService().doRequestGetUser();
+      var response = await UserNetwork().doRequestGetUser();
       response.email = textEmailController.text.toLowerCase();
       await _saveUserInDB(response);
-      loginStreamController.add(BaseResponse.completed());
+      loginController.add(BaseResponse.completed());
     } catch (e) {
-      loginStreamController.add(BaseResponse.error(e.toString()));
+      loginController.add(BaseResponse.error(e.toString()));
     }
   }
 
@@ -83,7 +83,7 @@ class SignInBloc {
       await UserDAO().save(user);
     } catch (e) {
       await Utils.cleanDataBase();
-      loginStreamController.add(BaseResponse.error(e.toString()));
+      loginController.add(BaseResponse.error(e.toString()));
     }
   }
 }
