@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/search_bloc.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/screens/home/profile_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
@@ -107,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ? Container()
                 : GestureDetector(
                     onTap: () {
-                      print(user.email);
+                      _doNavigateToProfileScreen(user);
                     },
                     child: Row(
                       children: [
@@ -182,5 +184,12 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+
+  _doNavigateToProfileScreen(User user) {
+    Navigator.of(context).push(CupertinoPageRoute(
+        builder: (context) => ProfileScreen(
+              user: user,
+            )));
   }
 }

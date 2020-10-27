@@ -3,7 +3,9 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
+import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/rounded_button.dart';
+import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/constants.dart';
@@ -12,7 +14,8 @@ import 'package:skilla/utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profileScreen';
-  ProfileScreen({Key key}) : super(key: key);
+  final User user;
+  ProfileScreen({Key key, this.user}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -40,78 +43,120 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Container(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: Utils.getPaddingDefault(),
-            child: Column(
-              children: [
-                StreamBuilder<BaseResponse<String>>(
-                  stream: _bloc.avatarController.stream,
+    return Scaffold(
+      appBar: widget.user != null
+          ? CustomAppBar(
+              titleImg: 'assets/navlogo.png',
+              center: true,
+            )
+          : AppBar(
+              leading: Container(),
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: Utils.getPaddingDefault(),
+          child: Column(
+            children: [
+              StreamBuilder<BaseResponse<String>>(
+                stream: _bloc.avatarController.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.data.data != null) {
+                    if (snapshot.data.data.isNotEmpty) {
+                      if (widget.user != null) {
+                        return _loadImage(widget.user.avatar);
+                      }
+                      return _loadImage(snapshot.data?.data);
+                    }
+                  }
+                  return _buildPlaceholder(context, _height, _width);
+                },
+              ),
+              StreamBuilder<BaseResponse<String>>(
+                  stream: _bloc.userNameController.stream,
                   builder: (context, snapshot) {
                     if (snapshot.data.data != null) {
                       if (snapshot.data.data.isNotEmpty) {
-                        return _loadImage(snapshot.data?.data);
+                        return Text(
+                          widget.user != null
+                              ? widget.user.username
+                              : snapshot.data?.data,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyles.paragraph(
+                            TextSize.xxLarge,
+                            weight: FontWeight.w400,
+                          ),
+                        );
                       }
                     }
-                    return _buildPlaceholder(context, _height, _width);
-                  },
-                ),
-                StreamBuilder<BaseResponse<String>>(
-                    stream: _bloc.userNameController.stream,
-                    builder: (context, snapshot) {
-                      if (snapshot.data.data != null) {
-                        if (snapshot.data.data.isNotEmpty) {
+                    return Container();
+                  }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  widget.user != null
+                      ? Container()
+                      : IconButton(
+                          icon: Icon(
+                            FeatherIcons.edit,
+                            color: kSkillaPurple,
+                          ),
+                          onPressed: () {},
+                        ),
+                  widget.user != null
+                      ? Container()
+                      : IconButton(
+                          icon: Icon(
+                            FeatherIcons.logOut,
+                            color: kSkillaPurple,
+                          ),
+                          onPressed: () async {
+                            await Utils.cleanDataBase();
+                            _doNavitageToSignInScreen();
+                          },
+                        ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  StreamBuilder<BaseResponse<int>>(
+                      stream: _bloc.postCountController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data.data != null) {
                           return Text(
-                            snapshot.data?.data,
+                            widget.user != null
+                                ? widget.user.postCount != 1
+                                    ? '${snapshot.data?.data} Posts'
+                                    : '${snapshot.data?.data} Post'
+                                : snapshot.data?.data != 1
+                                    ? '${snapshot.data?.data} Posts'
+                                    : '${snapshot.data?.data} Post',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyles.paragraph(
-                              TextSize.xxLarge,
+                              TextSize.medium,
                               weight: FontWeight.w400,
                             ),
                           );
                         }
-                      }
-                      return Container();
-                    }),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        FeatherIcons.edit,
-                        color: kSkillaPurple,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        FeatherIcons.logOut,
-                        color: kSkillaPurple,
-                      ),
-                      onPressed: () async {
-                        await Utils.cleanDataBase();
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          SignInScreen.id,
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    StreamBuilder<BaseResponse<int>>(
-                        stream: _bloc.postCountController.stream,
+                        return Container();
+                      }),
+                  GestureDetector(
+                    child: StreamBuilder<BaseResponse<int>>(
+                        stream: _bloc.followerCountController.stream,
                         builder: (context, snapshot) {
                           if (snapshot.data.data != null) {
                             return Text(
-                              snapshot.data?.data == 1
-                                  ? '${snapshot.data?.data} Post'
-                                  : '${snapshot.data?.data} Posts',
+                              widget.user != null
+                                  ? widget.user.followersCount != 1
+                                      ? '${snapshot.data?.data} Seguidores'
+                                      : '${snapshot.data?.data} Seguidor'
+                                  : snapshot.data?.data != 1
+                                      ? '${snapshot.data?.data} Seguidores'
+                                      : '${snapshot.data?.data} Seguidor',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyles.paragraph(
@@ -122,76 +167,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                           return Container();
                         }),
-                    GestureDetector(
-                      child: StreamBuilder<BaseResponse<int>>(
-                          stream: _bloc.followerCountController.stream,
-                          builder: (context, snapshot) {
-                            if (snapshot.data.data != null) {
-                              return Text(
-                                snapshot.data?.data == 1
-                                    ? '${snapshot.data?.data} Seguidor'
-                                    : '${snapshot.data?.data} Seguidores',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyles.paragraph(
-                                  TextSize.medium,
-                                  weight: FontWeight.w400,
-                                ),
-                              );
-                            }
-                            return Container();
-                          }),
-                      onTap: () {},
-                    ),
-                    GestureDetector(
-                      child: StreamBuilder<BaseResponse<int>>(
-                          stream: _bloc.followingCountController.stream,
-                          builder: (context, snapshot) {
-                            if (snapshot.data.data != null) {
-                              return Text(
-                                '${snapshot.data?.data} Seguindo',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyles.paragraph(
-                                  TextSize.medium,
-                                  weight: FontWeight.w400,
-                                ),
-                              );
-                            }
-                            return Container();
-                          }),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
-                  child: StreamBuilder<BaseResponse<String>>(
-                      stream: _bloc.fullNameController.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.data.data != null) {
-                          if (snapshot.data.data.isNotEmpty) {
+                    onTap: () {},
+                  ),
+                  GestureDetector(
+                    child: StreamBuilder<BaseResponse<int>>(
+                        stream: _bloc.followingCountController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.data.data != null) {
                             return Text(
-                              snapshot.data?.data,
+                              widget.user != null
+                                  ? '${widget.user.followingCount} Seguindo'
+                                  : '${snapshot.data?.data} Seguindo',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyles.paragraph(
-                                TextSize.large,
+                                TextSize.medium,
                                 weight: FontWeight.w400,
                               ),
                             );
                           }
-                        }
-                        return Container();
-                      }),
-                ),
-                StreamBuilder<BaseResponse<String>>(
-                    stream: _bloc.bioController.stream,
+                          return Container();
+                        }),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0, bottom: 2.0),
+                child: StreamBuilder<BaseResponse<String>>(
+                    stream: _bloc.fullNameController.stream,
                     builder: (context, snapshot) {
                       if (snapshot.data.data != null) {
                         if (snapshot.data.data.isNotEmpty) {
                           return Text(
-                            snapshot.data?.data,
+                            widget.user != null
+                                ? widget.user.fullname != null
+                                    ? widget.user.fullname
+                                    : ""
+                                : snapshot.data?.data != null
+                                    ? snapshot.data?.data
+                                    : "",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyles.paragraph(
@@ -203,62 +218,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                       return Container();
                     }),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: _buildSubmitButton(),
-                ),
-                Divider(
-                  height: 20.0,
-                  thickness: 2.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      FeatherIcons.archive,
-                      color: kSkillaPurple,
+              ),
+              StreamBuilder<BaseResponse<String>>(
+                  stream: _bloc.bioController.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.data.data != null) {
+                      if (snapshot.data.data.isNotEmpty) {
+                        return Text(
+                          widget.user != null
+                              ? widget.user.bio != null
+                                  ? widget.user.bio
+                                  : ""
+                              : snapshot.data?.data != null
+                                  ? snapshot.data?.data
+                                  : "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyles.paragraph(
+                            TextSize.large,
+                            weight: FontWeight.w400,
+                          ),
+                        );
+                      }
+                    }
+                    return Container();
+                  }),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: _buildSubmitButton(),
+              ),
+              Divider(
+                height: 20.0,
+                thickness: 2.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    FeatherIcons.archive,
+                    color: kSkillaPurple,
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    'Posts',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.paragraph(
+                      TextSize.medium,
+                      weight: FontWeight.w400,
                     ),
-                    SizedBox(
-                      width: 10.0,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      'assets/post.jpg',
+                      width: width / 4,
+                      height: height / 4,
                     ),
-                    Text(
-                      'Posts',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.paragraph(
-                        TextSize.medium,
-                        weight: FontWeight.w400,
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      'assets/post.jpg',
+                      width: width / 4,
+                      height: height / 4,
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset(
-                        'assets/post.jpg',
-                        width: width / 4,
-                        height: height / 4,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset(
-                        'assets/post.jpg',
-                        width: width / 4,
-                        height: height / 4,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  _doNavitageToSignInScreen() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(builder: (context) => SignInScreen()),
+        (route) => false);
   }
 
   Widget _buildSubmitButton() {

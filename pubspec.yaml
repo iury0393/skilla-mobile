@@ -47,6 +47,8 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   # Used to load and cache images from url
   cached_network_image: ^2.2.0+1
+  # Used to render pdf files
+  native_pdf_view: ^3.8.0
   
 dev_dependencies:
   flutter_test:
