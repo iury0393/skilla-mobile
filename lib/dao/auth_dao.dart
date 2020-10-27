@@ -5,7 +5,6 @@ import 'package:skilla/network/config/base_response.dart';
 
 class AuthDAO implements BaseDao<Auth> {
   final String _tableName = "auth";
-  final String _columnSuccess = "success";
   final String _columnToken = "token";
 
   @override

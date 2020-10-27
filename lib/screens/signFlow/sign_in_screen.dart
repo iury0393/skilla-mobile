@@ -216,10 +216,10 @@ class _SignInScreenState extends State<SignInScreen> {
   //NAVIGATION
 
   void _doNavigateMainScreen() {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      TabBarScreen.id,
-      (route) => false,
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(builder: (context) => TabBarScreen()),
+        (route) => false);
   }
 
   void _doNavigateRegisterScreen() {

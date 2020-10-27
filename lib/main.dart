@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:skilla/bloc/splash_bloc.dart';
+import 'package:skilla/model/auth.dart';
+import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed_screen.dart';
 import 'package:skilla/screens/home/opportunities_screen.dart';
 import 'package:skilla/screens/home/profile_screen.dart';
@@ -9,12 +12,37 @@ import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/utils.dart';
+import 'package:splashscreen/splashscreen.dart';
 
-void main() {
-  runApp(MyApp());
+final _bloc = SplashBloc();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await _bloc.getDataFromDB();
+
+  _bloc.authStreamController.stream.listen((event) async {
+    switch (event.status) {
+      case Status.LOADING:
+        break;
+      case Status.ERROR:
+        await Utils.cleanDataBase();
+        _bloc.dispose();
+        runApp(MyApp(event.data));
+        break;
+      case Status.COMPLETED:
+        _bloc.dispose();
+        runApp(MyApp(event.data));
+        break;
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
+  final Auth auth;
+
+  MyApp(this.auth, {Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,16 +75,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      initialRoute: SplashPage.id,
-      routes: {
-        SplashPage.id: (context) => SplashPage(),
-        IntroScreen.id: (context) => IntroScreen(),
-        TabBarScreen.id: (context) => TabBarScreen(),
-        FeedScreen.id: (context) => FeedScreen(),
-        OpportunitiesScreen.id: (context) => OpportunitiesScreen(),
-        ProfileScreen.id: (context) => ProfileScreen(),
-        SearchScreen.id: (context) => SearchScreen(),
-      },
+      home: auth != null ? TabBarScreen() : SplashPage(),
     );
   }
 

@@ -62,13 +62,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               StreamBuilder<BaseResponse<String>>(
                 stream: _bloc.avatarController.stream,
                 builder: (context, snapshot) {
-                  if (snapshot.data.data != null) {
+                  if (snapshot.data != null) {
                     if (snapshot.data.data.isNotEmpty) {
                       if (widget.user != null) {
                         return _loadImage(widget.user.avatar);
                       }
                       return _loadImage(snapshot.data?.data);
                     }
+                  } else {
+                    return Image.asset(
+                      'assets/default_avatar.jpg',
+                      width: 80.0,
+                      height: 80.0,
+                    );
                   }
                   return _buildPlaceholder(context, _height, _width);
                 },
@@ -76,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               StreamBuilder<BaseResponse<String>>(
                   stream: _bloc.userNameController.stream,
                   builder: (context, snapshot) {
-                    if (snapshot.data.data != null) {
+                    if (snapshot.data != null) {
                       if (snapshot.data.data.isNotEmpty) {
                         return Text(
                           widget.user != null
@@ -90,6 +96,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       }
+                    } else {
+                      return Text("");
                     }
                     return Container();
                   }),
@@ -125,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   StreamBuilder<BaseResponse<int>>(
                       stream: _bloc.postCountController.stream,
                       builder: (context, snapshot) {
-                        if (snapshot.data.data != null) {
+                        if (snapshot.data != null) {
                           return Text(
                             widget.user != null
                                 ? widget.user.postCount != 1
@@ -148,12 +156,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: StreamBuilder<BaseResponse<int>>(
                         stream: _bloc.followerCountController.stream,
                         builder: (context, snapshot) {
-                          if (snapshot.data.data != null) {
+                          if (snapshot.data != null) {
                             return Text(
                               widget.user != null
                                   ? widget.user.followersCount != 1
-                                      ? '${snapshot.data?.data} Seguidores'
-                                      : '${snapshot.data?.data} Seguidor'
+                                      ? '${widget.user.followersCount} Seguidores'
+                                      : '${widget.user.followersCount} Seguidor'
                                   : snapshot.data?.data != 1
                                       ? '${snapshot.data?.data} Seguidores'
                                       : '${snapshot.data?.data} Seguidor',
@@ -173,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: StreamBuilder<BaseResponse<int>>(
                         stream: _bloc.followingCountController.stream,
                         builder: (context, snapshot) {
-                          if (snapshot.data.data != null) {
+                          if (snapshot.data != null) {
                             return Text(
                               widget.user != null
                                   ? '${widget.user.followingCount} Seguindo'
@@ -197,16 +205,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: StreamBuilder<BaseResponse<String>>(
                     stream: _bloc.fullNameController.stream,
                     builder: (context, snapshot) {
-                      if (snapshot.data.data != null) {
+                      if (snapshot.data != null) {
                         if (snapshot.data.data.isNotEmpty) {
                           return Text(
                             widget.user != null
-                                ? widget.user.fullname != null
-                                    ? widget.user.fullname
-                                    : ""
-                                : snapshot.data?.data != null
-                                    ? snapshot.data?.data
-                                    : "",
+                                ? widget.user.fullname
+                                : snapshot.data?.data,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyles.paragraph(
@@ -222,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               StreamBuilder<BaseResponse<String>>(
                   stream: _bloc.bioController.stream,
                   builder: (context, snapshot) {
-                    if (snapshot.data.data != null) {
+                    if (snapshot.data != null) {
                       if (snapshot.data.data.isNotEmpty) {
                         return Text(
                           widget.user != null
