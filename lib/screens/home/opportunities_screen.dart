@@ -6,7 +6,6 @@ import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
 class OpportunitiesScreen extends StatefulWidget {
-  static const String id = 'opportunitiesScreen';
   OpportunitiesScreen({Key key}) : super(key: key);
 
   @override

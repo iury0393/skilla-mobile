@@ -13,7 +13,6 @@ import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
-  static const String id = 'profileScreen';
   final User user;
   ProfileScreen({Key key, this.user}) : super(key: key);
 
@@ -31,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _bloc.getUserData();
+    widget.user != null ? print(widget.user) : print("Usuário próprio");
   }
 
   @override

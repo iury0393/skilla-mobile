@@ -7,13 +7,12 @@ import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/profile_screen.dart';
+import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
 class SearchScreen extends StatefulWidget {
-  static const String id = 'searchScreen';
   SearchScreen({Key key}) : super(key: key);
 
   @override
