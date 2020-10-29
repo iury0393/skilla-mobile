@@ -3,16 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:skilla/bloc/splash_bloc.dart';
 import 'package:skilla/model/auth.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/feed_screen.dart';
-import 'package:skilla/screens/home/opportunities_screen.dart';
-import 'package:skilla/screens/home/profile_screen.dart';
-import 'package:skilla/screens/home/search_screen.dart';
 import 'package:skilla/screens/home/tab_bar_screen.dart';
-import 'package:skilla/screens/intro/intro_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/utils.dart';
-import 'package:splashscreen/splashscreen.dart';
 
 final _bloc = SplashBloc();
 

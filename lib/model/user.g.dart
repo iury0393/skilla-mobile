@@ -19,6 +19,9 @@ User _$UserFromJson(Map<String, dynamic> json) {
     postCount: json['postCount'] as int,
     username: json['username'] as String,
     website: json['website'] as String,
+    followers: json['followers'],
+    following: json['following'],
+    posts: json['posts'],
   );
 }
 
@@ -40,8 +43,11 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('bio', instance.bio);
   writeNotNull('website', instance.website);
   writeNotNull('followersCount', instance.followersCount);
+  writeNotNull('followers', instance.followers);
   writeNotNull('followingCount', instance.followingCount);
+  writeNotNull('following', instance.following);
   writeNotNull('postCount', instance.postCount);
+  writeNotNull('posts', instance.posts);
   return val;
 }
 

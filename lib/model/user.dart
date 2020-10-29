@@ -13,8 +13,11 @@ class User {
   String bio;
   String website;
   int followersCount;
+  var followers;
   int followingCount;
+  var following;
   int postCount;
+  var posts;
 
   User(
       {this.avatar,
@@ -27,7 +30,10 @@ class User {
       this.password,
       this.postCount,
       this.username,
-      this.website});
+      this.website,
+      this.followers,
+      this.following,
+      this.posts});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
@@ -35,7 +41,7 @@ class User {
 
   @override
   String toString() {
-    return "id: $id, avatar: $avatar, bio: $bio, email: $email, followersCount: $followersCount, followingCount: $followingCount, fullname: $fullname, password: $password, postCount: $postCount, username: $username, website: $website";
+    return "id: $id, avatar: $avatar, bio: $bio, email: $email, followersCount: $followersCount, followingCount: $followingCount, fullname: $fullname, password: $password, postCount: $postCount, username: $username, website: $website, followers: $followers, following: $following, posts: $posts";
   }
 }
 
