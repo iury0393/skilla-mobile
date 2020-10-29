@@ -191,9 +191,12 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   _doNavigateToProfileScreen(User user) {
-    Navigator.of(context).push(CupertinoPageRoute(
+    Navigator.of(context).push(
+      CupertinoPageRoute(
         builder: (context) => ProfileScreen(
-              user: user,
-            )));
+          user: user,
+        ),
+      ),
+    );
   }
 }

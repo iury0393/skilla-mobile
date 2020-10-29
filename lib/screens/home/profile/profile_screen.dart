@@ -7,6 +7,8 @@ import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/screens/home/profile/follower_screen.dart';
+import 'package:skilla/screens/home/profile/following_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -44,16 +46,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: widget.user != null
-          ? CustomAppBar(
-              titleImg: 'assets/navlogo.png',
-              center: true,
-            )
-          : AppBar(
-              leading: Container(),
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
-            ),
+      appBar: CustomAppBar(
+        titleImg: 'assets/navlogo.png',
+        center: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: Utils.getPaddingDefault(),
@@ -101,32 +97,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
                     return Container();
                   }),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  widget.user != null
-                      ? Container()
-                      : IconButton(
-                          icon: Icon(
-                            FeatherIcons.edit,
-                            color: kSkillaPurple,
-                          ),
-                          onPressed: () {},
-                        ),
-                  widget.user != null
-                      ? Container()
-                      : IconButton(
-                          icon: Icon(
-                            FeatherIcons.logOut,
-                            color: kSkillaPurple,
-                          ),
-                          onPressed: () async {
-                            await Utils.cleanDataBase();
-                            _doNavitageToSignInScreen();
-                          },
-                        ),
-                ],
-              ),
+              widget.user != null
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: _buildFollowButton(),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        widget.user != null
+                            ? Container()
+                            : IconButton(
+                                icon: Icon(
+                                  FeatherIcons.edit,
+                                  color: kSkillaPurple,
+                                ),
+                                onPressed: () {},
+                              ),
+                        widget.user != null
+                            ? Container()
+                            : IconButton(
+                                icon: Icon(
+                                  FeatherIcons.logOut,
+                                  color: kSkillaPurple,
+                                ),
+                                onPressed: () async {
+                                  await Utils.cleanDataBase();
+                                  _doNavigateToSignInScreen();
+                                },
+                              ),
+                      ],
+                    ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -175,7 +176,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                           return Container();
                         }),
-                    onTap: () {},
+                    onTap: () {
+                      _doNavigateToFollowerScreen();
+                    },
                   ),
                   GestureDetector(
                     child: StreamBuilder<BaseResponse<int>>(
@@ -196,7 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                           return Container();
                         }),
-                    onTap: () {},
+                    onTap: () {
+                      _doNavigateToFollowingScreen();
+                    },
                   ),
                 ],
               ),
@@ -279,22 +284,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/post.jpg',
-                      width: width / 4,
-                      height: height / 4,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/post.jpg',
-                      width: width / 4,
-                      height: height / 4,
-                    ),
-                  ),
+                  _buildPostItem(width, height),
+                  _buildPostItem(width, height),
                 ],
               ),
             ],
@@ -304,11 +295,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _doNavitageToSignInScreen() {
+  Padding _buildPostItem(double width, double height) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Image.asset(
+        'assets/post.jpg',
+        width: width / 4,
+        height: height / 4,
+      ),
+    );
+  }
+
+  _doNavigateToSignInScreen() {
     Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute(builder: (context) => SignInScreen()),
         (route) => false);
+  }
+
+  _doNavigateToFollowingScreen() {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => FollowingScreen(),
+      ),
+    );
+  }
+
+  _doNavigateToFollowerScreen() {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => FollowerScreen(),
+      ),
+    );
   }
 
   Widget _buildSubmitButton() {
@@ -319,6 +337,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
+      onPressed: () {},
+    );
+  }
+
+  Widget _buildFollowButton() {
+    return RoundedButton(
+      width: 100.0,
+      height: 30.0,
+      title: 'Seguir',
+      titleColor: kSkillaPurple,
+      borderColor: kPurpleColor,
+      backgroundColor: Colors.white,
       onPressed: () {},
     );
   }
