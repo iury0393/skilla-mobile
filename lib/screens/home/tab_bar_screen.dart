@@ -17,7 +17,7 @@ class TabBarScreen extends StatefulWidget {
 
 class _TabBarScreenState extends State<TabBarScreen> {
   List<Widget> tabs;
-  PageController _myPage = PageController(initialPage: 0);
+  PageController _myPage = PageController(initialPage: 3);
 
   bool isSelectedFeed = false;
   bool isSelectedOpportunities = false;
@@ -39,19 +39,6 @@ class _TabBarScreenState extends State<TabBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        titleImg: 'assets/navlogo.png',
-        center: true,
-        widgets: [
-          FlatButton(
-            onPressed: () {},
-            child: Icon(
-              FeatherIcons.plusSquare,
-              color: kSkillaPurple,
-            ),
-          ),
-        ],
-      ),
       body: Scaffold(
         body: PageView(
           physics: NeverScrollableScrollPhysics(),

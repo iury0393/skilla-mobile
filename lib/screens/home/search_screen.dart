@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/search_bloc.dart';
+import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/user.dart';
@@ -45,6 +46,10 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(
+        titleImg: 'assets/navlogo.png',
+        center: true,
+      ),
       body: Padding(
         padding: Utils.getPaddingDefault(),
         child: StreamBuilder<BaseResponse<List<User>>>(
