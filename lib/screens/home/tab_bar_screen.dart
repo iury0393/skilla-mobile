@@ -25,7 +25,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
   @override
   void initState() {
     super.initState();
-    isSelectedFeed = true;
+    isSelectedProfile = true;
     tabs = [
       SafeArea(child: FeedScreen()),
       SafeArea(child: OpportunitiesScreen()),

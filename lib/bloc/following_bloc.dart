@@ -26,12 +26,13 @@ class FollowingBloc {
     followingController.add(BaseResponse.loading());
     try {
       var response = await FollowingNetwork().doRequestgetUsers();
-      var user = await getUser();
-      response.forEach((element) {
-        if (element.followers.toString().contains(user.data.id)) {
-          listFollowings.add(element);
-        }
-      });
+      listFollowings = response;
+      // var user = await getUser();
+      // response.forEach((element) {
+      //   if (element.following.toString().contains(user.data.id)) {
+      //     listFollowers.add(element);
+      //   }
+      // });
       followingController.add(BaseResponse.completed(data: listFollowings));
     } catch (e) {
       followingController.add(BaseResponse.error(e.toString()));

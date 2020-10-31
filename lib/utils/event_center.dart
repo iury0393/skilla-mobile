@@ -1,8 +1,7 @@
 import 'package:event/event.dart';
 
 class EventCenter {
-  //EXAMPLE
-  final newPostEvent = Event<NewPostEventArgs>();
+  final editEvent = Event<EditEventArgs>();
 
   static EventCenter _instance = EventCenter();
 
@@ -14,8 +13,8 @@ class EventCenter {
   }
 }
 
-class NewPostEventArgs extends EventArgs {
-  String id;
+class EditEventArgs extends EventArgs {
+  bool isEdited;
 
-  NewPostEventArgs(this.id);
+  EditEventArgs(this.isEdited);
 }

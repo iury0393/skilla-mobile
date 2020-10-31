@@ -1,18 +1,21 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/rounded_button.dart';
+import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/home/profile/following_screen.dart';
+import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
+
+import 'edit_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
@@ -24,21 +27,27 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _bloc = ProfileBloc();
-
-  double _height = 120.0;
-  double _width = 120.0;
+  String id;
 
   @override
   void initState() {
     super.initState();
+    _bloc.getUser().then((value) {
+      setState(() {
+        _bloc.userEmail = value.data.email;
+        id = value.data.id;
+      });
+    });
     _bloc.getUserData();
     widget.user != null ? print(widget.user) : print("Usuário próprio");
+    EventCenter.getInstance().editEvent.subscribe(_refreshPage);
   }
 
   @override
   void dispose() {
     super.dispose();
     _bloc.dispose();
+    EventCenter.getInstance().editEvent.unsubscribe(_refreshPage);
   }
 
   @override
@@ -61,9 +70,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (snapshot.data != null) {
                     if (snapshot.data.data.isNotEmpty) {
                       if (widget.user != null) {
-                        return _loadImage(widget.user.avatar);
+                        return Utils.loadImage(
+                            widget.user.avatar, context, false);
                       }
-                      return _loadImage(snapshot.data?.data);
+                      return Utils.loadImage(
+                          snapshot.data?.data, context, false);
                     }
                   } else {
                     return Image.asset(
@@ -72,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 80.0,
                     );
                   }
-                  return _buildPlaceholder(context, _height, _width);
+                  return Container();
                 },
               ),
               StreamBuilder<BaseResponse<String>>(
@@ -105,27 +116,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        widget.user != null
-                            ? Container()
-                            : IconButton(
-                                icon: Icon(
-                                  FeatherIcons.edit,
-                                  color: kSkillaPurple,
-                                ),
-                                onPressed: () {},
-                              ),
-                        widget.user != null
-                            ? Container()
-                            : IconButton(
-                                icon: Icon(
-                                  FeatherIcons.logOut,
-                                  color: kSkillaPurple,
-                                ),
-                                onPressed: () async {
-                                  await Utils.cleanDataBase();
-                                  _doNavigateToSignInScreen();
-                                },
-                              ),
+                        IconButton(
+                          icon: Icon(
+                            FeatherIcons.edit,
+                            color: kSkillaPurple,
+                          ),
+                          onPressed: () {
+                            _doNavigateToEditScreen();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            FeatherIcons.logOut,
+                            color: kSkillaPurple,
+                          ),
+                          onPressed: () async {
+                            await Utils.cleanDataBase();
+                            _doNavigateToSignInScreen();
+                          },
+                        ),
                       ],
                     ),
               Row(
@@ -295,6 +304,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  _refreshPage(EditEventArgs args) {
+    if (args.isEdited) {
+      _bloc.getUserData();
+    }
+  }
+
   Padding _buildPostItem(double width, double height) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -313,6 +328,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         (route) => false);
   }
 
+  _doNavigateToEditScreen() async {
+    await UserDAO().get().then((value) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => EditScreen(
+            user: value.data,
+          ),
+        ),
+      );
+    });
+  }
+
   _doNavigateToFollowingScreen() {
     Navigator.of(context).push(
       CupertinoPageRoute(
@@ -324,9 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _doNavigateToFollowerScreen(String id) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => FollowerScreen(
-          id: id,
-        ),
+        builder: (context) => FollowerScreen(),
       ),
     );
   }
@@ -347,62 +372,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title: 'Seguir',
+      title:
+          widget.user.followers.toString().contains(id) ? 'Seguir' : 'Seguindo',
       titleColor: kSkillaPurple,
       borderColor: kPurpleColor,
       backgroundColor: Colors.white,
-      onPressed: () {},
-    );
-  }
-
-  Widget _loadImage(String url) {
-    if (url != null && url.isNotEmpty) {
-      return CachedNetworkImage(
-        placeholder: (context, url) =>
-            _buildPlaceholder(context, _height, _width),
-        errorWidget: (context, url, error) =>
-            _buildPlaceholder(context, _height, _width),
-        imageUrl: url,
-        height: _height,
-        width: _width,
-        fit: BoxFit.cover,
-        imageBuilder: (context, imgProvider) {
-          return _buildImageFromURL(imgProvider);
-        },
-      );
-    }
-
-    return _buildPlaceholder(context, _height, _width);
-  }
-
-  ClipRRect _buildPlaceholder(
-      BuildContext context, double height, double width) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-
-  ClipRRect _buildImageFromURL(ImageProvider imgProvider) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: Container(
-        height: _height,
-        width: _width,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: imgProvider,
-          ),
-        ),
-      ),
+      onPressed: () {
+        if (widget.user.followers.toString().contains(id)) {
+          print("Seguir");
+        }
+        print("Seguindo");
+      },
     );
   }
 }

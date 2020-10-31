@@ -117,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                     child: Row(
                       children: [
-                        _loadImage(user.avatar),
+                        Utils.loadImage(user.avatar, context, true),
                         SizedBox(
                           width: 15.0,
                         ),
@@ -136,57 +136,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _loadImage(String url) {
-    if (url != null && url.isNotEmpty) {
-      return CachedNetworkImage(
-        placeholder: (context, url) =>
-            _buildPlaceholder(context, _height, _width),
-        errorWidget: (context, url, error) =>
-            _buildPlaceholder(context, _height, _width),
-        imageUrl: url,
-        height: _height,
-        width: _width,
-        fit: BoxFit.cover,
-        imageBuilder: (context, imgProvider) {
-          return _buildImageFromURL(imgProvider);
-        },
-      );
-    }
-
-    return _buildPlaceholder(context, _height, _width);
-  }
-
-  ClipRRect _buildPlaceholder(
-      BuildContext context, double height, double width) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-
-  ClipRRect _buildImageFromURL(ImageProvider imgProvider) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: Container(
-        height: _height,
-        width: _width,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: imgProvider,
-          ),
-        ),
-      ),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -10,6 +11,11 @@ import 'package:skilla/model/user.dart';
 class Utils {
   static String appLanguage;
   static List<User> listOfUsers;
+
+  static double _height = 120.0;
+  static double _width = 120.0;
+  static double _heightOther = 40.0;
+  static double _widthOther = 40.0;
 
   static EdgeInsets getPaddingDefault({double left, double top, double right}) {
     return EdgeInsets.fromLTRB(left != null ? left : 20.0,
@@ -58,5 +64,70 @@ class Utils {
   static Future cleanDataBase() async {
     await AuthDAO().cleanTable();
     await UserDAO().cleanTable();
+  }
+
+  static Future cleanDataBaseUser() async {
+    await UserDAO().cleanTable();
+  }
+
+  static Widget loadImage(String url, BuildContext context, bool isOther) {
+    if (url != null && url.isNotEmpty) {
+      return CachedNetworkImage(
+        placeholder: (context, url) => _buildPlaceholder(
+          context,
+          isOther ? _heightOther : _height,
+          isOther ? _widthOther : _width,
+        ),
+        errorWidget: (context, url, error) => _buildPlaceholder(
+          context,
+          isOther ? _heightOther : _height,
+          isOther ? _widthOther : _width,
+        ),
+        imageUrl: url,
+        height: isOther ? _heightOther : _height,
+        width: isOther ? _widthOther : _width,
+        fit: BoxFit.cover,
+        imageBuilder: (context, imgProvider) {
+          return _buildImageFromURL(imgProvider, isOther);
+        },
+      );
+    }
+
+    return _buildPlaceholder(
+      context,
+      isOther ? _heightOther : _height,
+      isOther ? _widthOther : _width,
+    );
+  }
+
+  static ClipRRect _buildPlaceholder(
+      BuildContext context, double height, double width) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
+  static ClipRRect _buildImageFromURL(ImageProvider imgProvider, bool isOther) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Container(
+        height: isOther ? _heightOther : _height,
+        width: isOther ? _widthOther : _width,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: imgProvider,
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 
 class ProfileBloc {
@@ -14,6 +15,7 @@ class ProfileBloc {
   StreamController<BaseResponse<int>> followerCountController;
   StreamController<BaseResponse<int>> followingCountController;
   String id;
+  String userEmail;
 
   ProfileBloc() {
     fullNameController = StreamController();
@@ -37,6 +39,10 @@ class ProfileBloc {
     postCountController.close();
     followerCountController.close();
     followingCountController.close();
+  }
+
+  Future<BaseResponse<User>> getUser() async {
+    return await UserDAO().get();
   }
 
   getUserData() async {

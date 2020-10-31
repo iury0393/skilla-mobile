@@ -5,7 +5,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:skilla/network/config/custom_interceptors.dart';
 import 'package:skilla/utils/constants.dart';
 
-enum HttpMethod { get, post, patch, delete }
+enum HttpMethod { get, post, patch, put, delete }
 
 class RequestConfig {
   final String path;
@@ -70,6 +70,17 @@ class APIService {
           body = jsonEncode(config.body);
         }
         final response = await dio.patch(url, data: body).timeout(_timeout);
+        responseJson = _handlerResponse(response);
+        break;
+      case HttpMethod.put:
+        print(url);
+        var body;
+        if (config.body is FormData) {
+          body = config.body;
+        } else {
+          body = jsonEncode(config.body);
+        }
+        final response = await dio.put(url, data: body).timeout(_timeout);
         responseJson = _handlerResponse(response);
         break;
       case HttpMethod.delete:

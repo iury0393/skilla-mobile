@@ -35,6 +35,24 @@ class User {
       this.following,
       this.posts});
 
+  generateDataFromUser(User user) {
+    return User(
+        id: user.id,
+        avatar: user.avatar,
+        fullname: user.fullname,
+        username: user.username,
+        website: user.website,
+        bio: user.bio,
+        email: user.email,
+        followersCount: user.followersCount,
+        followingCount: user.followingCount,
+        postCount: user.postCount,
+        password: user.password,
+        posts: user.posts,
+        followers: user.followers,
+        following: user.following);
+  }
+
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
