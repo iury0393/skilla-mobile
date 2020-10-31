@@ -13,6 +13,7 @@ class ProfileBloc {
   StreamController<BaseResponse<int>> postCountController;
   StreamController<BaseResponse<int>> followerCountController;
   StreamController<BaseResponse<int>> followingCountController;
+  String id;
 
   ProfileBloc() {
     fullNameController = StreamController();
@@ -40,7 +41,7 @@ class ProfileBloc {
 
   getUserData() async {
     var user = await UserDAO().get();
-
+    id = user.data.id;
     fullNameController.add(BaseResponse.completed(data: user.data.fullname));
     userNameController.add(BaseResponse.completed(data: user.data.username));
     emailController.add(BaseResponse.completed(data: user.data.email));

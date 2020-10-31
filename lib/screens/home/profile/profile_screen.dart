@@ -138,8 +138,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return Text(
                             widget.user != null
                                 ? widget.user.postCount != 1
-                                    ? '${snapshot.data?.data} Posts'
-                                    : '${snapshot.data?.data} Post'
+                                    ? '${widget.user.postCount} Posts'
+                                    : '${widget.user.postCount} Post'
                                 : snapshot.data?.data != 1
                                     ? '${snapshot.data?.data} Posts'
                                     : '${snapshot.data?.data} Post',
@@ -177,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return Container();
                         }),
                     onTap: () {
-                      _doNavigateToFollowerScreen();
+                      _doNavigateToFollowerScreen(_bloc.id);
                     },
                   ),
                   GestureDetector(
@@ -321,10 +321,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _doNavigateToFollowerScreen() {
+  _doNavigateToFollowerScreen(String id) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => FollowerScreen(),
+        builder: (context) => FollowerScreen(
+          id: id,
+        ),
       ),
     );
   }

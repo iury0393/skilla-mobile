@@ -18,7 +18,7 @@ class UserDAO implements BaseDao<User> {
 
   @override
   String get createTableQuery => "CREATE TABLE $_tableName("
-      "$_columnId CHAR(36) PRIMARY KEY, "
+      "$_columnId TEXT PRIMARY KEY, "
       "$_columnFullName TEXT,"
       "$_columnUserName TEXT,"
       "$_columnAvatar TEXT,"
