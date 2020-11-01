@@ -1,6 +1,6 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:skilla/screens/home/feed_screen.dart';
+import 'package:skilla/screens/home/feed/feed_screen.dart';
 import 'package:skilla/screens/home/opportunities_screen.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/screens/home/search_screen.dart';

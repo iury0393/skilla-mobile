@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skilla/bloc/search_bloc.dart';
+import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
@@ -11,25 +11,21 @@ import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
-class SearchScreen extends StatefulWidget {
-  SearchScreen({Key key}) : super(key: key);
+class LikesScreen extends StatefulWidget {
+  final User user;
+  const LikesScreen({Key key, this.user}) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _LikesScreenState createState() => _LikesScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  final _bloc = SearchBloc();
+class _LikesScreenState extends State<LikesScreen> {
+  final _bloc = LikesBloc();
 
   @override
   void initState() {
     super.initState();
-    _bloc.getUser().then((value) {
-      setState(() {
-        _bloc.userEmail = value.data.email;
-      });
-    });
-    _bloc.doRequestGetUsers();
+    _bloc.doRequestGetLikes();
   }
 
   @override
@@ -48,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Padding(
         padding: Utils.getPaddingDefault(),
         child: StreamBuilder<BaseResponse<List<User>>>(
-          stream: _bloc.recommendedController.stream,
+          stream: _bloc.likesController.stream,
           builder: (context, snapshot) {
             switch (snapshot.data?.status) {
               case Status.LOADING:
@@ -70,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     return Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Não existe mais ninguém para seguir',
+                        'Ninguem curtiu sua publicação',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyles.paragraph(
@@ -104,35 +100,39 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 15.0),
-          child: GestureDetector(
-            child: user.email == _bloc.userEmail
-                ? Container()
-                : GestureDetector(
-                    onTap: () {
-                      _doNavigateToProfileScreen(user);
-                    },
-                    child: Row(
-                      children: [
-                        Utils.loadImage(user.avatar, context, true),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          user.fullname,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyles.paragraph(
-                            TextSize.large,
-                            weight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
+          child: _buildLikersList(user),
         ),
       ],
     );
+  }
+
+  Widget _buildLikersList(User user) {
+    if (user.email != _bloc.userEmail) {
+      return GestureDetector(
+        onTap: () {
+          _doNavigateToProfileScreen(user);
+        },
+        child: Row(
+          children: [
+            Utils.loadImage(user.avatar, context, true),
+            SizedBox(
+              width: 15.0,
+            ),
+            Text(
+              user.fullname,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.large,
+                weight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   _doNavigateToProfileScreen(User user) {

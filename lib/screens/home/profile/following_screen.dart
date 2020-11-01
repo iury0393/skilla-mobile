@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/following_bloc.dart';
@@ -22,8 +21,6 @@ class FollowingScreen extends StatefulWidget {
 
 class _FollowingScreenState extends State<FollowingScreen> {
   final _bloc = FollowingBloc();
-  double _height = 40.0;
-  double _width = 40.0;
 
   @override
   void initState() {

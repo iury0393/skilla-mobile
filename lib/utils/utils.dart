@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:package_info/package_info.dart';
 import 'package:skilla/dao/auth_dao.dart';
 import 'package:skilla/dao/user_dao.dart';
@@ -129,5 +130,19 @@ class Utils {
         ),
       ),
     );
+  }
+
+  static String convertToDisplayTimeDetail(
+      String timeStamp, BuildContext context) {
+    try {
+      Jiffy.locale(Utils.appLanguage);
+
+      var jiffy = Jiffy(timeStamp).format("dd [de] ");
+      var jiffyMonth = Jiffy(timeStamp).format("MMMM [de] yyyy");
+
+      return "$jiffy${jiffyMonth[0].toUpperCase()}${jiffyMonth.substring(1)}";
+    } catch (e) {
+      return timeStamp;
+    }
   }
 }

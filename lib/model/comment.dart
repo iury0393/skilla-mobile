@@ -1,18 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:skilla/model/post.dart';
-import 'package:skilla/model/user.dart';
+import 'package:skilla/model/user_comment.dart';
 
 part 'comment.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Comment {
   String id;
-  User user;
-  Post post;
+  UserComment user;
   String text;
-  String createdAt;
+  bool isCommentMine;
 
-  Comment({this.post, this.text, this.createdAt, this.user, this.id});
+  Comment({this.text, this.user, this.id, this.isCommentMine});
 
   factory Comment.fromJson(Map<String, dynamic> json) =>
       _$CommentFromJson(json);
@@ -21,6 +19,6 @@ class Comment {
 
   @override
   String toString() {
-    return "id: $id, user: $user, post: $post, text: $text, createdAt: $createdAt";
+    return "id: $id, user: $user, isCommentMine: $isCommentMine, text: $text";
   }
 }

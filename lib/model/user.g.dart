@@ -14,7 +14,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     followersCount: json['followersCount'] as int,
     followingCount: json['followingCount'] as int,
     fullname: json['fullname'] as String,
-    id: json['id'] as String,
+    id: json['id'],
     password: json['password'] as String,
     postCount: json['postCount'] as int,
     username: json['username'] as String,

@@ -49,6 +49,8 @@ dependencies:
   cached_network_image: ^2.2.0+1
   # Used to render pdf files
   native_pdf_view: ^3.8.0
+  # Used to formatter dates
+  jiffy: ^3.0.1
   
 dev_dependencies:
   flutter_test:

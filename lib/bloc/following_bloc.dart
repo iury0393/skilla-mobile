@@ -27,12 +27,6 @@ class FollowingBloc {
     try {
       var response = await FollowingNetwork().doRequestgetUsers();
       listFollowings = response;
-      // var user = await getUser();
-      // response.forEach((element) {
-      //   if (element.following.toString().contains(user.data.id)) {
-      //     listFollowers.add(element);
-      //   }
-      // });
       followingController.add(BaseResponse.completed(data: listFollowings));
     } catch (e) {
       followingController.add(BaseResponse.error(e.toString()));

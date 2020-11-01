@@ -4,7 +4,7 @@ part 'user.g.dart';
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class User {
-  String id;
+  var id;
   String fullname;
   String username;
   String email;
