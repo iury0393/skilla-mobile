@@ -1,12 +1,17 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
+import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/likes_screen.dart';
+import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
+
+import 'native_dialog.dart';
 
 class PostItem extends StatefulWidget {
   final Post post;
@@ -18,9 +23,28 @@ class PostItem extends StatefulWidget {
 }
 
 class _PostItemState extends State<PostItem> {
+  final _bloc = FeedBloc();
+
   @override
   void initState() {
     super.initState();
+    _bloc.userController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          _doNavigateToProfileScreen(event.data);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   @override
@@ -54,16 +78,19 @@ class _PostItemState extends State<PostItem> {
                       ),
                     ],
                   ),
+                  onTap: () async {
+                    await _bloc.doRequestGetUser(widget.post.user.username);
+                  },
                 ),
-                widget.user.email != widget.post.user.email
-                    ? Container()
-                    : IconButton(
+                widget.user.id == widget.post.user.id
+                    ? IconButton(
                         icon: Icon(
                           FeatherIcons.moreHorizontal,
                           color: kSkillaPurple,
                         ),
                         onPressed: () {},
-                      ),
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -97,7 +124,7 @@ class _PostItemState extends State<PostItem> {
                   ),
                 ),
                 onTap: () {
-                  _doNavigateToLikeScreen();
+                  _doNavigateToLikeScreen(widget.post.user, widget.post);
                 },
               ),
               SizedBox(
@@ -116,7 +143,7 @@ class _PostItemState extends State<PostItem> {
                   ),
                 ),
                 onTap: () {
-                  _doNavigateToLikeScreen();
+                  _doNavigateToLikeScreen(widget.post.user, widget.post);
                 },
               ),
               SizedBox(
@@ -188,11 +215,22 @@ class _PostItemState extends State<PostItem> {
     );
   }
 
-  _doNavigateToLikeScreen() {
+  _doNavigateToLikeScreen(User user, Post post) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => LikesScreen(
-          user: widget.user,
+          user: user,
+          post: post,
+        ),
+      ),
+    );
+  }
+
+  _doNavigateToProfileScreen(User user) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => ProfileScreen(
+          user: user,
         ),
       ),
     );

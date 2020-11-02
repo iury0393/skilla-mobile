@@ -19,7 +19,8 @@ import 'edit_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
-  ProfileScreen({Key key, this.user}) : super(key: key);
+  final String id;
+  ProfileScreen({Key key, this.user, this.id}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -186,7 +187,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return Container();
                         }),
                     onTap: () {
-                      _doNavigateToFollowerScreen(_bloc.id);
+                      if (widget.user != null) {
+                        _doNavigateToFollowerScreen(widget.user.id);
+                      } else {
+                        _doNavigateToFollowerScreen(_bloc.id);
+                      }
                     },
                   ),
                   GestureDetector(
@@ -209,7 +214,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return Container();
                         }),
                     onTap: () {
-                      _doNavigateToFollowingScreen();
+                      if (widget.user != null) {
+                        _doNavigateToFollowingScreen(widget.user.id);
+                      } else {
+                        _doNavigateToFollowingScreen(_bloc.id);
+                      }
                     },
                   ),
                 ],
@@ -340,10 +349,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  _doNavigateToFollowingScreen() {
+  _doNavigateToFollowingScreen(String id) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => FollowingScreen(),
+        builder: (context) => FollowingScreen(
+          id: id,
+        ),
       ),
     );
   }
@@ -351,7 +362,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _doNavigateToFollowerScreen(String id) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => FollowerScreen(),
+        builder: (context) => FollowerScreen(
+          id: id,
+        ),
       ),
     );
   }

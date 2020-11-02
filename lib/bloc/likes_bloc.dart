@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -10,8 +9,12 @@ class LikesBloc {
   StreamController<BaseResponse<List<User>>> likesController;
   List<User> listUsers = List<User>();
   String userEmail;
+  User _user;
+  Post _userPost;
 
-  LikesBloc() {
+  LikesBloc(User user, Post post) {
+    _user = user;
+    _userPost = post;
     likesController = StreamController();
   }
 
@@ -24,13 +27,14 @@ class LikesBloc {
     try {
       var responseFeed = await LikesNetwork().doRequestgetFeed();
       var responseUser = await LikesNetwork().doRequestgetUsers();
-      print(responseUser);
       responseFeed.forEach((feed) {
-        responseUser.forEach((user) {
-          if (feed.likes.toString().contains(user.id)) {
-            print("object");
-          }
-        });
+        if (feed.caption == _userPost.caption) {
+          responseUser.forEach((user) {
+            if (feed.likes.toString().contains(user.id)) {
+              listUsers.add(user);
+            }
+          });
+        }
       });
       likesController.add(BaseResponse.completed(data: listUsers));
     } catch (e) {

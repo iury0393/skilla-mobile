@@ -4,6 +4,7 @@ import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
@@ -13,18 +14,20 @@ import 'package:skilla/utils/utils.dart';
 
 class LikesScreen extends StatefulWidget {
   final User user;
-  const LikesScreen({Key key, this.user}) : super(key: key);
+  final Post post;
+  const LikesScreen({Key key, this.user, this.post}) : super(key: key);
 
   @override
   _LikesScreenState createState() => _LikesScreenState();
 }
 
 class _LikesScreenState extends State<LikesScreen> {
-  final _bloc = LikesBloc();
+  LikesBloc _bloc;
 
   @override
   void initState() {
     super.initState();
+    _bloc = LikesBloc(widget.user, widget.post);
     _bloc.doRequestGetLikes();
   }
 
@@ -107,32 +110,28 @@ class _LikesScreenState extends State<LikesScreen> {
   }
 
   Widget _buildLikersList(User user) {
-    if (user.email != _bloc.userEmail) {
-      return GestureDetector(
-        onTap: () {
-          _doNavigateToProfileScreen(user);
-        },
-        child: Row(
-          children: [
-            Utils.loadImage(user.avatar, context, true),
-            SizedBox(
-              width: 15.0,
+    return GestureDetector(
+      onTap: () {
+        _doNavigateToProfileScreen(user);
+      },
+      child: Row(
+        children: [
+          Utils.loadImage(user.avatar, context, true),
+          SizedBox(
+            width: 15.0,
+          ),
+          Text(
+            user.fullname,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.paragraph(
+              TextSize.large,
+              weight: FontWeight.w400,
             ),
-            Text(
-              user.fullname,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.paragraph(
-                TextSize.large,
-                weight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+          ),
+        ],
+      ),
+    );
   }
 
   _doNavigateToProfileScreen(User user) {

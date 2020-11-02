@@ -14,7 +14,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     followersCount: json['followersCount'] as int,
     followingCount: json['followingCount'] as int,
     fullname: json['fullname'] as String,
-    id: json['id'],
+    id: json['_id'] as String,
     password: json['password'] as String,
     postCount: json['postCount'] as int,
     username: json['username'] as String,
@@ -34,7 +34,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
+  writeNotNull('_id', instance.id);
   writeNotNull('fullname', instance.fullname);
   writeNotNull('username', instance.username);
   writeNotNull('email', instance.email);

@@ -77,12 +77,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 default:
                   if (snapshot.data != null) {
                     if (snapshot.data.data.isNotEmpty) {
-                      return GestureDetector(
-                        child: _buildListFeed(snapshot),
-                        onTap: () {
-                          print(snapshot.data.data.elementAt(1).comments.text);
-                        },
-                      );
+                      return _buildListFeed(snapshot);
                     } else {
                       return Align(
                         alignment: Alignment.center,

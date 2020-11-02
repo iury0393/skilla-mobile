@@ -7,7 +7,7 @@ class FollowingNetwork {
 
   Future<List<User>> doRequestgetUsers() async {
     final response = await service.doRequest(
-      RequestConfig('users', HttpMethod.get),
+      RequestConfig('auth/users', HttpMethod.get),
     );
 
     return Users.fromJson(response).data;

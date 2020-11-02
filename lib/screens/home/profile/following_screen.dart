@@ -20,11 +20,12 @@ class FollowingScreen extends StatefulWidget {
 }
 
 class _FollowingScreenState extends State<FollowingScreen> {
-  final _bloc = FollowingBloc();
+  FollowingBloc _bloc;
 
   @override
   void initState() {
     super.initState();
+    _bloc = FollowingBloc(widget.id);
     _bloc.getUser().then((value) {
       setState(() {
         _bloc.userEmail = value.data.email;
@@ -112,32 +113,28 @@ class _FollowingScreenState extends State<FollowingScreen> {
   }
 
   Widget _buildFollowingList(User user) {
-    if (user.email != _bloc.userEmail) {
-      return GestureDetector(
-        onTap: () {
-          _doNavigateToProfileScreen(user);
-        },
-        child: Row(
-          children: [
-            Utils.loadImage(user.avatar, context, true),
-            SizedBox(
-              width: 15.0,
+    return GestureDetector(
+      onTap: () {
+        _doNavigateToProfileScreen(user);
+      },
+      child: Row(
+        children: [
+          Utils.loadImage(user.avatar, context, true),
+          SizedBox(
+            width: 15.0,
+          ),
+          Text(
+            user.fullname,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.paragraph(
+              TextSize.large,
+              weight: FontWeight.w400,
             ),
-            Text(
-              user.fullname,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.paragraph(
-                TextSize.large,
-                weight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+          ),
+        ],
+      ),
+    );
   }
 
   _doNavigateToProfileScreen(User user) {

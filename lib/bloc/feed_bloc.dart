@@ -8,14 +8,17 @@ import 'package:skilla/network/feed_network.dart';
 
 class FeedBloc {
   StreamController<BaseResponse<List<Post>>> feedController;
+  StreamController<BaseResponse<User>> userController;
   String userEmail;
   User user;
 
   FeedBloc() {
+    userController = StreamController();
     feedController = StreamController();
   }
 
   dispose() {
+    userController.close();
     feedController.close();
   }
 
@@ -30,6 +33,16 @@ class FeedBloc {
       feedController.add(BaseResponse.completed(data: response));
     } catch (e) {
       feedController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  doRequestGetUser(String username) async {
+    userController.add(BaseResponse.loading());
+    try {
+      var response = await FeedNetwork().doRequestGetUser(username);
+      userController.add(BaseResponse.completed(data: response));
+    } catch (e) {
+      userController.add(BaseResponse.error(e.toString()));
     }
   }
 }

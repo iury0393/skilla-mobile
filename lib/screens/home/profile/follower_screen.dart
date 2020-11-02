@@ -12,17 +12,19 @@ import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
 class FollowerScreen extends StatefulWidget {
-  const FollowerScreen({Key key}) : super(key: key);
+  final String id;
+  const FollowerScreen({Key key, this.id}) : super(key: key);
 
   @override
   _FollowerScreenState createState() => _FollowerScreenState();
 }
 
 class _FollowerScreenState extends State<FollowerScreen> {
-  final _bloc = FollowerBloc();
+  FollowerBloc _bloc;
 
   @override
   void initState() {
+    _bloc = FollowerBloc(widget.id);
     super.initState();
     _bloc.getUser().then((value) {
       setState(() {
@@ -111,32 +113,28 @@ class _FollowerScreenState extends State<FollowerScreen> {
   }
 
   Widget _buildFollowersList(User user) {
-    if (user.email != _bloc.userEmail) {
-      return GestureDetector(
-        onTap: () {
-          _doNavigateToProfileScreen(user);
-        },
-        child: Row(
-          children: [
-            Utils.loadImage(user.avatar, context, true),
-            SizedBox(
-              width: 15.0,
+    return GestureDetector(
+      onTap: () {
+        _doNavigateToProfileScreen(user);
+      },
+      child: Row(
+        children: [
+          Utils.loadImage(user.avatar, context, true),
+          SizedBox(
+            width: 15.0,
+          ),
+          Text(
+            user.fullname,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.paragraph(
+              TextSize.large,
+              weight: FontWeight.w400,
             ),
-            Text(
-              user.fullname,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.paragraph(
-                TextSize.large,
-                weight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+          ),
+        ],
+      ),
+    );
   }
 
   _doNavigateToProfileScreen(User user) {

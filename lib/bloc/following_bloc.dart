@@ -9,8 +9,10 @@ class FollowingBloc {
   StreamController<BaseResponse<List<User>>> followingController;
   List<User> listFollowings = List<User>();
   String userEmail;
+  String _id;
 
-  FollowingBloc() {
+  FollowingBloc(String id) {
+    _id = id;
     followingController = StreamController();
   }
 
@@ -25,8 +27,18 @@ class FollowingBloc {
   doRequestGetUsers() async {
     followingController.add(BaseResponse.loading());
     try {
+      listFollowings = List<User>();
+
       var response = await FollowingNetwork().doRequestgetUsers();
-      listFollowings = response;
+      response.forEach((element) {
+        if (element.followers.toString().contains(_id)) {
+          listFollowings.add(element);
+        }
+      });
+      print(_id);
+      listFollowings.forEach((user) {
+        print(user.fullname);
+      });
       followingController.add(BaseResponse.completed(data: listFollowings));
     } catch (e) {
       followingController.add(BaseResponse.error(e.toString()));
