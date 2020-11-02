@@ -3,8 +3,14 @@ import 'dart:async';
 import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/network/profile_network.dart';
+import 'package:skilla/network/user_network.dart';
+import 'package:skilla/utils/utils.dart';
 
 class ProfileBloc {
+  UserNetwork _userService = UserNetwork();
+  bool isChecked = false;
+  StreamController<BaseResponse<void>> followController;
   StreamController<BaseResponse<String>> fullNameController;
   StreamController<BaseResponse<String>> userNameController;
   StreamController<BaseResponse<String>> emailController;
@@ -14,10 +20,9 @@ class ProfileBloc {
   StreamController<BaseResponse<int>> postCountController;
   StreamController<BaseResponse<int>> followerCountController;
   StreamController<BaseResponse<int>> followingCountController;
-  String id;
-  String userEmail;
 
   ProfileBloc() {
+    followController = StreamController();
     fullNameController = StreamController();
     userNameController = StreamController();
     emailController = StreamController();
@@ -30,6 +35,7 @@ class ProfileBloc {
   }
 
   dispose() {
+    followController.close();
     fullNameController.close();
     userNameController.close();
     emailController.close();
@@ -47,7 +53,6 @@ class ProfileBloc {
 
   getUserData() async {
     var user = await UserDAO().get();
-    id = user.data.id;
     fullNameController.add(BaseResponse.completed(data: user.data.fullname));
     userNameController.add(BaseResponse.completed(data: user.data.username));
     emailController.add(BaseResponse.completed(data: user.data.email));
@@ -59,5 +64,67 @@ class ProfileBloc {
         .add(BaseResponse.completed(data: user.data.followersCount));
     followingCountController
         .add(BaseResponse.completed(data: user.data.followingCount));
+  }
+
+  doRequestFollow(String id) async {
+    followController.add(BaseResponse.loading());
+    try {
+      await ProfileNetwork().doRequestFollow(id);
+      _doRequestGetUserLoggedData();
+    } catch (e) {
+      followController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  doRequestUnfollow(String id) async {
+    followController.add(BaseResponse.loading());
+    try {
+      await ProfileNetwork().doRequestUnfollow(id);
+      _doRequestGetUserLoggedData();
+    } catch (e) {
+      followController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _doRequestGetUserLoggedData() async {
+    try {
+      var userResponse = await _userService.doRequestGetUser();
+      _updateUserInDB(userResponse);
+    } catch (e) {
+      followController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _updateUserInDB(User userData) async {
+    try {
+      User user = User().generateDataFromUser(userData);
+      print(user);
+      _saveUserInDB(user);
+    } catch (e) {
+      followController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _saveUserInDB(User user) async {
+    try {
+      await Utils.cleanDataBaseUser();
+      await UserDAO().save(user);
+      followController.add(BaseResponse.completed());
+    } catch (e) {
+      followController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  Future<bool> isFollowing(String userId) async {
+    var response = await ProfileNetwork().doRequestgetUsers();
+    var userSelf = await UserDAO().get();
+    response.forEach((user) {
+      if (user.id == userId) {
+        if (user.followers.toString().contains(userSelf.data.id)) {
+          isChecked = true;
+        }
+      }
+    });
+    return isChecked;
   }
 }

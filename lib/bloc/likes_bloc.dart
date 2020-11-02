@@ -9,11 +9,9 @@ class LikesBloc {
   StreamController<BaseResponse<List<User>>> likesController;
   List<User> listUsers = List<User>();
   String userEmail;
-  User _user;
   Post _userPost;
 
   LikesBloc(User user, Post post) {
-    _user = user;
     _userPost = post;
     likesController = StreamController();
   }

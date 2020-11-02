@@ -63,7 +63,7 @@ class EditBloc {
         username: textUserNameController.text,
         website:
             textWebsiteController.text == "" ? "" : textWebsiteController.text,
-        bio: textWebsiteController.text == "" ? "" : textWebsiteController.text,
+        bio: textBioController.text == "" ? "" : textBioController.text,
       ).toJson();
       await EditNetwork().doRequestEdit(body);
       _doRequestGetUserLoggedData();

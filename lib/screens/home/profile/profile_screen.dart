@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
+import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/user.dart';
@@ -19,8 +20,7 @@ import 'edit_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
-  final String id;
-  ProfileScreen({Key key, this.user, this.id}) : super(key: key);
+  ProfileScreen({Key key, this.user}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -28,20 +28,43 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _bloc = ProfileBloc();
-  String id;
+  String _id;
+  bool _isFollowing = false;
 
   @override
   void initState() {
     super.initState();
     _bloc.getUser().then((value) {
       setState(() {
-        _bloc.userEmail = value.data.email;
-        id = value.data.id;
+        _id = value.data.id;
       });
     });
     _bloc.getUserData();
+
+    widget.user != null
+        ? _bloc.isFollowing(widget.user.id).then((value) {
+            _isFollowing = value;
+          })
+        : print("Usuário próprio");
     widget.user != null ? print(widget.user) : print("Usuário próprio");
     EventCenter.getInstance().editEvent.subscribe(_refreshPage);
+
+    _bloc.followController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   @override
@@ -112,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               widget.user != null
                   ? Padding(
                       padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: _buildFollowButton(),
+                      child: _buildFollowButton(widget.user.id),
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (widget.user != null) {
                         _doNavigateToFollowerScreen(widget.user.id);
                       } else {
-                        _doNavigateToFollowerScreen(_bloc.id);
+                        _doNavigateToFollowerScreen(_id);
                       }
                     },
                   ),
@@ -217,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (widget.user != null) {
                         _doNavigateToFollowingScreen(widget.user.id);
                       } else {
-                        _doNavigateToFollowingScreen(_bloc.id);
+                        _doNavigateToFollowingScreen(_id);
                       }
                     },
                   ),
@@ -246,30 +269,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return Container();
                     }),
               ),
-              StreamBuilder<BaseResponse<String>>(
-                  stream: _bloc.bioController.stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      if (snapshot.data.data.isNotEmpty) {
-                        return Text(
-                          widget.user != null
-                              ? widget.user.bio != null
-                                  ? widget.user.bio
-                                  : ""
-                              : snapshot.data?.data != null
-                                  ? snapshot.data?.data
-                                  : "",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyles.paragraph(
-                            TextSize.large,
-                            weight: FontWeight.w400,
-                          ),
-                        );
-                      }
-                    }
-                    return Container();
-                  }),
+              widget.user != null
+                  ? Text(
+                      widget.user.bio != null ? widget.user.bio : "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.paragraph(
+                        TextSize.large,
+                        weight: FontWeight.w400,
+                      ),
+                    )
+                  : StreamBuilder<BaseResponse<String>>(
+                      stream: _bloc.bioController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data != null) {
+                          if (snapshot.data.data.isNotEmpty) {
+                            return Text(
+                              widget.user != null
+                                  ? widget.user.bio != null
+                                      ? widget.user.bio
+                                      : ""
+                                  : snapshot.data?.data != null
+                                      ? snapshot.data?.data
+                                      : "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyles.paragraph(
+                                TextSize.large,
+                                weight: FontWeight.w400,
+                              ),
+                            );
+                          }
+                        }
+                        return Container();
+                      }),
               Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: _buildSubmitButton(),
@@ -381,20 +414,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildFollowButton() {
+  Widget _buildFollowButton(String id) {
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title:
-          widget.user.followers.toString().contains(id) ? 'Seguir' : 'Seguindo',
+      title: _isFollowing ? 'Seguindo' : 'Seguir',
       titleColor: kSkillaPurple,
       borderColor: kPurpleColor,
       backgroundColor: Colors.white,
       onPressed: () {
-        if (widget.user.followers.toString().contains(id)) {
-          print("Seguir");
+        if (_isFollowing) {
+          // _bloc.doRequestUnfollow(id);
+          print("Seguindo");
+        } else {
+          // _bloc.doRequestFollow(id);
+          print("Não Seguindo");
         }
-        print("Seguindo");
       },
     );
   }
