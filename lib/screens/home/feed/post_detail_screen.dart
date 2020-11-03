@@ -52,6 +52,24 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           break;
       }
     });
+
+    _bloc.addCommentController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          _bloc.textCommentController.clear();
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   @override
@@ -191,11 +209,22 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 20.0),
-              child: TextField(
-                maxLines: 2,
-                decoration: InputDecoration.collapsed(
-                  hintText: "Adicione um comentário",
-                ),
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 2,
+                    child: _buildCommentTextField(),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.send,
+                      color: kSkillaPurple,
+                    ),
+                    onPressed: () {
+                      _bloc.doRequestAddComment(widget.post.id);
+                    },
+                  ),
+                ],
               ),
             ),
             StreamBuilder<BaseResponse<List<Comment>>>(
@@ -225,6 +254,22 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 }),
           ],
         ),
+      ),
+    );
+  }
+
+  TextField _buildCommentTextField() {
+    return TextField(
+      maxLines: 1,
+      textCapitalization: TextCapitalization.none,
+      controller: _bloc.textCommentController,
+      style: TextStyles.textField(TextSize.medium),
+      decoration: InputDecoration(
+        hintText: 'Adicione um comentário',
+        hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+        fillColor: Colors.white,
+        filled: true,
       ),
     );
   }

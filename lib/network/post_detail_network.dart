@@ -12,4 +12,10 @@ class PostDetailNetwork {
 
     return Posts.fromJson(response).data;
   }
+
+  Future doRequestAddComment(String postId, Map<String, dynamic> body) async {
+    await service.doRequest(
+      RequestConfig('posts/$postId/comments', HttpMethod.post, body: body),
+    );
+  }
 }
