@@ -22,3 +22,20 @@ class Comment {
     return "id: $id, user: $user, isCommentMine: $isCommentMine, text: $text";
   }
 }
+
+@JsonSerializable(explicitToJson: true)
+class Comments {
+  List<Comment> comments;
+
+  Comments({this.comments});
+
+  factory Comments.fromJson(Map<String, dynamic> json) =>
+      _$CommentsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CommentsToJson(this);
+
+  @override
+  String toString() {
+    return "comments: $comments";
+  }
+}

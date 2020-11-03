@@ -9,7 +9,7 @@ part of 'post.dart';
 Post _$PostFromJson(Map<String, dynamic> json) {
   return Post(
     caption: json['caption'] as String,
-    commentCount: json['commentCount'] as int,
+    commentsCount: json['commentsCount'] as int,
     createdAt: json['createdAt'] == null
         ? null
         : DateTime.parse(json['createdAt'] as String),
@@ -35,7 +35,7 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'likes': instance.likes,
       'comments': instance.comments?.map((e) => e?.toJson())?.toList(),
       'likesCount': instance.likesCount,
-      'commentCount': instance.commentCount,
+      'commentsCount': instance.commentsCount,
       'createdAt': instance.createdAt?.toIso8601String(),
     };
 

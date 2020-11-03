@@ -23,3 +23,16 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'text': instance.text,
       'isCommentMine': instance.isCommentMine,
     };
+
+Comments _$CommentsFromJson(Map<String, dynamic> json) {
+  return Comments(
+    comments: (json['comments'] as List)
+        ?.map((e) =>
+            e == null ? null : Comment.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$CommentsToJson(Comments instance) => <String, dynamic>{
+      'comments': instance.comments?.map((e) => e?.toJson())?.toList(),
+    };

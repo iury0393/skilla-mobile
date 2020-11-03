@@ -133,9 +133,9 @@ class _PostItemState extends State<PostItem> {
               ),
               GestureDetector(
                 child: Text(
-                  widget.post.commentCount == 1
-                      ? '${widget.post.likesCount} Comentário'
-                      : '${widget.post.likesCount} Comentários',
+                  widget.post.commentsCount == 1
+                      ? '${widget.post.commentsCount} Comentário'
+                      : '${widget.post.commentsCount} Comentários',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.paragraph(

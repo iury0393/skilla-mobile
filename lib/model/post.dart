@@ -13,12 +13,12 @@ class Post {
   var likes;
   List<Comment> comments;
   int likesCount;
-  int commentCount;
+  int commentsCount;
   DateTime createdAt;
 
   Post(
       {this.caption,
-      this.commentCount,
+      this.commentsCount,
       this.createdAt,
       this.likesCount,
       this.user,
@@ -33,7 +33,7 @@ class Post {
 
   @override
   String toString() {
-    return "id: $id, user: $user, caption: $caption, likesCount: $likesCount, commentCount: $commentCount, createdAt: $createdAt, files: $files, likes: $likes, comments: $comments";
+    return "id: $id, user: $user, caption: $caption, likesCount: $likesCount, commentsCount: $commentsCount, createdAt: $createdAt, files: $files, likes: $likes, comments: $comments";
   }
 }
 
