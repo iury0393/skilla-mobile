@@ -17,7 +17,7 @@ Post _$PostFromJson(Map<String, dynamic> json) {
     user: json['user'] == null
         ? null
         : User.fromJson(json['user'] as Map<String, dynamic>),
-    id: json['id'] as String,
+    id: json['_id'] as String,
     files: json['files'],
     comments: (json['comments'] as List)
         ?.map((e) =>
@@ -32,7 +32,7 @@ Post _$PostFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'user': instance.user?.toJson(),
       'caption': instance.caption,
-      'id': instance.id,
+      '_id': instance.id,
       'files': instance.files,
       'likes': instance.likes,
       'comments': instance.comments?.map((e) => e?.toJson())?.toList(),

@@ -21,4 +21,10 @@ class LikesNetwork {
 
     return Posts.fromJson(response).data;
   }
+
+  doRequestToggleLike(String postId) async {
+    await service.doRequest(
+      RequestConfig('posts/$postId/togglelike', HttpMethod.get),
+    );
+  }
 }

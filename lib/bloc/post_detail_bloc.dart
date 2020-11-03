@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:skilla/model/comment.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/post_detail_network.dart';
 

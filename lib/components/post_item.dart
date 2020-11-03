@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
+import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -24,6 +25,7 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> {
   final _bloc = FeedBloc();
+  LikesBloc _likeBloc;
 
   @override
   void initState() {
@@ -33,6 +35,27 @@ class _PostItemState extends State<PostItem> {
         case Status.COMPLETED:
           Navigator.pop(context);
           _doNavigateToProfileScreen(event.data);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+    _likeBloc = LikesBloc(widget.user, widget.post);
+
+    _likeBloc.toggleLikesController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          setState(() {
+            widget.post.isLiked = !widget.post.isLiked;
+          });
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
@@ -107,7 +130,9 @@ class _PostItemState extends State<PostItem> {
               widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
               color: kSkillaPurple,
             ),
-            onPressed: () {},
+            onPressed: () {
+              _likeBloc.doRequesttoggleLike(widget.post.id);
+            },
           ),
           Row(
             children: [
@@ -194,20 +219,6 @@ class _PostItemState extends State<PostItem> {
                   ),
                 ),
               ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 15.0, bottom: 25.0),
-            child: Text(
-              Utils.convertToDisplayTimeDetail(
-                  widget.post.createdAt.toString(), context),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.paragraph(
-                TextSize.medium,
-                weight: FontWeight.w400,
-                color: kSkillaPurple,
-              ),
             ),
           ),
         ],

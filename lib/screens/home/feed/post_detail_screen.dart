@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/bloc/post_detail_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
@@ -24,11 +25,33 @@ class PostDetailScreen extends StatefulWidget {
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
   final _bloc = PostDetailBloc();
+  LikesBloc _likeBloc;
   bool isLiked = false;
   @override
   void initState() {
     super.initState();
     _bloc.doRequestGetComments(widget.post.user.id);
+    _likeBloc = LikesBloc(widget.user, widget.post);
+
+    _likeBloc.toggleLikesController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          setState(() {
+            widget.post.isLiked = !widget.post.isLiked;
+          });
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   @override
@@ -96,7 +119,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         : Icons.favorite_border,
                     color: kSkillaPurple,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _likeBloc.doRequesttoggleLike(widget.post.id);
+                  },
                 ),
                 GestureDetector(
                   child: Text(

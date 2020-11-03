@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/profile_network.dart';
@@ -10,7 +11,9 @@ import 'package:skilla/utils/utils.dart';
 class ProfileBloc {
   UserNetwork _userService = UserNetwork();
   bool isChecked = false;
+  BaseResponse<User> user;
   StreamController<BaseResponse<void>> followController;
+  StreamController<BaseResponse<List<Post>>> postController;
   StreamController<BaseResponse<String>> fullNameController;
   StreamController<BaseResponse<String>> userNameController;
   StreamController<BaseResponse<String>> emailController;
@@ -20,9 +23,11 @@ class ProfileBloc {
   StreamController<BaseResponse<int>> postCountController;
   StreamController<BaseResponse<int>> followerCountController;
   StreamController<BaseResponse<int>> followingCountController;
+  List<Post> listPostsUser = List<Post>();
 
   ProfileBloc() {
     followController = StreamController();
+    postController = StreamController();
     fullNameController = StreamController();
     userNameController = StreamController();
     emailController = StreamController();
@@ -36,6 +41,7 @@ class ProfileBloc {
 
   dispose() {
     followController.close();
+    postController.close();
     fullNameController.close();
     userNameController.close();
     emailController.close();
@@ -52,7 +58,7 @@ class ProfileBloc {
   }
 
   getUserData() async {
-    var user = await UserDAO().get();
+    user = await UserDAO().get();
     fullNameController.add(BaseResponse.completed(data: user.data.fullname));
     userNameController.add(BaseResponse.completed(data: user.data.username));
     emailController.add(BaseResponse.completed(data: user.data.email));
@@ -64,6 +70,21 @@ class ProfileBloc {
         .add(BaseResponse.completed(data: user.data.followersCount));
     followingCountController
         .add(BaseResponse.completed(data: user.data.followingCount));
+  }
+
+  doRequestGetPosts(String id) async {
+    postController.add(BaseResponse.loading());
+    try {
+      var response = await ProfileNetwork().doRequestGetPosts();
+      response.forEach((post) {
+        if (post.user.id == id) {
+          listPostsUser.add(post);
+        }
+      });
+      postController.add(BaseResponse.completed(data: listPostsUser));
+    } catch (e) {
+      postController.add(BaseResponse.error(e.toString()));
+    }
   }
 
   doRequestFollow(String id) async {

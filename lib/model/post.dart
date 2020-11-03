@@ -8,6 +8,7 @@ part 'post.g.dart';
 class Post {
   User user;
   String caption;
+  @JsonKey(name: "_id")
   String id;
   var files;
   var likes;

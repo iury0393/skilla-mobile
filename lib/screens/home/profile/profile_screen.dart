@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
+import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/screens/home/feed/post_detail_screen.dart';
 import 'package:skilla/screens/home/profile/following_screen.dart';
 import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
@@ -39,6 +42,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _id = value.data.id;
       });
+      widget.user != null
+          ? _bloc.doRequestGetPosts(widget.user.id)
+          : _bloc.doRequestGetPosts(_id);
     });
     _bloc.getUserData();
 
@@ -49,6 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             });
           })
         : print("Usuário próprio");
+
     widget.user != null ? print(widget.user) : print("Usuário próprio");
     EventCenter.getInstance().editEvent.subscribe(_refreshPage);
 
@@ -335,13 +342,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildPostItem(width, height),
-                  _buildPostItem(width, height),
-                ],
-              ),
+              StreamBuilder<BaseResponse<List<Post>>>(
+                  stream: _bloc.postController.stream,
+                  builder: (context, snapshot) {
+                    switch (snapshot.data?.status) {
+                      case Status.LOADING:
+                        return Center(
+                          child: NativeLoading(animating: true),
+                        );
+                        break;
+                      case Status.ERROR:
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          NativeDialog.showErrorDialog(
+                              context, snapshot.data.message);
+                        });
+                        return Container();
+                        break;
+                      default:
+                        if (snapshot.data != null) {
+                          if (snapshot.data.data.isNotEmpty) {
+                            return Container(
+                              width: width,
+                              height: height / 5,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data.data.length,
+                                itemBuilder: (context, index) {
+                                  return _buildPostItem(
+                                    width,
+                                    height,
+                                    post: snapshot.data.data,
+                                    index: index,
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Você ainda não postou nada',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyles.paragraph(
+                                  TextSize.xLarge,
+                                  weight: FontWeight.w400,
+                                  color: kSkillaPurple,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                        return Container();
+                    }
+                  }),
             ],
           ),
         ),
@@ -355,13 +409,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Padding _buildPostItem(double width, double height) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Image.asset(
-        'assets/post.jpg',
-        width: width / 4,
-        height: height / 4,
+  GestureDetector _buildPostItem(double width, double height,
+      {List<Post> post, int index}) {
+    return GestureDetector(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Image.network(
+          post.elementAt(index).files[0],
+          width: width / 4,
+          height: height / 4,
+        ),
+      ),
+      onTap: () {
+        _doNavigateToPostDetailScreen(
+          widget.user != null ? widget.user : _bloc.user.data,
+          post.elementAt(index),
+        );
+      },
+    );
+  }
+
+  _doNavigateToPostDetailScreen(User user, Post post) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => PostDetailScreen(
+          user: user,
+          post: post,
+        ),
       ),
     );
   }
