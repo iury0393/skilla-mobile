@@ -10,6 +10,7 @@ class DatabaseProvider {
   static DatabaseProvider get = _instance;
 
   //Never delete a version
+  // ignore: non_constant_identifier_names
   static List<int> VERSIONS = [
     1, //Initial version
   ]; // Must increment by 1

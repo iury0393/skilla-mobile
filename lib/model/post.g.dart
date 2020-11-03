@@ -24,6 +24,8 @@ Post _$PostFromJson(Map<String, dynamic> json) {
             e == null ? null : Comment.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     likes: json['likes'],
+    isLiked: json['isLiked'] as bool,
+    isMine: json['isMine'] as bool,
   );
 }
 
@@ -37,6 +39,8 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'likesCount': instance.likesCount,
       'commentsCount': instance.commentsCount,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'isLiked': instance.isLiked,
+      'isMine': instance.isMine,
     };
 
 Posts _$PostsFromJson(Map<String, dynamic> json) {

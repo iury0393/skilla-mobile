@@ -1,8 +1,9 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/post_detail_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
+import 'package:skilla/components/native_dialog.dart';
+import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
@@ -23,6 +24,7 @@ class PostDetailScreen extends StatefulWidget {
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
   final _bloc = PostDetailBloc();
+  bool isLiked = false;
   @override
   void initState() {
     super.initState();
@@ -65,10 +67,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       ),
                     ],
                   ),
-                  widget.user.id == widget.post.user.id
+                  widget.post.isMine
                       ? IconButton(
                           icon: Icon(
-                            FeatherIcons.moreHorizontal,
+                            Icons.more_horiz,
                             color: kSkillaPurple,
                           ),
                           onPressed: () {},
@@ -85,15 +87,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 height: height / 3,
               ),
             ),
-            IconButton(
-              icon: Icon(
-                FeatherIcons.heart,
-                color: kSkillaPurple,
-              ),
-              onPressed: () {},
-            ),
             Row(
               children: [
+                IconButton(
+                  icon: Icon(
+                    widget.post.isLiked
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: kSkillaPurple,
+                  ),
+                  onPressed: () {},
+                ),
                 GestureDetector(
                   child: Text(
                     widget.post.likesCount == 1
@@ -107,8 +111,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                   ),
                   onTap: () {
-                    // _doNavigateToLikeScreen(widget.post.user, widget.post);
-                    print(_bloc.commentsList);
+                    _doNavigateToLikeScreen(widget.post.user, widget.post);
                   },
                 ),
                 SizedBox(
@@ -173,24 +176,44 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             StreamBuilder<BaseResponse<List<Comment>>>(
                 stream: _bloc.commentController.stream,
                 builder: (context, snapshot) {
-                  if (snapshot.data != null) {
-                    if (snapshot.data.data.isNotEmpty) {
-                      return Container(
-                        width: width,
-                        height: 200,
-                        child: ListView.builder(
-                          itemCount: snapshot.data.data.length,
-                          itemBuilder: (context, index) {
-                            return buildComment(snapshot.data.data, index);
-                          },
-                        ),
+                  switch (snapshot.data?.status) {
+                    case Status.LOADING:
+                      return Center(
+                        child: NativeLoading(animating: true),
                       );
-                    }
+                      break;
+                    case Status.ERROR:
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        NativeDialog.showErrorDialog(
+                            context, snapshot.data.message);
+                      });
+                      return Container();
+                      break;
+                    default:
+                      if (snapshot.data != null) {
+                        if (snapshot.data.data.isNotEmpty) {
+                          return _buildPostComments(width, snapshot);
+                        }
+                      }
+                      return Container();
                   }
-                  return Container();
                 }),
           ],
         ),
+      ),
+    );
+  }
+
+  Container _buildPostComments(
+      double width, AsyncSnapshot<BaseResponse<List<Comment>>> snapshot) {
+    return Container(
+      width: width,
+      height: 200,
+      child: ListView.builder(
+        itemCount: snapshot.data.data.length,
+        itemBuilder: (context, index) {
+          return buildComment(snapshot.data.data, index);
+        },
       ),
     );
   }

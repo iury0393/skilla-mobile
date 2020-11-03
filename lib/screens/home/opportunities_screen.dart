@@ -1,4 +1,3 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/utils/constants.dart';
@@ -87,7 +86,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               ),
               IconButton(
                 icon: Icon(
-                  FeatherIcons.moreHorizontal,
+                  Icons.more_horiz,
                   color: kSkillaPurple,
                 ),
                 onPressed: () {},
@@ -108,14 +107,14 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
           children: [
             IconButton(
               icon: Icon(
-                FeatherIcons.heart,
+                Icons.favorite_border,
                 color: kSkillaPurple,
               ),
               onPressed: () {},
             ),
             IconButton(
               icon: Icon(
-                FeatherIcons.youtube,
+                Icons.chat_bubble_outline,
                 color: kSkillaPurple,
               ),
               onPressed: () {},

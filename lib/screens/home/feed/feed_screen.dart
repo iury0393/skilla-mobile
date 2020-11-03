@@ -1,4 +1,3 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
@@ -50,7 +49,7 @@ class _FeedScreenState extends State<FeedScreen> {
             FlatButton(
               onPressed: () {},
               child: Icon(
-                FeatherIcons.plusSquare,
+                Icons.add_box_outlined,
                 color: kSkillaPurple,
               ),
             ),

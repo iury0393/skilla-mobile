@@ -1,4 +1,3 @@
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
@@ -83,10 +82,10 @@ class _PostItemState extends State<PostItem> {
                     await _bloc.doRequestGetUser(widget.post.user.username);
                   },
                 ),
-                widget.user.id == widget.post.user.id
+                widget.post.isMine
                     ? IconButton(
                         icon: Icon(
-                          FeatherIcons.moreHorizontal,
+                          Icons.more_horiz,
                           color: kSkillaPurple,
                         ),
                         onPressed: () {},
@@ -105,7 +104,7 @@ class _PostItemState extends State<PostItem> {
           ),
           IconButton(
             icon: Icon(
-              FeatherIcons.heart,
+              widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
               color: kSkillaPurple,
             ),
             onPressed: () {},
