@@ -19,7 +19,10 @@ Post _$PostFromJson(Map<String, dynamic> json) {
         : User.fromJson(json['user'] as Map<String, dynamic>),
     id: json['id'] as String,
     files: json['files'],
-    comments: json['comments'],
+    comments: (json['comments'] as List)
+        ?.map((e) =>
+            e == null ? null : Comment.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     likes: json['likes'],
   );
 }
@@ -30,7 +33,7 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'id': instance.id,
       'files': instance.files,
       'likes': instance.likes,
-      'comments': instance.comments,
+      'comments': instance.comments?.map((e) => e?.toJson())?.toList(),
       'likesCount': instance.likesCount,
       'commentCount': instance.commentCount,
       'createdAt': instance.createdAt?.toIso8601String(),

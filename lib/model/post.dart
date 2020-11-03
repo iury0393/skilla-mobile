@@ -11,7 +11,7 @@ class Post {
   String id;
   var files;
   var likes;
-  var comments;
+  List<Comment> comments;
   int likesCount;
   int commentCount;
   DateTime createdAt;

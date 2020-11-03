@@ -1,51 +1,24 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
-import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/feed/likes_screen.dart';
-import 'package:skilla/screens/home/feed/post_detail_screen.dart';
-import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
-import 'native_dialog.dart';
-
-class PostItem extends StatefulWidget {
+class PostDetailScreen extends StatefulWidget {
   final Post post;
   final User user;
-  PostItem({Key key, this.post, this.user}) : super(key: key);
+  PostDetailScreen({Key key, this.post, this.user}) : super(key: key);
 
   @override
-  _PostItemState createState() => _PostItemState();
+  _PostDetailScreenState createState() => _PostDetailScreenState();
 }
 
-class _PostItemState extends State<PostItem> {
-  final _bloc = FeedBloc();
-
+class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc.userController.stream.listen((event) {
-      switch (event.status) {
-        case Status.COMPLETED:
-          Navigator.pop(context);
-          _doNavigateToProfileScreen(event.data);
-          break;
-        case Status.LOADING:
-          NativeDialog.showLoadingDialog(context);
-          break;
-        case Status.ERROR:
-          Navigator.pop(context);
-          NativeDialog.showErrorDialog(context, event.message);
-          break;
-        default:
-          break;
-      }
-    });
   }
 
   @override
@@ -61,27 +34,22 @@ class _PostItemState extends State<PostItem> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  child: Row(
-                    children: [
-                      Utils.loadImage(widget.post.user.avatar, context, true),
-                      SizedBox(
-                        width: 15.0,
+                Row(
+                  children: [
+                    Utils.loadImage(widget.post.user.avatar, context, true),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    Text(
+                      widget.post.user.fullname,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.paragraph(
+                        TextSize.large,
+                        weight: FontWeight.w400,
                       ),
-                      Text(
-                        widget.post.user.fullname,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.paragraph(
-                          TextSize.large,
-                          weight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onTap: () async {
-                    await _bloc.doRequestGetUser(widget.post.user.username);
-                  },
+                    ),
+                  ],
                 ),
                 widget.user.id == widget.post.user.id
                     ? IconButton(
@@ -124,28 +92,7 @@ class _PostItemState extends State<PostItem> {
                     weight: FontWeight.w400,
                   ),
                 ),
-                onTap: () {
-                  _doNavigateToLikeScreen(widget.post.user, widget.post);
-                },
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              GestureDetector(
-                child: Text(
-                  widget.post.commentCount == 1
-                      ? '${widget.post.likesCount} Comentário'
-                      : '${widget.post.likesCount} Comentários',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyles.paragraph(
-                    TextSize.large,
-                    weight: FontWeight.w400,
-                  ),
-                ),
-                onTap: () {
-                  _doNavigateToPostDetailScreen(widget.post.user, widget.post);
-                },
+                onTap: () {},
               ),
               SizedBox(
                 width: 20.0,
@@ -212,38 +159,6 @@ class _PostItemState extends State<PostItem> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  _doNavigateToLikeScreen(User user, Post post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => LikesScreen(
-          user: user,
-          post: post,
-        ),
-      ),
-    );
-  }
-
-  _doNavigateToPostDetailScreen(User user, Post post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => PostDetailScreen(
-          user: user,
-          post: post,
-        ),
-      ),
-    );
-  }
-
-  _doNavigateToProfileScreen(User user) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => ProfileScreen(
-          user: user,
-        ),
       ),
     );
   }

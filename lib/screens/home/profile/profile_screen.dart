@@ -29,6 +29,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _bloc = ProfileBloc();
   String _id;
+  String txtBtnFollow;
   bool _isFollowing = false;
 
   @override
@@ -43,7 +44,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     widget.user != null
         ? _bloc.isFollowing(widget.user.id).then((value) {
-            _isFollowing = value;
+            setState(() {
+              _isFollowing = value;
+            });
           })
         : print("Usuário próprio");
     widget.user != null ? print(widget.user) : print("Usuário próprio");
@@ -415,19 +418,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildFollowButton(String id) {
+    _isFollowing ? txtBtnFollow = 'Seguindo' : txtBtnFollow = 'Seguir';
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title: _isFollowing ? 'Seguindo' : 'Seguir',
+      title: txtBtnFollow,
       titleColor: kSkillaPurple,
       borderColor: kPurpleColor,
       backgroundColor: Colors.white,
       onPressed: () {
         if (_isFollowing) {
-          // _bloc.doRequestUnfollow(id);
+          _bloc.doRequestUnfollow(id);
           print("Seguindo");
         } else {
-          // _bloc.doRequestFollow(id);
+          _bloc.doRequestFollow(id);
           print("Não Seguindo");
         }
       },
