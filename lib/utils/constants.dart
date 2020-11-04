@@ -11,3 +11,6 @@ const kSkillaPurple = Color(0xFF5931bf);
 const kClientId = 'b7c96a89-eb9d-41a5-887f-aeccef11997e';
 const kBaseURL = 'https://skilla-backend.herokuapp.com/';
 // const kBaseURL = 'http://localhost:3333/';
+const kApiBaseUrl = 'https://api.cloudinary.com/v1_1/duujebpq4/image/upload';
+const kUploadPreset = 'otwdwv0m';
+const kCloudName = 'duujebpq4';

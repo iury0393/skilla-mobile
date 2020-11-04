@@ -22,12 +22,12 @@ class PostBloc {
     textFilesController.dispose();
   }
 
-  doRequestAddComment(String postId) async {
+  doRequestAddPost(String secureUrl) async {
     postController.add(BaseResponse.loading());
     try {
       var body = Post(
         caption: textCaptionController.text,
-        files: "",
+        files: secureUrl,
         tags: "",
       ).toJson();
       await PostNetwork().doRequestAddPost(body);
