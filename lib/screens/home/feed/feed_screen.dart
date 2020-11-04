@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
@@ -6,6 +7,7 @@ import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/post_item.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/screens/home/feed/post_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
@@ -47,7 +49,9 @@ class _FeedScreenState extends State<FeedScreen> {
           center: true,
           widgets: [
             FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                _doNavigateToPostScreen();
+              },
               child: Icon(
                 Icons.add_box_outlined,
                 color: kSkillaPurple,
@@ -111,6 +115,14 @@ class _FeedScreenState extends State<FeedScreen> {
           user: _bloc.user,
         );
       },
+    );
+  }
+
+  _doNavigateToPostScreen() {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => PostScreen(),
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
@@ -11,6 +12,7 @@ import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/post_detail_screen.dart';
+import 'package:skilla/screens/home/profile/curriculum_screen.dart';
 import 'package:skilla/screens/home/profile/following_screen.dart';
 import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
@@ -31,6 +33,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _bloc = ProfileBloc();
+  PdfController _pdfController;
   String _id;
   String txtBtnFollow;
   bool _isFollowing = false;
@@ -81,6 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     super.dispose();
     _bloc.dispose();
+    _pdfController.dispose();
     EventCenter.getInstance().editEvent.unsubscribe(_refreshPage);
   }
 
@@ -479,6 +483,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  _doNavigateToCurriculumScreen() {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => CurriculumScreen(),
+      ),
+    );
+  }
+
   Widget _buildSubmitButton() {
     return RoundedButton(
       width: 100.0,
@@ -487,7 +499,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
-      onPressed: () {},
+      onPressed: () {
+        _doNavigateToCurriculumScreen();
+      },
     );
   }
 
