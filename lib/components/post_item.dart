@@ -56,6 +56,11 @@ class _PostItemState extends State<PostItem> {
           Navigator.pop(context);
           setState(() {
             widget.post.isLiked = !widget.post.isLiked;
+            if (widget.post.isLiked) {
+              widget.post.likesCount += 1;
+            } else {
+              widget.post.likesCount -= 1;
+            }
           });
           break;
         case Status.LOADING:

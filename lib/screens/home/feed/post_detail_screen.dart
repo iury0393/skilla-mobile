@@ -33,7 +33,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc.doRequestGetComments(widget.post.user.id);
+    _bloc.doRequestGetComments(widget.post);
     _likeBloc = LikesBloc(widget.user, widget.post);
 
     _likeBloc.toggleLikesController.stream.listen((event) {
@@ -42,6 +42,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           Navigator.pop(context);
           setState(() {
             widget.post.isLiked = !widget.post.isLiked;
+            if (widget.post.isLiked) {
+              widget.post.likesCount += 1;
+            } else {
+              widget.post.likesCount -= 1;
+            }
           });
           break;
         case Status.LOADING:

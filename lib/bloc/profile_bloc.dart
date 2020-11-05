@@ -13,6 +13,7 @@ class ProfileBloc {
   bool isChecked = false;
   BaseResponse<User> user;
   StreamController<BaseResponse<void>> followController;
+  StreamController<BaseResponse<void>> unFollowController;
   StreamController<BaseResponse<List<Post>>> postController;
   StreamController<BaseResponse<String>> fullNameController;
   StreamController<BaseResponse<String>> userNameController;
@@ -27,6 +28,7 @@ class ProfileBloc {
 
   ProfileBloc() {
     followController = StreamController();
+    unFollowController = StreamController();
     postController = StreamController();
     fullNameController = StreamController();
     userNameController = StreamController();
@@ -41,6 +43,7 @@ class ProfileBloc {
 
   dispose() {
     followController.close();
+    unFollowController.close();
     postController.close();
     fullNameController.close();
     userNameController.close();
@@ -98,12 +101,12 @@ class ProfileBloc {
   }
 
   doRequestUnfollow(String id) async {
-    followController.add(BaseResponse.loading());
+    unFollowController.add(BaseResponse.loading());
     try {
       await ProfileNetwork().doRequestUnfollow(id);
-      _doRequestGetUserLoggedData();
+      _doRequestGetUserLoggedDataUn();
     } catch (e) {
-      followController.add(BaseResponse.error(e.toString()));
+      unFollowController.add(BaseResponse.error(e.toString()));
     }
   }
 
@@ -133,6 +136,35 @@ class ProfileBloc {
       followController.add(BaseResponse.completed());
     } catch (e) {
       followController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _doRequestGetUserLoggedDataUn() async {
+    try {
+      var userResponse = await _userService.doRequestGetUser();
+      _updateUserInDBUn(userResponse);
+    } catch (e) {
+      unFollowController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _updateUserInDBUn(User userData) async {
+    try {
+      User user = User().generateDataFromUser(userData);
+      print(user);
+      _saveUserInDBUn(user);
+    } catch (e) {
+      unFollowController.add(BaseResponse.error(e.toString()));
+    }
+  }
+
+  _saveUserInDBUn(User user) async {
+    try {
+      await Utils.cleanDataBaseUser();
+      await UserDAO().save(user);
+      unFollowController.add(BaseResponse.completed());
+    } catch (e) {
+      unFollowController.add(BaseResponse.error(e.toString()));
     }
   }
 

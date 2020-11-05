@@ -65,6 +65,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _bloc.followController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
+          setState(() {
+            _isFollowing = true;
+          });
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+
+    _bloc.unFollowController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          setState(() {
+            _isFollowing = false;
+          });
           Navigator.pop(context);
           break;
         case Status.LOADING:
@@ -506,11 +529,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildFollowButton(String id) {
-    _isFollowing ? txtBtnFollow = 'Seguindo' : txtBtnFollow = 'Seguir';
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title: txtBtnFollow,
+      title: _isFollowing ? txtBtnFollow = 'Seguindo' : txtBtnFollow = 'Seguir',
       titleColor: kSkillaPurple,
       borderColor: kPurpleColor,
       backgroundColor: Colors.white,
