@@ -49,8 +49,10 @@ class PostDetailBloc {
       var body = Comment(
         text: textCommentController.text,
       ).toJson();
-      await PostDetailNetwork().doRequestAddComment(postId, body);
-      addCommentController.add(BaseResponse.completed());
+      var response =
+          await PostDetailNetwork().doRequestAddComment(postId, body);
+      commentsList.add(response);
+      addCommentController.add(BaseResponse.completed(data: commentsList));
     } catch (e) {
       addCommentController.add(BaseResponse.error(e.toString()));
     }
@@ -60,6 +62,8 @@ class PostDetailBloc {
     deleteCommentController.add(BaseResponse.loading());
     try {
       await PostDetailNetwork().doRequestDeteleComment(commentId, postId);
+      commentsList.removeWhere((element) => element.id == commentId);
+      commentController.add(BaseResponse.completed(data: commentsList));
       deleteCommentController.add(BaseResponse.completed());
     } catch (e) {
       deleteCommentController.add(BaseResponse.error(e.toString()));

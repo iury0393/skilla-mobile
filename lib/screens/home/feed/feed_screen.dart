@@ -9,6 +9,7 @@ import 'package:skilla/model/post.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/post_screen.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -32,12 +33,16 @@ class _FeedScreenState extends State<FeedScreen> {
       });
     });
     _bloc.doRequestGetFeed();
+    EventCenter.getInstance().newPostEvent.subscribe(_refreshFeed);
+    EventCenter.getInstance().deletePostEvent.subscribe(_refreshFeedDelete);
   }
 
   @override
   void dispose() {
     super.dispose();
     _bloc.dispose();
+    EventCenter.getInstance().newPostEvent.unsubscribe(_refreshFeed);
+    EventCenter.getInstance().deletePostEvent.unsubscribe(_refreshFeedDelete);
   }
 
   @override
@@ -104,6 +109,18 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
       ),
     );
+  }
+
+  _refreshFeed(NewPostEventArgs args) {
+    if (args.isNewPost) {
+      _bloc.doRequestGetFeed();
+    }
+  }
+
+  _refreshFeedDelete(DeletePostEventArgs args) {
+    if (args.isDeletedPost) {
+      _bloc.doRequestGetFeed();
+    }
   }
 
   ListView _buildListFeed(AsyncSnapshot<BaseResponse<List<Post>>> snapshot) {

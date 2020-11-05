@@ -11,6 +11,7 @@ import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -25,7 +26,7 @@ class _PostScreenState extends State<PostScreen> {
   final _bloc = PostBloc();
   File _image;
   final picker = ImagePicker();
-  bool isloading = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -34,6 +35,8 @@ class _PostScreenState extends State<PostScreen> {
     _bloc.postController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
+          refreshFeedWithNewPost(true);
+          Navigator.pop(context);
           Navigator.pop(context);
           break;
         case Status.LOADING:
@@ -79,6 +82,12 @@ class _PostScreenState extends State<PostScreen> {
     });
   }
 
+  void refreshFeedWithNewPost(isNewPost) {
+    EventCenter.getInstance()
+        .newPostEvent
+        .broadcast(NewPostEventArgs(isNewPost));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +96,7 @@ class _PostScreenState extends State<PostScreen> {
         center: true,
       ),
       body: SingleChildScrollView(
-        child: isloading
+        child: isLoading
             ? Center(
                 child: NativeLoading(animating: true),
               )
@@ -210,7 +219,7 @@ class _PostScreenState extends State<PostScreen> {
 
   Future uploadImage() async {
     setState(() {
-      isloading = true;
+      isLoading = true;
     });
     Dio dio = Dio();
     FormData formData = new FormData.fromMap({
@@ -226,7 +235,7 @@ class _PostScreenState extends State<PostScreen> {
       var data = jsonDecode(response.toString());
       print(data['secure_url']);
       setState(() {
-        isloading = false;
+        isLoading = false;
       });
       return data['secure_url'];
     } catch (e) {

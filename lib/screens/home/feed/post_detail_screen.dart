@@ -12,6 +12,7 @@ import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/likes_screen.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -58,6 +59,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     _bloc.addCommentController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
+          refreshFeedWithDeletePost(true);
           Navigator.pop(context);
           _bloc.textCommentController.clear();
           break;
@@ -76,6 +78,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     _bloc.deleteCommentController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
+          refreshFeedWithDeletePost(true);
           Navigator.pop(context);
           break;
         case Status.LOADING:
@@ -93,6 +96,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     _feedBloc.deletePostController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
+          refreshFeedWithDeletePost(true);
+          Navigator.pop(context);
           Navigator.pop(context);
           break;
         case Status.LOADING:
@@ -106,6 +111,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           break;
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
+    _feedBloc.dispose();
+    _likeBloc.dispose();
   }
 
   @override
@@ -294,6 +307,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ),
       ),
     );
+  }
+
+  void refreshFeedWithDeletePost(isDeletePost) {
+    EventCenter.getInstance()
+        .deletePostEvent
+        .broadcast(DeletePostEventArgs(isDeletePost));
   }
 
   TextField _buildCommentTextField() {

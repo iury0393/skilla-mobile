@@ -9,6 +9,7 @@ import 'package:skilla/screens/home/feed/likes_screen.dart';
 import 'package:skilla/screens/home/feed/post_detail_screen.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -72,6 +73,7 @@ class _PostItemState extends State<PostItem> {
     _bloc.deletePostController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
+          refreshFeedWithDeletePost(true);
           Navigator.pop(context);
           break;
         case Status.LOADING:
@@ -243,6 +245,12 @@ class _PostItemState extends State<PostItem> {
         ],
       ),
     );
+  }
+
+  void refreshFeedWithDeletePost(isDeletePost) {
+    EventCenter.getInstance()
+        .deletePostEvent
+        .broadcast(DeletePostEventArgs(isDeletePost));
   }
 
   _doNavigateToLikeScreen(User user, Post post) {
