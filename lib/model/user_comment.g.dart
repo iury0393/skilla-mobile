@@ -10,7 +10,7 @@ UserComment _$UserCommentFromJson(Map<String, dynamic> json) {
   return UserComment(
     avatar: json['avatar'] as String,
     fullname: json['fullname'] as String,
-    id: json['id'],
+    id: json['_id'] as String,
     username: json['username'] as String,
   );
 }
@@ -24,7 +24,7 @@ Map<String, dynamic> _$UserCommentToJson(UserComment instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
+  writeNotNull('_id', instance.id);
   writeNotNull('fullname', instance.fullname);
   writeNotNull('username', instance.username);
   writeNotNull('avatar', instance.avatar);

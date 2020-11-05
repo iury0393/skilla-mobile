@@ -5,6 +5,7 @@ part 'comment.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Comment {
+  @JsonKey(name: "_id")
   String id;
   UserComment user;
   String text;

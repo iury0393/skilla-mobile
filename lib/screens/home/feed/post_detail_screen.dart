@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/bloc/post_detail_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
@@ -25,6 +26,7 @@ class PostDetailScreen extends StatefulWidget {
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
   final _bloc = PostDetailBloc();
+  final _feedBloc = FeedBloc();
   LikesBloc _likeBloc;
   bool isLiked = false;
   @override
@@ -58,6 +60,40 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         case Status.COMPLETED:
           Navigator.pop(context);
           _bloc.textCommentController.clear();
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+
+    _bloc.deleteCommentController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+
+    _feedBloc.deletePostController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
@@ -114,7 +150,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             Icons.more_horiz,
                             color: kSkillaPurple,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _showDialogForDeletePost(context, widget.post);
+                          },
                         )
                       : Container(),
                 ],
@@ -325,9 +363,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             ),
             onTap: () {
               if (comments.elementAt(index).isCommentMine) {
-                print("TRUE");
-              } else {
-                print("FALSE");
+                _showDialogForDeleteComment(
+                    context, widget.post, comments.elementAt(index));
               }
             },
           ),
@@ -343,6 +380,59 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           user: user,
           post: post,
         ),
+      ),
+    );
+  }
+
+  void _showDialogForDeleteComment(
+      BuildContext context, Post post, Comment comments) {
+    showNativeDialog(
+      context: context,
+      builder: (context) => NativeDialog(
+        title: 'Você realmente deseja deletar esse comentário?',
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Deletar',
+                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
+            onPressed: () {
+              Navigator.pop(context);
+              _bloc.doRequestDeleteComment(comments.id, post.id);
+            },
+          ),
+          FlatButton(
+            child:
+                Text('Cancelar', style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDialogForDeletePost(BuildContext context, Post post) {
+    showNativeDialog(
+      context: context,
+      builder: (context) => NativeDialog(
+        title: 'Você realmente deseja deletar esse post?',
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Deletar',
+                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
+            onPressed: () {
+              Navigator.pop(context);
+              _feedBloc.doRequestDeletePost(post.id);
+            },
+          ),
+          FlatButton(
+            child:
+                Text('Cancelar', style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }

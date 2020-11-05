@@ -4,7 +4,8 @@ part 'user_comment.g.dart';
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class UserComment {
-  var id;
+  @JsonKey(name: "_id")
+  String id;
   String fullname;
   String username;
   String avatar;

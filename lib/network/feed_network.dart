@@ -21,4 +21,10 @@ class FeedNetwork {
 
     return User.fromJson(response['data']);
   }
+
+  Future doRequestDetelePost(String postId) async {
+    await service.doRequest(
+      RequestConfig('posts/$postId', HttpMethod.delete),
+    );
+  }
 }

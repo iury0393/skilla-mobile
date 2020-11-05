@@ -68,6 +68,23 @@ class _PostItemState extends State<PostItem> {
           break;
       }
     });
+
+    _bloc.deletePostController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   @override
@@ -111,7 +128,9 @@ class _PostItemState extends State<PostItem> {
                           Icons.more_horiz,
                           color: kSkillaPurple,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          _showDialogForUser(context, widget.post);
+                        },
                       )
                     : Container(),
               ],
@@ -254,6 +273,32 @@ class _PostItemState extends State<PostItem> {
         builder: (context) => ProfileScreen(
           user: user,
         ),
+      ),
+    );
+  }
+
+  void _showDialogForUser(BuildContext context, Post post) {
+    showNativeDialog(
+      context: context,
+      builder: (context) => NativeDialog(
+        title: 'Você realmente deseja deletar esse post?',
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Deletar',
+                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
+            onPressed: () {
+              Navigator.pop(context);
+              _bloc.doRequestDeletePost(post.id);
+            },
+          ),
+          FlatButton(
+            child:
+                Text('Cancelar', style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }

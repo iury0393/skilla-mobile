@@ -18,4 +18,10 @@ class PostDetailNetwork {
       RequestConfig('posts/$postId/comments', HttpMethod.post, body: body),
     );
   }
+
+  Future doRequestDeteleComment(String commentId, String postId) async {
+    await service.doRequest(
+      RequestConfig('posts/$postId/comments/$commentId', HttpMethod.delete),
+    );
+  }
 }

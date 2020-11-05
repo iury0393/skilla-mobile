@@ -12,13 +12,13 @@ Comment _$CommentFromJson(Map<String, dynamic> json) {
     user: json['user'] == null
         ? null
         : UserComment.fromJson(json['user'] as Map<String, dynamic>),
-    id: json['id'] as String,
+    id: json['_id'] as String,
     isCommentMine: json['isCommentMine'] as bool,
   );
 }
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
       'user': instance.user?.toJson(),
       'text': instance.text,
       'isCommentMine': instance.isCommentMine,
