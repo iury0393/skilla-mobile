@@ -27,7 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _bloc.registerController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
-          _doNavigateLoginScreen();
+          Navigator.pop(context);
+          Navigator.pop(context);
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
@@ -58,9 +59,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/logo.png'),
+                Hero(
+                  tag: 'logo',
+                  child: Image.asset('assets/logo.png'),
+                ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 30),
+                  padding: EdgeInsets.only(bottom: 30, top: 30.0),
                   child: Form(
                     key: _bloc.formKey,
                     child: Column(
@@ -99,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildLoginButton() {
     return FlatButton(
       onPressed: () {
-        _doNavigateLoginScreen();
+        Navigator.pop(context);
       },
       child: RichText(
         overflow: TextOverflow.ellipsis,
@@ -288,12 +292,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
           );
         });
-  }
-
-  //NAVIGATION
-
-  void _doNavigateLoginScreen() {
-    Navigator.of(context).pop();
   }
 
   //SNACKBAR

@@ -48,13 +48,19 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: Utils.getPaddingDefault(),
+        child: Padding(
+          padding: Utils.getPaddingDefault(),
+          child: Align(
+            alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/logo.png'),
+                Flexible(
+                  child: Hero(
+                    tag: 'logo',
+                    child: Image.asset('assets/logo.png'),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 30),
                   child: Form(
