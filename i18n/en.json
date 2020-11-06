@@ -5,6 +5,7 @@
   "btnRegisterText" : "No registration?",
   "btnLoginRegisterLink": "click here",
 
+  "fieldsEmpty": "Fields cannot be empty",
   "fieldLoginRegisterEmail": "E-mail",
   "fieldLoginRegisterEmailValidatorEmpty": "E-mail cannot be empty",
   "fieldLoginRegisterEmailValidatorInvalid": "Invalid email",

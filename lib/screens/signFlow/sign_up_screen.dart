@@ -1,7 +1,7 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_up_bloc.dart';
+import 'package:skilla/components/custom_flushbar.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -23,24 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-
-    _bloc.registerController.stream.listen((event) {
-      switch (event.status) {
-        case Status.COMPLETED:
-          Navigator.pop(context);
-          Navigator.pop(context);
-          break;
-        case Status.LOADING:
-          NativeDialog.showLoadingDialog(context);
-          break;
-        case Status.ERROR:
-          Navigator.pop(context);
-          NativeDialog.showErrorDialog(context, event.message);
-          break;
-        default:
-          break;
-      }
-    });
+    _doSignInStream();
   }
 
   @override
@@ -59,39 +42,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Hero(
-                  tag: 'logo',
-                  child: Image.asset('assets/logo.png'),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 30, top: 30.0),
-                  child: Form(
-                    key: _bloc.formKey,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: _buildEmailTextFormField(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: _buildNameTextFormField(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: _buildUsernameTextFormField(),
-                        ),
-                        _buildPasswordTextFormField(),
-                      ],
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    _buildSubmitButton(),
-                    _buildLoginButton(),
-                  ],
-                ),
+                _ImageSkillaLogo(),
+                _TextFormFields(bloc: _bloc),
+                _BuildLoginButton(),
+                _BuildSubmitButton(bloc: _bloc),
               ],
             ),
           ),
@@ -100,7 +54,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildLoginButton() {
+  // >>>>>>>>>> STREAM
+
+  _doSignInStream() {
+    _bloc.registerController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+  }
+}
+
+class _ImageSkillaLogo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: 'logo',
+      child: Image.asset('assets/logo.png'),
+    );
+  }
+}
+
+class _BuildSubmitButton extends StatelessWidget {
+  final SignUpBloc bloc;
+
+  _BuildSubmitButton({this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return RoundedButton(
+      title: AppLocalizations.of(context).translate('btnRegister'),
+      titleColor: Colors.white,
+      borderColor: Colors.transparent,
+      backgroundColor: kPurpleColor,
+      onPressed: () {
+        if (bloc.formKey.currentState.validate()) {
+          bloc.doRequestRegister();
+        }
+      },
+    );
+  }
+}
+
+class _BuildLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return FlatButton(
       onPressed: () {
         Navigator.pop(context);
@@ -126,186 +136,161 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+}
 
-  //BUTTON
+class _TextFormFields extends StatelessWidget {
+  final SignUpBloc bloc;
 
-  Widget _buildSubmitButton() {
-    return RoundedButton(
-      title: AppLocalizations.of(context).translate('btnRegister'),
-      titleColor: Colors.white,
-      borderColor: Colors.transparent,
-      backgroundColor: kPurpleColor,
-      onPressed: () {
-        if (_bloc.formKey.currentState.validate()) {
-          _bloc.doRequestRegister();
-        }
-      },
+  const _TextFormFields({this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: bloc.formKey,
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 78,
+          ),
+          _TextFormField(
+            mainController: bloc.textEmailController,
+            secondController: bloc.textPasswordController,
+            isPassword: false,
+            hint: AppLocalizations.of(context)
+                .translate('fieldLoginRegisterEmail'),
+            formKey: bloc.formKey,
+            isPrincipal: true,
+          ),
+          SizedBox(
+            height: 14,
+          ),
+          _TextFormField(
+            mainController: bloc.textFullNameController,
+            secondController: bloc.textPasswordController,
+            isPassword: false,
+            hint: AppLocalizations.of(context)
+                .translate('fieldLoginRegisterName'),
+            formKey: bloc.formKey,
+            isPrincipal: false,
+          ),
+          SizedBox(
+            height: 14,
+          ),
+          _TextFormField(
+            mainController: bloc.textUserNameController,
+            secondController: bloc.textPasswordController,
+            isPassword: false,
+            hint: AppLocalizations.of(context)
+                .translate('fieldLoginRegisterUsername'),
+            formKey: bloc.formKey,
+            isPrincipal: false,
+          ),
+          SizedBox(
+            height: 14,
+          ),
+          _TextFormField(
+            mainController: bloc.textPasswordController,
+            secondController: bloc.textEmailController,
+            isPassword: true,
+            hint: AppLocalizations.of(context)
+                .translate('fieldLoginRegisterPassword'),
+            formKey: bloc.formKey,
+            isPrincipal: true,
+          )
+        ],
+      ),
     );
   }
-  //TEXT FORM FIELDS
+}
 
-  TextFormField _buildEmailTextFormField() {
+class _TextFormField extends StatefulWidget {
+  final TextEditingController mainController;
+  final TextEditingController secondController;
+  final bool isPassword;
+  final String hint;
+  final GlobalKey<FormState> formKey;
+  final bool isPrincipal;
+
+  const _TextFormField(
+      {this.mainController,
+      this.secondController,
+      this.isPassword,
+      this.hint,
+      this.formKey,
+      this.isPrincipal});
+  @override
+  __TextFormFieldState createState() => __TextFormFieldState();
+}
+
+class __TextFormFieldState extends State<_TextFormField> {
+  bool _errorDisplayed = false;
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
     return TextFormField(
       textCapitalization: TextCapitalization.none,
-      controller: _bloc.textEmailController,
-      keyboardType: TextInputType.emailAddress,
+      controller: widget.mainController,
+      obscureText: widget.isPassword ? _obscureText : false,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText:
-            AppLocalizations.of(context).translate('fieldLoginRegisterEmail'),
+        errorStyle: TextStyle(height: 0),
+        hintText: widget.hint,
         hintStyle: TextStyle(color: Colors.grey),
-        prefixIcon: Icon(Icons.email),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         fillColor: Colors.white,
         filled: true,
-      ),
-      onFieldSubmitted: (text) {
-        if (_bloc.isEmailErrorDisplayed) {
-          _bloc.formKey.currentState.validate();
-        }
-      },
-      validator: (text) {
-        if (text.trim().isEmpty) {
-          _bloc.isEmailErrorDisplayed = true;
-          _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldLoginRegisterEmailValidatorEmpty'));
-          return "";
-        }
-
-        if (!Utils.validateEmail(text)) {
-          _bloc.isEmailErrorDisplayed = true;
-          _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldLoginRegisterEmailValidatorInvalid'));
-          return "";
-        }
-
-        _bloc.isEmailErrorDisplayed = false;
-        return null;
-      },
-    );
-  }
-
-  TextFormField _buildNameTextFormField() {
-    return TextFormField(
-      textCapitalization: TextCapitalization.none,
-      controller: _bloc.textFullNameController,
-      style: TextStyles.textField(TextSize.medium),
-      decoration: InputDecoration(
-        hintText:
-            AppLocalizations.of(context).translate('fieldLoginRegisterName'),
-        hintStyle: TextStyle(color: Colors.grey),
-        prefixIcon: Icon(Icons.person),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-        fillColor: Colors.white,
-        filled: true,
-      ),
-      onFieldSubmitted: (text) {
-        if (_bloc.isNameErrorDisplayed) {
-          _bloc.formKey.currentState.validate();
-        }
-      },
-      validator: (text) {
-        if (text.trim().isEmpty) {
-          _bloc.isNameErrorDisplayed = true;
-          _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldLoginRegisterNameValidator'));
-          return "";
-        }
-
-        _bloc.isEmailErrorDisplayed = false;
-        return null;
-      },
-    );
-  }
-
-  TextFormField _buildUsernameTextFormField() {
-    return TextFormField(
-      textCapitalization: TextCapitalization.none,
-      controller: _bloc.textUserNameController,
-      keyboardType: TextInputType.emailAddress,
-      style: TextStyles.textField(TextSize.medium),
-      decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)
-            .translate('fieldLoginRegisterUsername'),
-        hintStyle: TextStyle(color: Colors.grey),
-        prefixIcon: Icon(Icons.verified_user),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-        fillColor: Colors.white,
-        filled: true,
-      ),
-      onFieldSubmitted: (text) {
-        if (_bloc.isUsernameErrorDisplayed) {
-          _bloc.formKey.currentState.validate();
-        }
-      },
-      validator: (text) {
-        if (text.trim().isEmpty) {
-          _bloc.isUsernameErrorDisplayed = true;
-          _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldLoginRegisterUsernameValidator'));
-          return "";
-        }
-
-        _bloc.isUsernameErrorDisplayed = false;
-        return null;
-      },
-    );
-  }
-
-  Widget _buildPasswordTextFormField() {
-    return StreamBuilder<bool>(
-        stream: _bloc.obfuscatePasswordController.stream,
-        initialData: true,
-        builder: (context, snapshot) {
-          return TextFormField(
-            textCapitalization: TextCapitalization.none,
-            controller: _bloc.textPasswordController,
-            obscureText: snapshot.data,
-            style: TextStyles.textField(TextSize.medium),
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)
-                  .translate('fieldLoginRegisterPassword'),
-              hintStyle: TextStyle(color: Colors.grey),
-              prefixIcon: Icon(Icons.vpn_key),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-              fillColor: Colors.white,
-              filled: true,
-              suffixIcon: IconButton(
+        suffixIcon: widget.isPassword
+            ? IconButton(
                 icon: Icon(
-                    snapshot.data ? Icons.visibility : Icons.visibility_off),
+                    _obscureText ? Icons.visibility : Icons.visibility_off),
                 onPressed: () {
-                  _bloc.obfuscatePasswordController.add(!snapshot.data);
-                },
-              ),
-            ),
-            onFieldSubmitted: (text) {
-              if (_bloc.isPasswordErrorDisplayed) {
-                _bloc.formKey.currentState.validate();
-              }
-            },
-            validator: (text) {
-              if (text.trim().isEmpty) {
-                _bloc.isPasswordErrorDisplayed = true;
-                _showSnackBar(AppLocalizations.of(context)
-                    .translate('fieldLoginRegisterPasswordValidator'));
-                return "";
-              }
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                })
+            : null,
+      ),
+      onFieldSubmitted: (text) {
+        if (_errorDisplayed) {
+          widget.formKey.currentState.validate();
+        }
+      },
+      validator: (text) {
+        if (widget.isPrincipal) {
+          if (widget.mainController.text.trim().isEmpty) {
+            _errorDisplayed = true;
+            CustomFlushBar.showFlushBar(
+                AppLocalizations.of(context).translate('fieldsEmpty'), context);
+            return "";
+          }
 
-              _bloc.isPasswordErrorDisplayed = false;
-              return null;
-            },
-          );
-        });
-  }
+          if (!widget.isPassword) {
+            if (!Utils.validateEmail(widget.mainController.text.trim())) {
+              CustomFlushBar.showFlushBar(
+                  AppLocalizations.of(context)
+                      .translate('fieldLoginRegisterEmailValidatorInvalid'),
+                  context);
+              return "";
+            }
+          }
 
-  //SNACKBAR
+          if (widget.mainController.text.trim().isEmpty) {
+            _errorDisplayed = true;
+            CustomFlushBar.showFlushBar(
+                AppLocalizations.of(context).translate(widget.isPassword
+                    ? 'fieldLoginRegisterPasswordValidator'
+                    : 'fieldLoginRegisterEmailValidatorEmpty'),
+                context);
+            return "";
+          }
 
-  void _showSnackBar(String text) {
-    Flushbar(
-      message: text,
-      duration: Duration(seconds: 3),
-      backgroundColor: kRedColor,
-    )..show(context);
+          _errorDisplayed = false;
+          return null;
+        }
+        _errorDisplayed = false;
+        return null;
+      },
+    );
   }
 }

@@ -1,7 +1,7 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_in_bloc.dart';
+import 'package:skilla/components/custom_flushbar.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -25,11 +25,45 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
+    _doSignInStream();
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: Utils.getPaddingDefault(),
+          child: Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _ImageSkillaLogo(),
+                _TextFormFields(bloc: _bloc),
+                _BuildRegisterButton(),
+                _BuildSubmitButton(bloc: _bloc),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // >>>>>>>>>> STREAM
+
+  _doSignInStream() {
     _bloc.loginController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
-          _doNavigateMainScreen();
+          _doNavigateToMainScreen();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
@@ -44,58 +78,55 @@ class _SignInScreenState extends State<SignInScreen> {
     });
   }
 
+  // >>>>>>>>>> NAVIGATOR
+
+  _doNavigateToMainScreen() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(builder: (context) => TabBarScreen()),
+        (route) => false);
+  }
+}
+
+class _ImageSkillaLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: Utils.getPaddingDefault(),
-          child: Align(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Flexible(
-                  child: Hero(
-                    tag: 'logo',
-                    child: Image.asset('assets/logo.png'),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 30),
-                  child: Form(
-                    key: _bloc.formKey,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: _buildEmailTextFormField(),
-                        ),
-                        _buildPasswordTextFormField(),
-                      ],
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    _buildSubmitButton(),
-                    _buildRegisterButton(),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+    return Flexible(
+      child: Hero(
+        tag: 'logo',
+        child: Image.asset('assets/logo.png'),
       ),
     );
   }
+}
 
-  //BUTTONS
+class _BuildSubmitButton extends StatelessWidget {
+  final SignInBloc bloc;
 
-  Widget _buildRegisterButton() {
+  _BuildSubmitButton({this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return RoundedButton(
+      title: AppLocalizations.of(context).translate('btnLogin'),
+      titleColor: Colors.white,
+      borderColor: Colors.transparent,
+      backgroundColor: kPurpleColor,
+      onPressed: () {
+        if (bloc.formKey.currentState.validate()) {
+          bloc.doRequestLogin();
+        }
+      },
+    );
+  }
+}
+
+class _BuildRegisterButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return FlatButton(
       onPressed: () {
-        _doNavigateRegisterScreen();
+        _doNavigateToRegisterScreen(context);
       },
       child: RichText(
         overflow: TextOverflow.ellipsis,
@@ -119,134 +150,135 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
-    return RoundedButton(
-      title: AppLocalizations.of(context).translate('btnLogin'),
-      titleColor: Colors.white,
-      borderColor: Colors.transparent,
-      backgroundColor: kPurpleColor,
-      onPressed: () {
-        if (_bloc.formKey.currentState.validate()) {
-          _bloc.doRequestLogin();
-        }
-      },
-    );
-  }
-
-  //TEXT FORM FIELDS
-
-  TextFormField _buildEmailTextFormField() {
-    return TextFormField(
-      textCapitalization: TextCapitalization.none,
-      controller: _bloc.textEmailController,
-      keyboardType: TextInputType.emailAddress,
-      style: TextStyles.textField(TextSize.medium),
-      decoration: InputDecoration(
-        hintText:
-            AppLocalizations.of(context).translate('fieldLoginRegisterEmail'),
-        hintStyle: TextStyle(color: Colors.grey),
-        prefixIcon: Icon(Icons.email),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-        fillColor: Colors.white,
-        filled: true,
-      ),
-      onFieldSubmitted: (text) {
-        if (_bloc.isEmailErrorDisplayed) {
-          _bloc.formKey.currentState.validate();
-        }
-      },
-      validator: (text) {
-        if (text.trim().isEmpty) {
-          _bloc.isEmailErrorDisplayed = true;
-          _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldLoginRegisterEmailValidatorEmpty'));
-          return "";
-        }
-
-        if (!Utils.validateEmail(text)) {
-          _bloc.isEmailErrorDisplayed = true;
-          _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldLoginRegisterEmailValidatorInvalid'));
-          return "";
-        }
-
-        _bloc.isEmailErrorDisplayed = false;
-        return null;
-      },
-    );
-  }
-
-  Widget _buildPasswordTextFormField() {
-    return StreamBuilder<bool>(
-        stream: _bloc.obfuscatePasswordController.stream,
-        initialData: true,
-        builder: (context, snapshot) {
-          return TextFormField(
-            textCapitalization: TextCapitalization.none,
-            controller: _bloc.textPasswordController,
-            obscureText: snapshot.data,
-            style: TextStyles.textField(TextSize.medium),
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)
-                  .translate('fieldLoginRegisterPassword'),
-              hintStyle: TextStyle(color: Colors.grey),
-              prefixIcon: Icon(Icons.vpn_key),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-              fillColor: Colors.white,
-              filled: true,
-              suffixIcon: IconButton(
-                icon: Icon(
-                    snapshot.data ? Icons.visibility : Icons.visibility_off),
-                onPressed: () {
-                  _bloc.obfuscatePasswordController.add(!snapshot.data);
-                },
-              ),
-            ),
-            onFieldSubmitted: (text) {
-              if (_bloc.isPasswordErrorDisplayed) {
-                _bloc.formKey.currentState.validate();
-              }
-            },
-            validator: (text) {
-              if (text.trim().isEmpty) {
-                _bloc.isPasswordErrorDisplayed = true;
-                _showSnackBar(AppLocalizations.of(context)
-                    .translate('fieldLoginRegisterPasswordValidator'));
-                return "";
-              }
-
-              _bloc.isPasswordErrorDisplayed = false;
-              return null;
-            },
-          );
-        });
-  }
-
-  //NAVIGATION
-
-  void _doNavigateMainScreen() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(builder: (context) => TabBarScreen()),
-        (route) => false);
-  }
-
-  void _doNavigateRegisterScreen() {
+  _doNavigateToRegisterScreen(BuildContext context) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => SignUpScreen(),
       ),
     );
   }
+}
 
-  //SNACKBAR
+class _TextFormFields extends StatelessWidget {
+  final SignInBloc bloc;
 
-  void _showSnackBar(String text) {
-    Flushbar(
-      message: text,
-      duration: Duration(seconds: 3),
-      backgroundColor: kRedColor,
-    )..show(context);
+  const _TextFormFields({this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: bloc.formKey,
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 78,
+          ),
+          _TextFormField(
+              mainController: bloc.textEmailController,
+              secondController: bloc.textPasswordController,
+              isPassword: false,
+              hint: AppLocalizations.of(context)
+                  .translate('fieldLoginRegisterEmail'),
+              formKey: bloc.formKey),
+          SizedBox(
+            height: 14,
+          ),
+          _TextFormField(
+              mainController: bloc.textPasswordController,
+              secondController: bloc.textEmailController,
+              isPassword: true,
+              hint: AppLocalizations.of(context)
+                  .translate('fieldLoginRegisterPassword'),
+              formKey: bloc.formKey)
+        ],
+      ),
+    );
+  }
+}
+
+class _TextFormField extends StatefulWidget {
+  final TextEditingController mainController;
+  final TextEditingController secondController;
+  final bool isPassword;
+  final String hint;
+  final GlobalKey<FormState> formKey;
+
+  const _TextFormField(
+      {this.mainController,
+      this.secondController,
+      this.isPassword,
+      this.hint,
+      this.formKey});
+  @override
+  __TextFormFieldState createState() => __TextFormFieldState();
+}
+
+class __TextFormFieldState extends State<_TextFormField> {
+  bool _errorDisplayed = false;
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      textCapitalization: TextCapitalization.none,
+      controller: widget.mainController,
+      obscureText: widget.isPassword ? _obscureText : false,
+      style: TextStyles.textField(TextSize.medium),
+      decoration: InputDecoration(
+        errorStyle: TextStyle(height: 0),
+        hintText: widget.hint,
+        hintStyle: TextStyle(color: Colors.grey),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+        fillColor: Colors.white,
+        filled: true,
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                })
+            : null,
+      ),
+      onFieldSubmitted: (text) {
+        if (_errorDisplayed) {
+          widget.formKey.currentState.validate();
+        }
+      },
+      validator: (text) {
+        if (widget.mainController.text.trim().isEmpty &&
+            widget.secondController.text.trim().isEmpty) {
+          _errorDisplayed = true;
+          CustomFlushBar.showFlushBar(
+              AppLocalizations.of(context).translate('fieldsEmpty'), context);
+          return "";
+        }
+
+        if (!widget.isPassword) {
+          if (!Utils.validateEmail(widget.mainController.text.trim())) {
+            CustomFlushBar.showFlushBar(
+                AppLocalizations.of(context)
+                    .translate('fieldLoginRegisterEmailValidatorInvalid'),
+                context);
+            return "";
+          }
+        }
+
+        if (widget.mainController.text.trim().isEmpty) {
+          _errorDisplayed = true;
+          CustomFlushBar.showFlushBar(
+              AppLocalizations.of(context).translate(widget.isPassword
+                  ? 'fieldLoginRegisterPasswordValidator'
+                  : 'fieldLoginRegisterEmailValidatorEmpty'),
+              context);
+          return "";
+        }
+
+        _errorDisplayed = false;
+        return null;
+      },
+    );
   }
 }

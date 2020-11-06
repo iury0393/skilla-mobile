@@ -315,23 +315,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       stream: _bloc.bioController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.data != null) {
-                          if (snapshot.data.data.isNotEmpty) {
-                            return Text(
-                              widget.user != null
-                                  ? widget.user.bio != null
-                                      ? widget.user.bio
-                                      : ""
-                                  : snapshot.data?.data != null
-                                      ? snapshot.data?.data
-                                      : "",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyles.paragraph(
-                                TextSize.large,
-                                weight: FontWeight.w400,
-                              ),
-                            );
-                          }
+                          return Text(
+                            widget.user != null
+                                ? widget.user.bio != null
+                                    ? widget.user.bio
+                                    : ""
+                                : snapshot.data?.data != null
+                                    ? snapshot.data?.data
+                                    : "",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyles.paragraph(
+                              TextSize.large,
+                              weight: FontWeight.w400,
+                            ),
+                          );
                         }
                         return Container();
                       }),
@@ -349,23 +347,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       stream: _bloc.websiteController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.data != null) {
-                          if (snapshot.data.data.isNotEmpty) {
-                            return Text(
-                              widget.user != null
-                                  ? widget.user.website != null
-                                      ? widget.user.website
-                                      : ""
-                                  : snapshot.data?.data != null
-                                      ? snapshot.data?.data
-                                      : "",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyles.paragraph(
-                                TextSize.large,
-                                weight: FontWeight.w400,
-                              ),
-                            );
-                          }
+                          return Text(
+                            widget.user != null
+                                ? widget.user.website != null
+                                    ? widget.user.website
+                                    : ""
+                                : snapshot.data?.data != null
+                                    ? snapshot.data?.data
+                                    : "",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyles.paragraph(
+                              TextSize.large,
+                              weight: FontWeight.w400,
+                            ),
+                          );
                         }
                         return Container();
                       }),
