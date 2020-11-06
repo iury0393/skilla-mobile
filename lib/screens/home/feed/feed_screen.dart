@@ -127,9 +127,12 @@ class _FeedScreenState extends State<FeedScreen> {
     return ListView.builder(
       itemCount: snapshot.data.data.length,
       itemBuilder: (context, index) {
-        return PostItem(
-          post: snapshot.data.data.elementAt(index),
-          user: _bloc.user,
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 25.0),
+          child: PostItem(
+            post: snapshot.data.data.elementAt(index),
+            user: _bloc.user,
+          ),
         );
       },
     );

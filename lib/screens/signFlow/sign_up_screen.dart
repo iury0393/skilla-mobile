@@ -52,42 +52,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: Utils.getPaddingDefault(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/logo.png'),
-              Padding(
-                padding: EdgeInsets.only(bottom: 30),
-                child: Form(
-                  key: _bloc.formKey,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 15),
-                        child: _buildEmailTextFormField(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 15),
-                        child: _buildNameTextFormField(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 15),
-                        child: _buildUsernameTextFormField(),
-                      ),
-                      _buildPasswordTextFormField(),
-                    ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: Utils.getPaddingDefault(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset('assets/logo.png'),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: Form(
+                    key: _bloc.formKey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: _buildEmailTextFormField(),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: _buildNameTextFormField(),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: _buildUsernameTextFormField(),
+                        ),
+                        _buildPasswordTextFormField(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                children: [
-                  _buildSubmitButton(),
-                  _buildLoginButton(),
-                ],
-              ),
-            ],
+                Column(
+                  children: [
+                    _buildSubmitButton(),
+                    _buildLoginButton(),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

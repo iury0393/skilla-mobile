@@ -151,14 +151,27 @@ class _PostItemState extends State<PostItem> {
               height: height / 3,
             ),
           ),
-          IconButton(
-            icon: Icon(
-              widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
-              color: kSkillaPurple,
-            ),
-            onPressed: () {
-              _likeBloc.doRequesttoggleLike(widget.post.id);
-            },
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: kSkillaPurple,
+                ),
+                onPressed: () {
+                  _likeBloc.doRequesttoggleLike(widget.post.id);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.message_outlined,
+                  color: kSkillaPurple,
+                ),
+                onPressed: () {
+                  _doNavigateToPostDetailScreen(widget.post.user, widget.post);
+                },
+              ),
+            ],
           ),
           Row(
             children: [

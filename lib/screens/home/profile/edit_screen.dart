@@ -65,26 +65,41 @@ class _EditScreenState extends State<EditScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Utils.loadImage(widget.user.avatar, context, false),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Utils.loadImage(widget.user.avatar, context, false),
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.user.username,
-                        style: TextStyles.paragraph(
-                          TextSize.large,
-                          weight: FontWeight.w700,
+                      Container(
+                        width: 180,
+                        child: Text(
+                          widget.user.username,
+                          style: TextStyles.paragraph(
+                            TextSize.large,
+                            weight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                      Text(
-                        'Troque a imagem do seu perfil',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyles.paragraph(
-                          TextSize.medium,
-                          weight: FontWeight.w400,
-                          color: Color(0xFF4998F5),
+                      GestureDetector(
+                        child: Container(
+                          width: 180.0,
+                          child: Text(
+                            'Troque a imagem do seu perfil',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyles.paragraph(
+                              TextSize.medium,
+                              weight: FontWeight.w400,
+                              color: Color(0xFF4998F5),
+                            ),
+                          ),
                         ),
+                        onTap: () {
+                          //TODO: Trocar imagem do perfil, deixar lista de posts de 3 em 3 por linha
+                          print("Trocar imagem do perfil");
+                        },
                       ),
                     ],
                   ),

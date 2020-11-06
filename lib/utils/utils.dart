@@ -138,7 +138,7 @@ class Utils {
       Jiffy.locale(Utils.appLanguage);
 
       var jiffy = Jiffy(timeStamp).format("dd [de] ");
-      var jiffyMonth = Jiffy(timeStamp).format("MMMM [de] yyyy");
+      var jiffyMonth = Jiffy(timeStamp).format("MMMM");
 
       return "$jiffy${jiffyMonth[0].toUpperCase()}${jiffyMonth.substring(1)}";
     } catch (e) {

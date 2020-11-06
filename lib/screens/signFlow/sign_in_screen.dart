@@ -48,34 +48,36 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: Utils.getPaddingDefault(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/logo.png'),
-              Padding(
-                padding: EdgeInsets.only(bottom: 30),
-                child: Form(
-                  key: _bloc.formKey,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 15),
-                        child: _buildEmailTextFormField(),
-                      ),
-                      _buildPasswordTextFormField(),
-                    ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: Utils.getPaddingDefault(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset('assets/logo.png'),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: Form(
+                    key: _bloc.formKey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: _buildEmailTextFormField(),
+                        ),
+                        _buildPasswordTextFormField(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                children: [
-                  _buildSubmitButton(),
-                  _buildRegisterButton(),
-                ],
-              ),
-            ],
+                Column(
+                  children: [
+                    _buildSubmitButton(),
+                    _buildRegisterButton(),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
