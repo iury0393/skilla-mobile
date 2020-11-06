@@ -50,13 +50,11 @@ class EditBloc {
     editController.close();
   }
 
-  doRequestEdit() async {
+  doRequestEdit(String secureUrl) async {
     editController.add(BaseResponse.loading());
     try {
       var body = User(
-        avatar: textAvatarController.text == ""
-            ? defaultImg
-            : textAvatarController.text,
+        avatar: secureUrl,
         fullname: textFullNameController.text == ""
             ? ""
             : textFullNameController.text,

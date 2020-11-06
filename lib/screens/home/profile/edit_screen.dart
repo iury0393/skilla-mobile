@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:skilla/bloc/edit_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
+import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -22,6 +28,9 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   EditBloc _bloc;
+  File _image;
+  final picker = ImagePicker();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -51,6 +60,36 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
+  }
+
+  Future getImageCamera() async {
+    var pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        NativeDialog.showErrorDialog(context, "Imagem não selecionada");
+      }
+    });
+  }
+
+  Future getImageGallery() async {
+    var pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        NativeDialog.showErrorDialog(context, "Imagem não selecionada");
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
@@ -58,78 +97,117 @@ class _EditScreenState extends State<EditScreen> {
         center: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: Utils.getPaddingDefault(),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: Utils.loadImage(widget.user.avatar, context, false),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 180,
-                        child: Text(
-                          widget.user.username,
-                          style: TextStyles.paragraph(
-                            TextSize.large,
-                            weight: FontWeight.w700,
-                          ),
+        child: isLoading
+            ? Center(
+                child: NativeLoading(animating: true),
+              )
+            : Padding(
+                padding: Utils.getPaddingDefault(),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: _image == null
+                              ? Utils.loadImage(
+                                  widget.user.avatar, context, false)
+                              : CircleAvatar(
+                                  radius: 55,
+                                  child: Image.file(
+                                    _image,
+                                  ),
+                                ),
                         ),
-                      ),
-                      GestureDetector(
-                        child: Container(
-                          width: 180.0,
-                          child: Text(
-                            'Troque a imagem do seu perfil',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyles.paragraph(
-                              TextSize.medium,
-                              weight: FontWeight.w400,
-                              color: Color(0xFF4998F5),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 180,
+                              child: Text(
+                                widget.user.username,
+                                style: TextStyles.paragraph(
+                                  TextSize.large,
+                                  weight: FontWeight.w700,
+                                ),
+                              ),
                             ),
-                          ),
+                            GestureDetector(
+                              child: Container(
+                                width: 180.0,
+                                child: Text(
+                                  'Troque a imagem do seu perfil',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyles.paragraph(
+                                    TextSize.medium,
+                                    weight: FontWeight.w400,
+                                    color: Color(0xFF4998F5),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                //TODO: Trocar imagem do perfil, deixar lista de posts de 3 em 3 por linha
+                                print("Trocar imagem do perfil");
+                                _showDialogForUser(context);
+                              },
+                            ),
+                          ],
                         ),
-                        onTap: () {
-                          //TODO: Trocar imagem do perfil, deixar lista de posts de 3 em 3 por linha
-                          print("Trocar imagem do perfil");
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 25.0),
+                      child: _buildFullNameTextFormField(),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 25.0),
+                      child: _buildUserNameTextFormField(),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 25.0),
+                      child: _buildWebsiteTextFormField(),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 25.0),
+                      child: _buildBioTextFormField(),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 25.0),
+                      child: _buildSubmitButton(),
+                    ),
+                  ],
+                ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 25.0),
-                child: _buildFullNameTextFormField(),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 25.0),
-                child: _buildUserNameTextFormField(),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 25.0),
-                child: _buildWebsiteTextFormField(),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 25.0),
-                child: _buildBioTextFormField(),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 25.0),
-                child: _buildSubmitButton(),
-              ),
-            ],
-          ),
-        ),
       ),
     );
+  }
+
+  Future uploadImage() async {
+    setState(() {
+      isLoading = true;
+    });
+    Dio dio = Dio();
+    FormData formData = new FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        _image.path,
+      ),
+      "upload_preset": kUploadPreset,
+      "cloud_name": kCloudName,
+    });
+    try {
+      Response response = await dio.post(kApiBaseUrl, data: formData);
+
+      var data = jsonDecode(response.toString());
+      print(data['secure_url']);
+      setState(() {
+        isLoading = false;
+      });
+      return data['secure_url'];
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget _buildSubmitButton() {
@@ -140,8 +218,10 @@ class _EditScreenState extends State<EditScreen> {
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
-      onPressed: () {
-        _bloc.doRequestEdit();
+      onPressed: () async {
+        var response = await uploadImage();
+
+        _bloc.doRequestEdit(response);
       },
     );
   }
@@ -225,6 +305,39 @@ class _EditScreenState extends State<EditScreen> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         fillColor: Colors.white,
         filled: true,
+      ),
+    );
+  }
+
+  void _showDialogForUser(BuildContext context) {
+    showNativeDialog(
+      context: context,
+      builder: (context) => NativeDialog(
+        title: 'Você realmente deseja deletar esse post?',
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Câmera', style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+              getImageCamera();
+            },
+          ),
+          FlatButton(
+            child:
+                Text('Galeria', style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+              getImageGallery();
+            },
+          ),
+          FlatButton(
+            child: Text('Cancelar',
+                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }

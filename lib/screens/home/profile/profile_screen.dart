@@ -13,8 +13,8 @@ import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/post_detail_screen.dart';
 import 'package:skilla/screens/home/profile/curriculum_screen.dart';
-import 'package:skilla/screens/home/profile/following_screen.dart';
 import 'package:skilla/screens/home/profile/follower_screen.dart';
+import 'package:skilla/screens/home/profile/following_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
@@ -137,12 +137,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return Utils.loadImage(
                           snapshot.data?.data, context, false);
                     }
-                  } else {
-                    return Image.asset(
-                      'assets/default_avatar.jpg',
-                      width: 80.0,
-                      height: 80.0,
-                    );
                   }
                   return Container();
                 },
