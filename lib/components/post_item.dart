@@ -215,31 +215,37 @@ class _PostItemState extends State<PostItem> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 5.0),
-                child: Text(
-                  Utils.convertToDisplayTimeDetail(
-                      widget.post.createdAt.toString(), context),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyles.paragraph(
-                    TextSize.medium,
-                    weight: FontWeight.w400,
-                    color: kSkillaPurple,
+                child: Container(
+                  width: 100.0,
+                  child: Text(
+                    Utils.convertToDisplayTimeDetail(
+                        widget.post.createdAt.toString(), context),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.paragraph(
+                      TextSize.medium,
+                      weight: FontWeight.w400,
+                      color: kSkillaPurple,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          Container(
-            padding: EdgeInsets.all(8.0),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
             child: Row(
               children: [
-                Text(
-                  widget.post.user.fullname,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyles.paragraph(
-                    TextSize.large,
-                    weight: FontWeight.w700,
+                Container(
+                  width: 120,
+                  child: Text(
+                    widget.post.user.fullname,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.paragraph(
+                      TextSize.large,
+                      weight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 SizedBox(

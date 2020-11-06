@@ -1,31 +1,24 @@
 {
   "btnLogin": "Iniciar sesión",
+  "btnLoginText": "¿Ya tienes una cuenta?",
   "btnRegister": "Registrarse",
   "btnRegisterText" : "¿No hay registro?",
-  "btnLoginText": "¿Ya tienes una cuenta?",
-  "btnLink": "haga clic aquí",
+  "btnLoginRegisterLink": "haga clic aquí",
 
-  "fieldEmail": "E-mail",
-  "fieldEmailValidatorEmpty": "El correo electrónico no puede estar vacío",
-  "fieldEmailValidatorInvalid": "Email inválido",
-  "fieldPassword": "Contraseña",
-  "fieldPasswordValidator": "La contraseña no puede estar vacía",
-  "fieldName": "Nombre completo",
-  "fieldNameValidator": "El nombre no puede estar vacío",
-  "fieldUsername": "Usuario",
-  "fieldUsernameValidator": "El usuario no puede estar vacío",
+  "fieldLoginRegisterEmail": "E-mail",
+  "fieldLoginRegisterEmailValidatorEmpty": "El correo electrónico no puede estar vacío",
+  "fieldLoginRegisterEmailValidatorInvalid": "Email inválido",
+  "fieldLoginRegisterPassword": "Contraseña",
+  "fieldLoginRegisterPasswordValidator": "La contraseña no puede estar vacía",
+  "fieldLoginRegisterName": "Nombre completo",
+  "fieldLoginRegisterNameValidator": "El nombre no puede estar vacío",
+  "fieldLoginRegisterUsername": "Usuario",
+  "fieldLoginRegisterUsernameValidator": "El usuario no puede estar vacío",
 
   "introOpportunitiesTitle": "Oportunidades",
   "introOpportunitiesText": "Encuentra oportunidades en las empresas más grandes de Ceará",
   "introPublicationsTitle": "Publicaciones",
   "introPublicationsText": "¡Vea noticias de empresas y usuarios!",
   "introCoursesTitle": "Cursos/Estudios",
-  "introCoursesText": "Encuentre cursos para agregar al plan de estudios",
-
-  "menuFeed": "Feed",
-  "menuProfile": "Perfil",
-  "menuOpportunities": "Oportunidades",
-  "menuExplore": "Explorar",
-  "menuSearch": "Buscar",
-  "menuExit": "Sair"
+  "introCoursesText": "Encuentre cursos para agregar al plan de estudios"
 }

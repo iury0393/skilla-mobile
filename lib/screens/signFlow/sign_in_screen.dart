@@ -106,7 +106,8 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           children: [
             TextSpan(
-              text: AppLocalizations.of(context).translate('btnLink'),
+              text: AppLocalizations.of(context)
+                  .translate('btnLoginRegisterLink'),
               style: TextStyles.paragraph(
                 TextSize.medium,
                 color: kPurpleColor,
@@ -141,7 +142,8 @@ class _SignInScreenState extends State<SignInScreen> {
       keyboardType: TextInputType.emailAddress,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context).translate('fieldEmail'),
+        hintText:
+            AppLocalizations.of(context).translate('fieldLoginRegisterEmail'),
         hintStyle: TextStyle(color: Colors.grey),
         prefixIcon: Icon(Icons.email),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -157,14 +159,14 @@ class _SignInScreenState extends State<SignInScreen> {
         if (text.trim().isEmpty) {
           _bloc.isEmailErrorDisplayed = true;
           _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldEmailValidatorEmpty'));
+              .translate('fieldLoginRegisterEmailValidatorEmpty'));
           return "";
         }
 
         if (!Utils.validateEmail(text)) {
           _bloc.isEmailErrorDisplayed = true;
           _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldEmailValidatorInvalid'));
+              .translate('fieldLoginRegisterEmailValidatorInvalid'));
           return "";
         }
 
@@ -185,7 +187,8 @@ class _SignInScreenState extends State<SignInScreen> {
             obscureText: snapshot.data,
             style: TextStyles.textField(TextSize.medium),
             decoration: InputDecoration(
-              hintText: AppLocalizations.of(context).translate('fieldPassword'),
+              hintText: AppLocalizations.of(context)
+                  .translate('fieldLoginRegisterPassword'),
               hintStyle: TextStyle(color: Colors.grey),
               prefixIcon: Icon(Icons.vpn_key),
               border:
@@ -209,7 +212,7 @@ class _SignInScreenState extends State<SignInScreen> {
               if (text.trim().isEmpty) {
                 _bloc.isPasswordErrorDisplayed = true;
                 _showSnackBar(AppLocalizations.of(context)
-                    .translate('fieldPasswordValidator'));
+                    .translate('fieldLoginRegisterPasswordValidator'));
                 return "";
               }
 

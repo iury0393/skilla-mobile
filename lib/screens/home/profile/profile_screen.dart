@@ -334,6 +334,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                         return Container();
                       }),
+              widget.user != null
+                  ? Text(
+                      widget.user.website != null ? widget.user.website : "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.paragraph(
+                        TextSize.large,
+                        weight: FontWeight.w400,
+                      ),
+                    )
+                  : StreamBuilder<BaseResponse<String>>(
+                      stream: _bloc.websiteController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data != null) {
+                          if (snapshot.data.data.isNotEmpty) {
+                            return Text(
+                              widget.user != null
+                                  ? widget.user.website != null
+                                      ? widget.user.website
+                                      : ""
+                                  : snapshot.data?.data != null
+                                      ? snapshot.data?.data
+                                      : "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyles.paragraph(
+                                TextSize.large,
+                                weight: FontWeight.w400,
+                              ),
+                            );
+                          }
+                        }
+                        return Container();
+                      }),
               Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: _buildSubmitButton(),

@@ -65,6 +65,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
+          _bloc.doRequestGetComments(widget.post);
           Navigator.pop(context);
           _bloc.textCommentController.clear();
           break;
@@ -237,13 +238,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 padding: EdgeInsets.only(top: 10.0),
                 child: Row(
                   children: [
-                    Text(
-                      widget.post.user.fullname,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.paragraph(
-                        TextSize.large,
-                        weight: FontWeight.w700,
+                    Container(
+                      width: 120,
+                      child: Text(
+                        widget.post.user.fullname,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyles.paragraph(
+                          TextSize.large,
+                          weight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     SizedBox(

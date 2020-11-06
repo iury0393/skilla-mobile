@@ -35,7 +35,11 @@ class PostDetailBloc {
         if (feed.user.id == post.user.id) {
           if (feed.id == post.id) {
             feed.comments.forEach((comments) {
-              commentsList.add(comments);
+              if (commentsList.contains(comments)) {
+                commentsList.remove(comments);
+              } else {
+                commentsList.add(comments);
+              }
             });
           }
         }

@@ -114,6 +114,7 @@ class _EditScreenState extends State<EditScreen> {
                               ? Utils.loadImage(
                                   widget.user.avatar, context, false)
                               : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
                                   radius: 55,
                                   child: Image.file(
                                     _image,

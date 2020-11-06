@@ -114,7 +114,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           children: [
             TextSpan(
-              text: AppLocalizations.of(context).translate('btnLink'),
+              text: AppLocalizations.of(context)
+                  .translate('btnLoginRegisterLink'),
               style: TextStyles.paragraph(
                 TextSize.medium,
                 color: kPurpleColor,
@@ -150,7 +151,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       keyboardType: TextInputType.emailAddress,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context).translate('fieldEmail'),
+        hintText:
+            AppLocalizations.of(context).translate('fieldLoginRegisterEmail'),
         hintStyle: TextStyle(color: Colors.grey),
         prefixIcon: Icon(Icons.email),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -166,14 +168,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (text.trim().isEmpty) {
           _bloc.isEmailErrorDisplayed = true;
           _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldEmailValidatorEmpty'));
+              .translate('fieldLoginRegisterEmailValidatorEmpty'));
           return "";
         }
 
         if (!Utils.validateEmail(text)) {
           _bloc.isEmailErrorDisplayed = true;
           _showSnackBar(AppLocalizations.of(context)
-              .translate('fieldEmailValidatorInvalid'));
+              .translate('fieldLoginRegisterEmailValidatorInvalid'));
           return "";
         }
 
@@ -189,7 +191,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       controller: _bloc.textFullNameController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context).translate('fieldName'),
+        hintText:
+            AppLocalizations.of(context).translate('fieldLoginRegisterName'),
         hintStyle: TextStyle(color: Colors.grey),
         prefixIcon: Icon(Icons.person),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -204,8 +207,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       validator: (text) {
         if (text.trim().isEmpty) {
           _bloc.isNameErrorDisplayed = true;
-          _showSnackBar(
-              AppLocalizations.of(context).translate('fieldNameValidator'));
+          _showSnackBar(AppLocalizations.of(context)
+              .translate('fieldLoginRegisterNameValidator'));
           return "";
         }
 
@@ -222,7 +225,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       keyboardType: TextInputType.emailAddress,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context).translate('fieldUsername'),
+        hintText: AppLocalizations.of(context)
+            .translate('fieldLoginRegisterUsername'),
         hintStyle: TextStyle(color: Colors.grey),
         prefixIcon: Icon(Icons.verified_user),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -237,8 +241,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       validator: (text) {
         if (text.trim().isEmpty) {
           _bloc.isUsernameErrorDisplayed = true;
-          _showSnackBar(
-              AppLocalizations.of(context).translate('fieldUsernameValidator'));
+          _showSnackBar(AppLocalizations.of(context)
+              .translate('fieldLoginRegisterUsernameValidator'));
           return "";
         }
 
@@ -259,7 +263,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             obscureText: snapshot.data,
             style: TextStyles.textField(TextSize.medium),
             decoration: InputDecoration(
-              hintText: AppLocalizations.of(context).translate('fieldPassword'),
+              hintText: AppLocalizations.of(context)
+                  .translate('fieldLoginRegisterPassword'),
               hintStyle: TextStyle(color: Colors.grey),
               prefixIcon: Icon(Icons.vpn_key),
               border:
@@ -283,7 +288,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               if (text.trim().isEmpty) {
                 _bloc.isPasswordErrorDisplayed = true;
                 _showSnackBar(AppLocalizations.of(context)
-                    .translate('fieldPasswordValidator'));
+                    .translate('fieldLoginRegisterPasswordValidator'));
                 return "";
               }
 
