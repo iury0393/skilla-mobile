@@ -8,6 +8,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/likes_screen.dart';
 import 'package:skilla/screens/home/feed/post_detail_screen.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -197,8 +198,8 @@ class _PostItemState extends State<PostItem> {
               GestureDetector(
                 child: Text(
                   widget.post.commentsCount == 1
-                      ? '${widget.post.commentsCount} Comentário'
-                      : '${widget.post.commentsCount} Comentários',
+                      ? '${widget.post.commentsCount} ${AppLocalizations.of(context).translate('textPostItemComment')}'
+                      : '${widget.post.commentsCount} ${AppLocalizations.of(context).translate('textPostItemComments')}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.paragraph(
@@ -313,10 +314,11 @@ class _PostItemState extends State<PostItem> {
     showNativeDialog(
       context: context,
       builder: (context) => NativeDialog(
-        title: 'Você realmente deseja deletar esse post?',
+        title: AppLocalizations.of(context)
+            .translate('textPostDetailDialogTitlePost'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Deletar',
+            child: Text(AppLocalizations.of(context).translate('textDelete'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);
@@ -324,8 +326,8 @@ class _PostItemState extends State<PostItem> {
             },
           ),
           FlatButton(
-            child:
-                Text('Cancelar', style: TextStyles.paragraph(TextSize.xSmall)),
+            child: Text(AppLocalizations.of(context).translate('textCancel'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
               Navigator.pop(context);
             },

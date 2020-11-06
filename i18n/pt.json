@@ -20,5 +20,45 @@
   "introPublicationsTitle": "Publicacões",
   "introPublicationsText": "Veja notícias de empresas e usuários!",
   "introCoursesTitle": "Cursos/Estudos",
-  "introCoursesText": "Encontre cursos para agregar ao currículo"
+  "introCoursesText": "Encontre cursos para agregar ao currículo",
+
+  "textSearchWarning": "Não existe mais ninguém para seguir",
+
+  "textFeedWarning": "O feed está vazio, siga alguém",
+
+  "textLikesWarning": "Ninguem curtiu sua publicação",
+
+  "textFieldPostDetailCommentHint": "Adicione um comentário",
+  "textPostDetailDialogTitleComment": "Você realmente deseja deletar esse comentário?",
+  "textDelete": "Deletar",
+  "textCancel": "Cancelar",
+  "textPostDetailDialogTitlePost": "Você realmente deseja deletar esse post?",
+
+  "textFieldPostHint": "Adicione uma legenda",
+  "btnPostSubmit": "Publicar",
+  "textImagePickerWarning": "Imagem não selecionada",
+
+  "textEditBtnImage": "Troque a imagem do seu perfil",
+  "btnEditSubmit": "Editar",
+  "textFieldEditNameHint": "Nome",
+  "textFieldEditUserHint": "Usuário",
+  "textFieldEditUserWarning": "O campo do nome do usuário não pode estar vazio.",
+  "textFieldEditBioHint": "Bio",
+  "textFieldEditWebHint": "Website",
+  "textCamera": "Câmera",
+  "textGallery": "Galeria",
+
+  "textFollowerWarning": "Não existe ninguém lhe seguindo",
+
+  "textFollowingWarning": "Não existe ninguém que você esteja seguindo",
+
+  "textProfileFollower": "Seguidor",
+  "textProfileFollowers": "Seguidores",
+  "textProfileFollowing": "Seguindo",
+  "textProfileFollow": "Seguir",
+  "textProfilePostWarning": "Você ainda não postou nada.",
+  "textProfileCurriculum": "Currículo",
+
+  "textPostItemComment": "Comentário",
+  "textPostItemComments": "Comentários"
 }

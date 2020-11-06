@@ -20,5 +20,45 @@
   "introPublicationsTitle": "Publications",
   "introPublicationsText": "See news of companies and users!",
   "introCoursesTitle": "Courses/Studies",
-  "introCoursesText": "Found courses to add to or curriculum"
+  "introCoursesText": "Found courses to add to or curriculum",
+
+  "textSearchWarning": "There is no one else to follow",
+
+  "textFeedWarning": "The feed is empty, follow someone",
+
+  "textLikesWarning": "Nobody liked your post",
+
+  "textFieldPostDetailCommentHint": "Add a comment",
+  "textPostDetailDialogTitleComment": "Do you really want to delete this comment?",
+  "textDelete": "Delete",
+  "textCancel": "Cancel",
+  "textPostDetailDialogTitlePost": "Do you really want to delete this post?",
+
+  "textFieldPostHint": "Add a caption",
+  "btnPostSubmit": "Publish",
+  "textImagePickerWarning": "Image not selected",
+
+  "textEditBtnImage": "Change your profile picture",
+  "btnEditSubmit": "Edit",
+  "textFieldEditNameHint": "Name",
+  "textFieldEditUserHint": "User",
+  "textFieldEditUserWarning": "The username field cannot be empty.",
+  "textFieldEditBioHint": "Bio",
+  "textFieldEditWebHint": "Web site",
+  "textCamera": "Camera",
+  "textGallery": "Gallery",
+
+  "textFollowerWarning": "There is no one following you",
+
+  "textFollowingWarning": "There is no one you are following",
+
+  "textProfileFollower": "Follower",
+  "textProfileFollowers": "Followers",
+  "textProfileFollowing": "Following",
+  "textProfileFollow": "Follow",
+  "textProfilePostWarning": "You haven't posted anything yet.",
+  "textProfileCurriculum": "Curriculum",
+
+  "textPostItemComment": "Comment",
+  "textPostItemComments": "Comments"
 }

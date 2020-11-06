@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:skilla/components/custom_app_bar.dart';
 
 class CurriculumScreen extends StatefulWidget {
   @override
@@ -29,9 +30,10 @@ class _CurriculumScreenState extends State<CurriculumScreen> {
   Widget build(BuildContext context) => MaterialApp(
         theme: ThemeData(primaryColor: Colors.white),
         home: Scaffold(
-          appBar: AppBar(
-            title: Text('PdfView example'),
-            actions: <Widget>[
+          appBar: CustomAppBar(
+            titleImg: 'assets/navlogo.png',
+            center: true,
+            widgets: [
               IconButton(
                 icon: Icon(Icons.navigate_before),
                 onPressed: () {
@@ -69,7 +71,7 @@ class _CurriculumScreenState extends State<CurriculumScreen> {
                   }
                   isSampleDoc = !isSampleDoc;
                 },
-              )
+              ),
             ],
           ),
           body: PdfView(

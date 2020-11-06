@@ -10,6 +10,7 @@ import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -65,7 +66,8 @@ class _PostScreenState extends State<PostScreen> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
       } else {
-        NativeDialog.showErrorDialog(context, "Imagem não selecionada");
+        NativeDialog.showErrorDialog(context,
+            AppLocalizations.of(context).translate('textImagePickerWarning'));
       }
     });
   }
@@ -77,7 +79,8 @@ class _PostScreenState extends State<PostScreen> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
       } else {
-        NativeDialog.showErrorDialog(context, "Imagem não selecionada");
+        NativeDialog.showErrorDialog(context,
+            AppLocalizations.of(context).translate('textImagePickerWarning'));
       }
     });
   }
@@ -194,7 +197,7 @@ class _PostScreenState extends State<PostScreen> {
       controller: _bloc.textCaptionController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: 'Adicione uma legenda',
+        hintText: AppLocalizations.of(context).translate('textFieldPostHint'),
         hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         fillColor: Colors.white,
@@ -205,7 +208,7 @@ class _PostScreenState extends State<PostScreen> {
 
   Widget _buildSubmitButton() {
     return RoundedButton(
-      title: 'Postar',
+      title: AppLocalizations.of(context).translate('btnPostSubmit'),
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,

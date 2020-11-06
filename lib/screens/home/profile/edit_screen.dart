@@ -13,6 +13,7 @@ import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -72,7 +73,8 @@ class _EditScreenState extends State<EditScreen> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
       } else {
-        NativeDialog.showErrorDialog(context, "Imagem não selecionada");
+        NativeDialog.showErrorDialog(context,
+            AppLocalizations.of(context).translate('textImagePickerWarning'));
       }
     });
   }
@@ -84,7 +86,8 @@ class _EditScreenState extends State<EditScreen> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
       } else {
-        NativeDialog.showErrorDialog(context, "Imagem não selecionada");
+        NativeDialog.showErrorDialog(context,
+            AppLocalizations.of(context).translate('textImagePickerWarning'));
       }
     });
   }
@@ -138,7 +141,8 @@ class _EditScreenState extends State<EditScreen> {
                               child: Container(
                                 width: 180.0,
                                 child: Text(
-                                  'Troque a imagem do seu perfil',
+                                  AppLocalizations.of(context)
+                                      .translate('btnRegisterText'),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style: TextStyles.paragraph(
@@ -149,8 +153,6 @@ class _EditScreenState extends State<EditScreen> {
                                 ),
                               ),
                               onTap: () {
-                                //TODO: Trocar imagem do perfil, deixar lista de posts de 3 em 3 por linha
-                                print("Trocar imagem do perfil");
                                 _showDialogForUser(context);
                               },
                             ),
@@ -215,7 +217,7 @@ class _EditScreenState extends State<EditScreen> {
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title: 'Submit',
+      title: AppLocalizations.of(context).translate('btnEditSubmit'),
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
@@ -237,7 +239,7 @@ class _EditScreenState extends State<EditScreen> {
       controller: _bloc.textFullNameController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: 'Nome',
+        hintText: AppLocalizations.of(context).translate('btnRegisterText'),
         hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
         prefixIcon: Icon(Icons.person),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -253,7 +255,7 @@ class _EditScreenState extends State<EditScreen> {
       controller: _bloc.textUserNameController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: 'Usuário',
+        hintText: AppLocalizations.of(context).translate('btnRegisterText'),
         hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
         prefixIcon: Icon(Icons.person_pin),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -268,7 +270,8 @@ class _EditScreenState extends State<EditScreen> {
       validator: (text) {
         if (text.trim().isEmpty) {
           _bloc.isUserNameErrorDisplayed = true;
-          _showSnackBar('O campo do nome do usuário não pode estar vazio.');
+          _showSnackBar(AppLocalizations.of(context)
+              .translate('textFieldEditUserWarning'));
           return "";
         }
 
@@ -284,7 +287,7 @@ class _EditScreenState extends State<EditScreen> {
       controller: _bloc.textWebsiteController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: 'Website',
+        hintText: AppLocalizations.of(context).translate('btnRegisterText'),
         hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
         prefixIcon: Icon(Icons.account_circle),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -300,7 +303,7 @@ class _EditScreenState extends State<EditScreen> {
       controller: _bloc.textBioController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: 'Bio',
+        hintText: AppLocalizations.of(context).translate('btnRegisterText'),
         hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
         prefixIcon: Icon(Icons.text_format),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -314,25 +317,27 @@ class _EditScreenState extends State<EditScreen> {
     showNativeDialog(
       context: context,
       builder: (context) => NativeDialog(
-        title: 'Você realmente deseja deletar esse post?',
+        title: AppLocalizations.of(context)
+            .translate('textPostDetailDialogTitlePost'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Câmera', style: TextStyles.paragraph(TextSize.xSmall)),
+            child: Text(AppLocalizations.of(context).translate('textCamera'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
               Navigator.pop(context);
               getImageCamera();
             },
           ),
           FlatButton(
-            child:
-                Text('Galeria', style: TextStyles.paragraph(TextSize.xSmall)),
+            child: Text(AppLocalizations.of(context).translate('textGallery'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
               Navigator.pop(context);
               getImageGallery();
             },
           ),
           FlatButton(
-            child: Text('Cancelar',
+            child: Text(AppLocalizations.of(context).translate('textCancel'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);

@@ -8,6 +8,7 @@ import 'package:skilla/components/post_item.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/post_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -90,7 +91,8 @@ class _FeedScreenState extends State<FeedScreen> {
                       return Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'O feed está vazio, siga alguém',
+                          AppLocalizations.of(context)
+                              .translate('textFeedWarning'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyles.paragraph(

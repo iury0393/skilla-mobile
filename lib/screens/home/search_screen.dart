@@ -7,6 +7,7 @@ import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
@@ -70,7 +71,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     return Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Não existe mais ninguém para seguir',
+                        AppLocalizations.of(context)
+                            .translate('textSearchWarning'),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyles.paragraph(

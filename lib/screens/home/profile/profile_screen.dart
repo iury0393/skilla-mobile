@@ -16,6 +16,7 @@ import 'package:skilla/screens/home/profile/curriculum_screen.dart';
 import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/home/profile/following_screen.dart';
 import 'package:skilla/screens/signFlow/sign_in_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -225,11 +226,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return Text(
                               widget.user != null
                                   ? widget.user.followersCount != 1
-                                      ? '${widget.user.followersCount} Seguidores'
-                                      : '${widget.user.followersCount} Seguidor'
+                                      ? '${widget.user.followersCount} ${AppLocalizations.of(context).translate('textProfileFollowers')}'
+                                      : '${widget.user.followersCount} ${AppLocalizations.of(context).translate('textProfileFollower')}'
                                   : snapshot.data?.data != 1
-                                      ? '${snapshot.data?.data} Seguidores'
-                                      : '${snapshot.data?.data} Seguidor',
+                                      ? '${snapshot.data?.data} ${AppLocalizations.of(context).translate('textProfileFollowers')}'
+                                      : '${snapshot.data?.data} ${AppLocalizations.of(context).translate('textProfileFollower')}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyles.paragraph(
@@ -255,8 +256,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           if (snapshot.data != null) {
                             return Text(
                               widget.user != null
-                                  ? '${widget.user.followingCount} Seguindo'
-                                  : '${snapshot.data?.data} Seguindo',
+                                  ? '${widget.user.followingCount} ${AppLocalizations.of(context).translate('textProfileFollowing')}'
+                                  : '${snapshot.data?.data} ${AppLocalizations.of(context).translate('textProfileFollowing')}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyles.paragraph(
@@ -436,7 +437,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return Align(
                               alignment: Alignment.center,
                               child: Text(
-                                'Você ainda não postou nada',
+                                AppLocalizations.of(context)
+                                    .translate('textProfilePostWarning'),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyles.paragraph(
@@ -546,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title: 'Curriculo',
+      title: AppLocalizations.of(context).translate('textProfileCurriculum'),
       titleColor: Colors.white,
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
@@ -560,17 +562,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return RoundedButton(
       width: 100.0,
       height: 30.0,
-      title: _isFollowing ? txtBtnFollow = 'Seguindo' : txtBtnFollow = 'Seguir',
+      title: _isFollowing
+          ? txtBtnFollow =
+              AppLocalizations.of(context).translate('textProfileFollowing')
+          : txtBtnFollow =
+              AppLocalizations.of(context).translate('textProfileFollow'),
       titleColor: kSkillaPurple,
       borderColor: kPurpleColor,
       backgroundColor: Colors.white,
       onPressed: () {
         if (_isFollowing) {
           _bloc.doRequestUnfollow(id);
-          print("Seguindo");
         } else {
           _bloc.doRequestFollow(id);
-          print("Não Seguindo");
         }
       },
     );

@@ -11,6 +11,7 @@ import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/likes_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -333,7 +334,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       controller: _bloc.textCommentController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
-        hintText: 'Adicione um comentário',
+        hintText: AppLocalizations.of(context)
+            .translate('textFieldPostDetailCommentHint'),
         hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         fillColor: Colors.white,
@@ -419,10 +421,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     showNativeDialog(
       context: context,
       builder: (context) => NativeDialog(
-        title: 'Você realmente deseja deletar esse comentário?',
+        title: AppLocalizations.of(context)
+            .translate('textPostDetailDialogTitleComment'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Deletar',
+            child: Text(AppLocalizations.of(context).translate('textDelete'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);
@@ -430,8 +433,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             },
           ),
           FlatButton(
-            child:
-                Text('Cancelar', style: TextStyles.paragraph(TextSize.xSmall)),
+            child: Text(AppLocalizations.of(context).translate('textCancel'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -445,10 +448,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     showNativeDialog(
       context: context,
       builder: (context) => NativeDialog(
-        title: 'Você realmente deseja deletar esse post?',
+        title: AppLocalizations.of(context)
+            .translate('textPostDetailDialogTitlePost'),
         actions: <Widget>[
           FlatButton(
-            child: Text('Deletar',
+            child: Text(AppLocalizations.of(context).translate('textDelete'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);
@@ -456,8 +460,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             },
           ),
           FlatButton(
-            child:
-                Text('Cancelar', style: TextStyles.paragraph(TextSize.xSmall)),
+            child: Text(AppLocalizations.of(context).translate('textCancel'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
               Navigator.pop(context);
             },
