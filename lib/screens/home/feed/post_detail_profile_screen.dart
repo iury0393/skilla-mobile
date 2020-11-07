@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/bloc/likes_bloc.dart';
-import 'package:skilla/bloc/post_detail_bloc.dart';
+import 'package:skilla/bloc/post_detail_profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
@@ -10,31 +10,32 @@ import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/feed/likes_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
+import 'likes_screen.dart';
+
 class PostDetailScreen extends StatefulWidget {
   final Post post;
   final User user;
   PostDetailScreen({Key key, this.post, this.user}) : super(key: key);
-
   @override
   _PostDetailScreenState createState() => _PostDetailScreenState();
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
-  final _bloc = PostDetailBloc();
+  PostDetailBloc _bloc;
   final _feedBloc = FeedBloc();
   LikesBloc _likeBloc;
-  bool isLiked = false;
+
   @override
   void initState() {
     super.initState();
-    _bloc.doRequestGetComments(widget.post);
+    _bloc = PostDetailBloc(widget.post.comments);
+    _bloc.doGetComment();
     _likeBloc = LikesBloc(widget.user, widget.post);
 
     _likeBloc.toggleLikesController.stream.listen((event) {
@@ -66,7 +67,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
-          _bloc.doRequestGetComments(widget.post);
           Navigator.pop(context);
           _bloc.textCommentController.clear();
           break;
@@ -124,8 +124,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   void dispose() {
     super.dispose();
     _bloc.dispose();
-    _feedBloc.dispose();
-    _likeBloc.dispose();
   }
 
   @override
@@ -150,12 +148,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   children: [
                     Row(
                       children: [
-                        Utils.loadImage(widget.post.user.avatar, context, true),
+                        Utils.loadImage(widget.user.avatar, context, true),
                         SizedBox(
                           width: 15.0,
                         ),
                         Text(
-                          widget.post.user.fullname,
+                          widget.user.fullname,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyles.paragraph(
@@ -242,7 +240,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     Container(
                       width: 120,
                       child: Text(
-                        widget.post.user.fullname,
+                        widget.user.fullname,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyles.paragraph(
@@ -308,7 +306,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       default:
                         if (snapshot.data != null) {
                           if (snapshot.data.data.isNotEmpty) {
-                            return _buildPostComments(width, snapshot);
+                            return _buildPostComments(
+                                width, snapshot.data.data);
                           }
                         }
                         return Container();
@@ -344,21 +343,20 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Container _buildPostComments(
-      double width, AsyncSnapshot<BaseResponse<List<Comment>>> snapshot) {
+  Container _buildPostComments(double width, List<Comment> commentList) {
     return Container(
       width: width,
       height: 200,
       child: ListView.builder(
-        itemCount: snapshot.data.data.length,
+        itemCount: commentList.length,
         itemBuilder: (context, index) {
-          return buildComment(snapshot.data.data, index);
+          return buildComment(commentList, index);
         },
       ),
     );
   }
 
-  Container buildComment(List<Comment> comments, int index) {
+  Container buildComment(List<Comment> commentList, int index) {
     return Container(
       padding: EdgeInsets.all(8.0),
       color: Colors.grey[50],
@@ -368,7 +366,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             child: Row(
               children: [
                 Text(
-                  comments.elementAt(index).user.username,
+                  commentList.elementAt(index).user.username,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.paragraph(
@@ -382,7 +380,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 Container(
                   width: 180,
                   child: Text(
-                    comments.elementAt(index).text,
+                    commentList.elementAt(index).text,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.paragraph(
@@ -394,9 +392,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               ],
             ),
             onTap: () {
-              if (comments.elementAt(index).isCommentMine) {
+              if (commentList.elementAt(index).isCommentMine) {
                 _showDialogForDeleteComment(
-                    context, widget.post, comments.elementAt(index));
+                    context, widget.post, commentList.elementAt(index));
               }
             },
           ),

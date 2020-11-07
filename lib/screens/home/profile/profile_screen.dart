@@ -8,10 +8,10 @@ import 'package:skilla/components/native_dialog.dart';
 import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/dao/user_dao.dart';
-import 'package:skilla/model/post.dart';
+import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/feed/post_detail_screen.dart';
+import 'package:skilla/screens/home/feed/post_detail_profile_screen.dart';
 import 'package:skilla/screens/home/profile/curriculum_screen.dart';
 import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/home/profile/following_screen.dart';
@@ -394,8 +394,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              StreamBuilder<BaseResponse<List<Post>>>(
-                  stream: _bloc.postController.stream,
+              StreamBuilder<BaseResponse<List<PostDetail>>>(
+                  stream: _bloc.postsController.stream,
                   builder: (context, snapshot) {
                     switch (snapshot.data?.status) {
                       case Status.LOADING:
@@ -463,7 +463,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   GestureDetector _buildPostItem(double width, double height,
-      {List<Post> post, int index}) {
+      {List<PostDetail> post, int index}) {
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -482,15 +482,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _doNavigateToPostDetailScreen(User user, Post post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => PostDetailScreen(
-          user: user,
-          post: post,
+  _doNavigateToPostDetailScreen(User user, PostDetail post) {
+    _bloc.doRequestGetPost(post.id).then((value) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => PostDetailScreen(
+            user: user,
+            post: value,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   _doNavigateToSignInScreen() {

@@ -1,19 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/comment.dart';
-import 'package:skilla/model/post.dart';
+import 'package:skilla/model/comment_data.dart';
+import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/post_detail_network.dart';
 
 class PostDetailBloc {
   StreamController<BaseResponse<List<Comment>>> commentController;
-  StreamController<BaseResponse<void>> addCommentController;
+  StreamController<BaseResponse<Comment>> addCommentController;
   StreamController<BaseResponse<void>> deleteCommentController;
   TextEditingController textCommentController;
   List<Comment> commentsList = List<Comment>();
 
-  PostDetailBloc() {
+  PostDetailBloc(List<Comment> comments) {
+    commentsList = comments;
     commentController = StreamController();
     addCommentController = StreamController();
     deleteCommentController = StreamController();
@@ -27,23 +30,13 @@ class PostDetailBloc {
     textCommentController.dispose();
   }
 
-  doRequestGetComments(Post post) async {
+  Future<BaseResponse<User>> getUser() async {
+    return await UserDAO().get();
+  }
+
+  doGetComment() {
     commentController.add(BaseResponse.loading());
     try {
-      var response = await PostDetailNetwork().doRequestgetFeed();
-      response.forEach((feed) {
-        if (feed.user.id == post.user.id) {
-          if (feed.id == post.id) {
-            feed.comments.forEach((comments) {
-              if (commentsList.contains(comments)) {
-                commentsList.remove(comments);
-              } else {
-                commentsList.add(comments);
-              }
-            });
-          }
-        }
-      });
       commentController.add(BaseResponse.completed(data: commentsList));
     } catch (e) {
       commentController.add(BaseResponse.error(e.toString()));
@@ -53,13 +46,14 @@ class PostDetailBloc {
   doRequestAddComment(String postId) async {
     addCommentController.add(BaseResponse.loading());
     try {
-      var body = Comment(
+      var body = CommentData(
         text: textCommentController.text,
       ).toJson();
       var response =
           await PostDetailNetwork().doRequestAddComment(postId, body);
       commentsList.add(response);
-      addCommentController.add(BaseResponse.completed(data: commentsList));
+      commentController.add(BaseResponse.completed(data: commentsList));
+      addCommentController.add(BaseResponse.completed(data: response));
     } catch (e) {
       addCommentController.add(BaseResponse.error(e.toString()));
     }

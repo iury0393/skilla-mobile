@@ -11,7 +11,7 @@ import 'package:skilla/model/user.dart';
 
 class Utils {
   static String appLanguage;
-  static List<User> listOfUsers;
+  static List<User> listOfUsers = [];
 
   static double _height = 120.0;
   static double _width = 120.0;
