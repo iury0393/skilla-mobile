@@ -6,7 +6,7 @@ import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/likes_screen.dart';
-import 'package:skilla/screens/home/feed/post_detail_screen.dart';
+import 'package:skilla/screens/home/feed/post_detail_feed_screen.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
@@ -292,7 +292,7 @@ class _PostItemState extends State<PostItem> {
   _doNavigateToPostDetailScreen(User user, Post post) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (context) => PostDetailScreen(
+        builder: (context) => PostDetailFeedScreen(
           user: user,
           post: post,
         ),

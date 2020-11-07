@@ -17,20 +17,20 @@ import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
-class PostDetailScreen extends StatefulWidget {
+class PostDetailFeedScreen extends StatefulWidget {
   final Post post;
   final User user;
-  PostDetailScreen({Key key, this.post, this.user}) : super(key: key);
+  PostDetailFeedScreen({Key key, this.post, this.user}) : super(key: key);
 
   @override
-  _PostDetailScreenState createState() => _PostDetailScreenState();
+  _PostDetailFeedScreenState createState() => _PostDetailFeedScreenState();
 }
 
-class _PostDetailScreenState extends State<PostDetailScreen> {
+class _PostDetailFeedScreenState extends State<PostDetailFeedScreen> {
   final _bloc = PostDetailBloc();
   final _feedBloc = FeedBloc();
   LikesBloc _likeBloc;
-  bool isLiked = false;
+
   @override
   void initState() {
     super.initState();

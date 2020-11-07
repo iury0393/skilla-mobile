@@ -15,8 +15,6 @@ class PostDetail {
   int likesCount;
   int commentsCount;
   DateTime createdAt;
-  bool isLiked;
-  bool isMine;
 
   PostDetail(
       {this.caption,
@@ -28,8 +26,6 @@ class PostDetail {
       this.files,
       this.comments,
       this.likes,
-      this.isLiked,
-      this.isMine,
       this.tags});
 
   factory PostDetail.fromJson(Map<String, dynamic> json) =>
@@ -39,7 +35,7 @@ class PostDetail {
 
   @override
   String toString() {
-    return "id: $id, user: $user, caption: $caption, likesCount: $likesCount, commentsCount: $commentsCount, createdAt: $createdAt, files: $files, likes: $likes, comments: $comments, isLiked: $isLiked, isMine: $isMine, tags: $tags";
+    return "id: $id, user: $user, caption: $caption, likesCount: $likesCount, commentsCount: $commentsCount, createdAt: $createdAt, files: $files, likes: $likes, comments: $comments, tags: $tags";
   }
 }
 

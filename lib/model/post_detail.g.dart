@@ -19,8 +19,6 @@ PostDetail _$PostDetailFromJson(Map<String, dynamic> json) {
     files: json['files'],
     comments: json['comments'],
     likes: json['likes'],
-    isLiked: json['isLiked'] as bool,
-    isMine: json['isMine'] as bool,
     tags: json['tags'],
   );
 }
@@ -37,8 +35,6 @@ Map<String, dynamic> _$PostDetailToJson(PostDetail instance) =>
       'likesCount': instance.likesCount,
       'commentsCount': instance.commentsCount,
       'createdAt': instance.createdAt?.toIso8601String(),
-      'isLiked': instance.isLiked,
-      'isMine': instance.isMine,
     };
 
 PostDetails _$PostDetailsFromJson(Map<String, dynamic> json) {
