@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:skilla/dao/user_dao.dart';
-import 'package:skilla/model/post.dart';
+import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/profile_network.dart';
@@ -14,7 +14,7 @@ class ProfileBloc {
   BaseResponse<User> user;
   StreamController<BaseResponse<void>> followController;
   StreamController<BaseResponse<void>> unFollowController;
-  StreamController<BaseResponse<List<Post>>> postController;
+  StreamController<BaseResponse<List<PostDetail>>> postController;
   StreamController<BaseResponse<String>> fullNameController;
   StreamController<BaseResponse<String>> userNameController;
   StreamController<BaseResponse<String>> emailController;
@@ -24,7 +24,7 @@ class ProfileBloc {
   StreamController<BaseResponse<int>> postCountController;
   StreamController<BaseResponse<int>> followerCountController;
   StreamController<BaseResponse<int>> followingCountController;
-  List<Post> listPostsUser = List<Post>();
+  List<PostDetail> listPostsUser = List<PostDetail>();
 
   ProfileBloc() {
     followController = StreamController();
@@ -80,7 +80,7 @@ class ProfileBloc {
     try {
       var response = await ProfileNetwork().doRequestGetPosts();
       response.forEach((post) {
-        if (post.user.id == id) {
+        if (post.user == id) {
           listPostsUser.add(post);
         }
       });

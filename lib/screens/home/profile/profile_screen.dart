@@ -9,6 +9,7 @@ import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/post.dart';
+import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/feed/post_detail_screen.dart';
@@ -394,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              StreamBuilder<BaseResponse<List<Post>>>(
+              StreamBuilder<BaseResponse<List<PostDetail>>>(
                   stream: _bloc.postController.stream,
                   builder: (context, snapshot) {
                     switch (snapshot.data?.status) {
@@ -463,7 +464,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   GestureDetector _buildPostItem(double width, double height,
-      {List<Post> post, int index}) {
+      {List<PostDetail> post, int index}) {
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -474,10 +475,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       onTap: () {
-        _doNavigateToPostDetailScreen(
-          widget.user != null ? widget.user : _bloc.user.data,
-          post.elementAt(index),
-        );
+        // _doNavigateToPostDetailScreen(
+        //   widget.user != null ? widget.user : _bloc.user.data,
+        //   post.elementAt(index),
+        // );
       },
     );
   }
