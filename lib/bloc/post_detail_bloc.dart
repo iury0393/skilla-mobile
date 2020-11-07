@@ -5,6 +5,7 @@ import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/post_detail_network.dart';
+import 'package:skilla/utils/utils.dart';
 
 class PostDetailBloc {
   StreamController<BaseResponse<List<Comment>>> commentController;
@@ -35,16 +36,16 @@ class PostDetailBloc {
         if (feed.user.id == post.user.id) {
           if (feed.id == post.id) {
             feed.comments.forEach((comments) {
-              if (commentsList.contains(comments)) {
-                commentsList.remove(comments);
+              if (Utils.commentsList.contains(comments)) {
+                Utils.commentsList.remove(comments);
               } else {
-                commentsList.add(comments);
+                Utils.commentsList.add(comments);
               }
             });
           }
         }
       });
-      commentController.add(BaseResponse.completed(data: commentsList));
+      commentController.add(BaseResponse.completed(data: Utils.commentsList));
     } catch (e) {
       commentController.add(BaseResponse.error(e.toString()));
     }

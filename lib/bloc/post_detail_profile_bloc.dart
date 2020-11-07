@@ -10,6 +10,7 @@ class PostDetailProfileBloc {
   StreamController<BaseResponse<void>> addCommentController;
   StreamController<BaseResponse<void>> deleteCommentController;
   TextEditingController textCommentController;
+  List<Comment> commentsList = List<Comment>();
 
   PostDetailProfileBloc() {
     addCommentController = StreamController();
@@ -32,8 +33,7 @@ class PostDetailProfileBloc {
       var response =
           await PostDetailNetwork().doRequestAddComment(postId, body);
       Utils.commentsList.add(response);
-      addCommentController
-          .add(BaseResponse.completed(data: Utils.commentsList));
+      addCommentController.add(BaseResponse.completed());
     } catch (e) {
       addCommentController.add(BaseResponse.error(e.toString()));
     }

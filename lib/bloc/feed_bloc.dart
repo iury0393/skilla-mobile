@@ -5,6 +5,7 @@ import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/feed_network.dart';
+import 'package:skilla/network/profile_network.dart';
 
 class FeedBloc {
   StreamController<BaseResponse<List<Post>>> feedController;
@@ -27,6 +28,10 @@ class FeedBloc {
 
   Future<BaseResponse<User>> getUser() async {
     return await UserDAO().get();
+  }
+
+  Future<Post> doRequestGetPost(String postId) async {
+    return await ProfileNetwork().doRequestGetPost(postId);
   }
 
   doRequestGetFeed() async {
