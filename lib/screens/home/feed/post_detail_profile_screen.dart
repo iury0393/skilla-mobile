@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
+import 'package:skilla/bloc/likes_bloc.dart';
+import 'package:skilla/bloc/post_detail_profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
+import 'package:skilla/components/native_loading.dart';
+import 'package:skilla/model/comment.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -21,11 +26,56 @@ class PostDetailProfileScreen extends StatefulWidget {
 }
 
 class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
+  final _bloc = PostDetailProfileBloc();
   final _feedBloc = FeedBloc();
+  LikesBloc _likeBloc;
+  Post userPost;
 
   @override
   void initState() {
     super.initState();
+    _bloc.doRequestGetPost(widget.post.id).then((value) {
+      userPost = value;
+      _bloc.doRequestGetComments(value);
+    });
+
+    _bloc.addCommentController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          refreshFeedWithDeletePost(true);
+          _bloc.doRequestGetComments(userPost);
+          Navigator.pop(context);
+          _bloc.textCommentController.clear();
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+
+    _bloc.deleteCommentController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          refreshFeedWithDeletePost(true);
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
 
     _feedBloc.deletePostController.stream.listen((event) {
       switch (event.status) {
@@ -50,6 +100,7 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
   @override
   void dispose() {
     super.dispose();
+    _bloc.dispose();
     _feedBloc.dispose();
   }
 
@@ -204,9 +255,112 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                   ],
                 ),
               ),
+              StreamBuilder<BaseResponse<List<Comment>>>(
+                  stream: _bloc.commentController.stream,
+                  builder: (context, snapshot) {
+                    switch (snapshot.data?.status) {
+                      case Status.LOADING:
+                        return Center(
+                          child: NativeLoading(animating: true),
+                        );
+                        break;
+                      case Status.ERROR:
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          NativeDialog.showErrorDialog(
+                              context, snapshot.data.message);
+                        });
+                        return Container();
+                        break;
+                      default:
+                        if (snapshot.data != null) {
+                          if (snapshot.data.data.isNotEmpty) {
+                            return _buildPostComments(width, snapshot);
+                          }
+                        }
+                        return Container();
+                    }
+                  }),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  TextField _buildCommentTextField() {
+    return TextField(
+      maxLines: 1,
+      textCapitalization: TextCapitalization.none,
+      controller: _bloc.textCommentController,
+      style: TextStyles.textField(TextSize.medium),
+      decoration: InputDecoration(
+        hintText: AppLocalizations.of(context)
+            .translate('textFieldPostDetailCommentHint'),
+        hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+        fillColor: Colors.white,
+        filled: true,
+      ),
+    );
+  }
+
+  Container _buildPostComments(
+      double width, AsyncSnapshot<BaseResponse<List<Comment>>> snapshot) {
+    return Container(
+      width: width,
+      height: 200,
+      child: ListView.builder(
+        itemCount: snapshot.data.data.length,
+        itemBuilder: (context, index) {
+          return buildComment(snapshot.data.data, index);
+        },
+      ),
+    );
+  }
+
+  Container buildComment(List<Comment> comments, int index) {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      color: Colors.grey[50],
+      child: Column(
+        children: [
+          GestureDetector(
+            child: Row(
+              children: [
+                Text(
+                  comments.elementAt(index).user.username,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyles.paragraph(
+                    TextSize.medium,
+                    weight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(
+                  width: 15.0,
+                ),
+                Container(
+                  width: 180,
+                  child: Text(
+                    comments.elementAt(index).text,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.paragraph(
+                      TextSize.medium,
+                      weight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            onTap: () {
+              if (comments.elementAt(index).isCommentMine) {
+                _showDialogForDeleteComment(
+                    context, userPost, comments.elementAt(index));
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -217,18 +371,30 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
         .broadcast(DeletePostEventArgs(isDeletePost));
   }
 
-  TextField _buildCommentTextField() {
-    return TextField(
-      maxLines: 1,
-      textCapitalization: TextCapitalization.none,
-      style: TextStyles.textField(TextSize.medium),
-      decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)
-            .translate('textFieldPostDetailCommentHint'),
-        hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-        fillColor: Colors.white,
-        filled: true,
+  void _showDialogForDeleteComment(
+      BuildContext context, Post post, Comment comments) {
+    showNativeDialog(
+      context: context,
+      builder: (context) => NativeDialog(
+        title: AppLocalizations.of(context)
+            .translate('textPostDetailDialogTitleComment'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(AppLocalizations.of(context).translate('textDelete'),
+                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
+            onPressed: () {
+              Navigator.pop(context);
+              _bloc.doRequestDeleteComment(comments.id, post.id);
+            },
+          ),
+          FlatButton(
+            child: Text(AppLocalizations.of(context).translate('textCancel'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }

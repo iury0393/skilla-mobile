@@ -483,7 +483,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _doNavigateToPostDetailScreen(User user, PostDetail post) {
-    print(post);
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => PostDetailProfileScreen(
