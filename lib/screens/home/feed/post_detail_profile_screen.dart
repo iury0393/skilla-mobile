@@ -5,6 +5,7 @@ import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/bloc/post_detail_profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
+import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
@@ -17,24 +18,24 @@ import 'package:skilla/utils/utils.dart';
 
 import 'likes_screen.dart';
 
-class PostDetailProfileScreen extends StatefulWidget {
+class PostDetailScreen extends StatefulWidget {
   final Post post;
   final User user;
-  PostDetailProfileScreen({Key key, this.post, this.user}) : super(key: key);
+  PostDetailScreen({Key key, this.post, this.user}) : super(key: key);
   @override
-  _PostDetailProfileScreenState createState() =>
-      _PostDetailProfileScreenState();
+  _PostDetailScreenState createState() => _PostDetailScreenState();
 }
 
-class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
-  final _bloc = PostDetailProfileBloc();
+class _PostDetailScreenState extends State<PostDetailScreen> {
+  PostDetailBloc _bloc;
   final _feedBloc = FeedBloc();
   LikesBloc _likeBloc;
 
   @override
   void initState() {
     super.initState();
-    Utils.commentsList = widget.post.comments;
+    _bloc = PostDetailBloc(widget.post.comments);
+    _bloc.doGetComment();
     _likeBloc = LikesBloc(widget.user, widget.post);
 
     _likeBloc.toggleLikesController.stream.listen((event) {
@@ -286,7 +287,32 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                   ],
                 ),
               ),
-              _buildPostComments(width, Utils.commentsList),
+              StreamBuilder<BaseResponse<List<Comment>>>(
+                  stream: _bloc.commentController.stream,
+                  builder: (context, snapshot) {
+                    switch (snapshot.data?.status) {
+                      case Status.LOADING:
+                        return Center(
+                          child: NativeLoading(animating: true),
+                        );
+                        break;
+                      case Status.ERROR:
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          NativeDialog.showErrorDialog(
+                              context, snapshot.data.message);
+                        });
+                        return Container();
+                        break;
+                      default:
+                        if (snapshot.data != null) {
+                          if (snapshot.data.data.isNotEmpty) {
+                            return _buildPostComments(
+                                width, snapshot.data.data);
+                          }
+                        }
+                        return Container();
+                    }
+                  }),
             ],
           ),
         ),
@@ -330,7 +356,7 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
     );
   }
 
-  Container buildComment(List<Comment> comments, int index) {
+  Container buildComment(List<Comment> commentList, int index) {
     return Container(
       padding: EdgeInsets.all(8.0),
       color: Colors.grey[50],
@@ -340,7 +366,7 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
             child: Row(
               children: [
                 Text(
-                  comments.elementAt(index).user.username,
+                  commentList.elementAt(index).user.username,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.paragraph(
@@ -354,7 +380,7 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                 Container(
                   width: 180,
                   child: Text(
-                    comments.elementAt(index).text,
+                    commentList.elementAt(index).text,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.paragraph(
@@ -366,9 +392,9 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
               ],
             ),
             onTap: () {
-              if (comments.elementAt(index).isCommentMine) {
+              if (commentList.elementAt(index).isCommentMine) {
                 _showDialogForDeleteComment(
-                    context, widget.post, comments.elementAt(index));
+                    context, widget.post, commentList.elementAt(index));
               }
             },
           ),
@@ -401,8 +427,6 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);
-              Utils.commentsList
-                  .removeWhere((element) => element.id == comments.id);
               _bloc.doRequestDeleteComment(comments.id, post.id);
             },
           ),

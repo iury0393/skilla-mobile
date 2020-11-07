@@ -486,7 +486,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _bloc.doRequestGetPost(post.id).then((value) {
       Navigator.of(context).push(
         CupertinoPageRoute(
-          builder: (context) => PostDetailProfileScreen(
+          builder: (context) => PostDetailScreen(
             user: user,
             post: value,
           ),

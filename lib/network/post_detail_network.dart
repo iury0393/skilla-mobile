@@ -1,3 +1,4 @@
+import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/post.dart';
 
 import 'config/api_service.dart';
@@ -13,10 +14,13 @@ class PostDetailNetwork {
     return Posts.fromJson(response).data;
   }
 
-  Future doRequestAddComment(String postId, Map<String, dynamic> body) async {
-    await service.doRequest(
+  Future<Comment> doRequestAddComment(
+      String postId, Map<String, dynamic> body) async {
+    var response = await service.doRequest(
       RequestConfig('posts/$postId/comments', HttpMethod.post, body: body),
     );
+
+    return Comment.fromJson(response['data']);
   }
 
   Future doRequestDeteleComment(String commentId, String postId) async {
