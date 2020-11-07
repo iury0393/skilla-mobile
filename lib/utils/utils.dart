@@ -7,11 +7,13 @@ import 'package:jiffy/jiffy.dart';
 import 'package:package_info/package_info.dart';
 import 'package:skilla/dao/auth_dao.dart';
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/user.dart';
 
 class Utils {
   static String appLanguage;
-  static List<User> listOfUsers;
+  static List<Comment> commentsList = [];
+  static List<User> listOfUsers = [];
 
   static double _height = 120.0;
   static double _width = 120.0;

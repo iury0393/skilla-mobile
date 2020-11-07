@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
@@ -14,7 +15,8 @@ class ProfileBloc {
   BaseResponse<User> user;
   StreamController<BaseResponse<void>> followController;
   StreamController<BaseResponse<void>> unFollowController;
-  StreamController<BaseResponse<List<PostDetail>>> postController;
+  StreamController<BaseResponse<Post>> postController;
+  StreamController<BaseResponse<List<PostDetail>>> postsController;
   StreamController<BaseResponse<String>> fullNameController;
   StreamController<BaseResponse<String>> userNameController;
   StreamController<BaseResponse<String>> emailController;
@@ -30,6 +32,7 @@ class ProfileBloc {
     followController = StreamController();
     unFollowController = StreamController();
     postController = StreamController();
+    postsController = StreamController();
     fullNameController = StreamController();
     userNameController = StreamController();
     emailController = StreamController();
@@ -45,6 +48,7 @@ class ProfileBloc {
     followController.close();
     unFollowController.close();
     postController.close();
+    postsController.close();
     fullNameController.close();
     userNameController.close();
     emailController.close();
@@ -76,7 +80,7 @@ class ProfileBloc {
   }
 
   doRequestGetPosts(String id) async {
-    postController.add(BaseResponse.loading());
+    postsController.add(BaseResponse.loading());
     try {
       var response = await ProfileNetwork().doRequestGetPosts();
       response.forEach((post) {
@@ -84,10 +88,14 @@ class ProfileBloc {
           listPostsUser.add(post);
         }
       });
-      postController.add(BaseResponse.completed(data: listPostsUser));
+      postsController.add(BaseResponse.completed(data: listPostsUser));
     } catch (e) {
-      postController.add(BaseResponse.error(e.toString()));
+      postsController.add(BaseResponse.error(e.toString()));
     }
+  }
+
+  Future<Post> doRequestGetPost(String postId) async {
+    return await ProfileNetwork().doRequestGetPost(postId);
   }
 
   doRequestFollow(String id) async {

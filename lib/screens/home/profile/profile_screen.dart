@@ -395,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
               StreamBuilder<BaseResponse<List<PostDetail>>>(
-                  stream: _bloc.postController.stream,
+                  stream: _bloc.postsController.stream,
                   builder: (context, snapshot) {
                     switch (snapshot.data?.status) {
                       case Status.LOADING:
@@ -483,14 +483,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _doNavigateToPostDetailScreen(User user, PostDetail post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => PostDetailProfileScreen(
-          user: user,
-          post: post,
+    _bloc.doRequestGetPost(post.id).then((value) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => PostDetailProfileScreen(
+            user: user,
+            post: value,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   _doNavigateToSignInScreen() {

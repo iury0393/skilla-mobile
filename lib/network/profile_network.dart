@@ -1,3 +1,4 @@
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 
@@ -8,10 +9,18 @@ class ProfileNetwork {
 
   Future<List<PostDetail>> doRequestGetPosts() async {
     var response = await service.doRequest(
-      RequestConfig('posts', HttpMethod.get),
+      RequestConfig('posts/', HttpMethod.get),
     );
 
     return PostDetails.fromJson(response).data;
+  }
+
+  Future<Post> doRequestGetPost(String postId) async {
+    final response = await service.doRequest(
+      RequestConfig('posts/$postId', HttpMethod.get),
+    );
+
+    return Post.fromJson(response['data']);
   }
 
   Future doRequestFollow(String id) async {

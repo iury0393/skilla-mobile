@@ -1,13 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/bloc/likes_bloc.dart';
 import 'package:skilla/bloc/post_detail_profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
-import 'package:skilla/components/native_loading.dart';
 import 'package:skilla/model/comment.dart';
 import 'package:skilla/model/post.dart';
-import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/utils/appLocalizations.dart';
@@ -16,8 +15,10 @@ import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
+import 'likes_screen.dart';
+
 class PostDetailProfileScreen extends StatefulWidget {
-  final PostDetail post;
+  final Post post;
   final User user;
   PostDetailProfileScreen({Key key, this.post, this.user}) : super(key: key);
   @override
@@ -29,21 +30,42 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
   final _bloc = PostDetailProfileBloc();
   final _feedBloc = FeedBloc();
   LikesBloc _likeBloc;
-  Post userPost;
 
   @override
   void initState() {
     super.initState();
-    _bloc.doRequestGetPost(widget.post.id).then((value) {
-      userPost = value;
-      _bloc.doRequestGetComments(value);
+    Utils.commentsList = widget.post.comments;
+    _likeBloc = LikesBloc(widget.user, widget.post);
+
+    _likeBloc.toggleLikesController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          Navigator.pop(context);
+          setState(() {
+            widget.post.isLiked = !widget.post.isLiked;
+            if (widget.post.isLiked) {
+              widget.post.likesCount += 1;
+            } else {
+              widget.post.likesCount -= 1;
+            }
+          });
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
     });
 
     _bloc.addCommentController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
-          _bloc.doRequestGetComments(userPost);
           Navigator.pop(context);
           _bloc.textCommentController.clear();
           break;
@@ -101,7 +123,6 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
   void dispose() {
     super.dispose();
     _bloc.dispose();
-    _feedBloc.dispose();
   }
 
   @override
@@ -141,15 +162,17 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                         ),
                       ],
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.more_horiz,
-                        color: kSkillaPurple,
-                      ),
-                      onPressed: () {
-                        _showDialogForDeletePost(context, widget.post);
-                      },
-                    )
+                    widget.post.isMine
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.more_horiz,
+                              color: kSkillaPurple,
+                            ),
+                            onPressed: () {
+                              _showDialogForDeletePost(context, widget.post);
+                            },
+                          )
+                        : Container(),
                   ],
                 ),
               ),
@@ -165,10 +188,14 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                 children: [
                   IconButton(
                     icon: Icon(
-                      Icons.favorite,
+                      widget.post.isLiked
+                          ? Icons.favorite
+                          : Icons.favorite_border,
                       color: kSkillaPurple,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _likeBloc.doRequesttoggleLike(widget.post.id);
+                    },
                   ),
                   GestureDetector(
                     child: Text(
@@ -182,7 +209,9 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                         weight: FontWeight.w400,
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      _doNavigateToLikeScreen(widget.post.user, widget.post);
+                    },
                   ),
                   SizedBox(
                     width: 20.0,
@@ -250,41 +279,25 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                         Icons.send,
                         color: kSkillaPurple,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        _bloc.doRequestAddComment(widget.post.id);
+                      },
                     ),
                   ],
                 ),
               ),
-              StreamBuilder<BaseResponse<List<Comment>>>(
-                  stream: _bloc.commentController.stream,
-                  builder: (context, snapshot) {
-                    switch (snapshot.data?.status) {
-                      case Status.LOADING:
-                        return Center(
-                          child: NativeLoading(animating: true),
-                        );
-                        break;
-                      case Status.ERROR:
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          NativeDialog.showErrorDialog(
-                              context, snapshot.data.message);
-                        });
-                        return Container();
-                        break;
-                      default:
-                        if (snapshot.data != null) {
-                          if (snapshot.data.data.isNotEmpty) {
-                            return _buildPostComments(width, snapshot);
-                          }
-                        }
-                        return Container();
-                    }
-                  }),
+              _buildPostComments(width, Utils.commentsList),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void refreshFeedWithDeletePost(isDeletePost) {
+    EventCenter.getInstance()
+        .deletePostEvent
+        .broadcast(DeletePostEventArgs(isDeletePost));
   }
 
   TextField _buildCommentTextField() {
@@ -304,15 +317,14 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
     );
   }
 
-  Container _buildPostComments(
-      double width, AsyncSnapshot<BaseResponse<List<Comment>>> snapshot) {
+  Container _buildPostComments(double width, List<Comment> commentList) {
     return Container(
       width: width,
       height: 200,
       child: ListView.builder(
-        itemCount: snapshot.data.data.length,
+        itemCount: commentList.length,
         itemBuilder: (context, index) {
-          return buildComment(snapshot.data.data, index);
+          return buildComment(commentList, index);
         },
       ),
     );
@@ -356,7 +368,7 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
             onTap: () {
               if (comments.elementAt(index).isCommentMine) {
                 _showDialogForDeleteComment(
-                    context, userPost, comments.elementAt(index));
+                    context, widget.post, comments.elementAt(index));
               }
             },
           ),
@@ -365,10 +377,15 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
     );
   }
 
-  void refreshFeedWithDeletePost(isDeletePost) {
-    EventCenter.getInstance()
-        .deletePostEvent
-        .broadcast(DeletePostEventArgs(isDeletePost));
+  _doNavigateToLikeScreen(User user, Post post) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => LikesScreen(
+          user: user,
+          post: post,
+        ),
+      ),
+    );
   }
 
   void _showDialogForDeleteComment(
@@ -384,6 +401,8 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);
+              Utils.commentsList
+                  .removeWhere((element) => element.id == comments.id);
               _bloc.doRequestDeleteComment(comments.id, post.id);
             },
           ),
@@ -399,7 +418,7 @@ class _PostDetailProfileScreenState extends State<PostDetailProfileScreen> {
     );
   }
 
-  void _showDialogForDeletePost(BuildContext context, PostDetail post) {
+  void _showDialogForDeletePost(BuildContext context, Post post) {
     showNativeDialog(
       context: context,
       builder: (context) => NativeDialog(
