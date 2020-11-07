@@ -35,7 +35,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _bloc = ProfileBloc();
   PdfController _pdfController;
-  String _id;
+  String _userId;
   String txtBtnFollow;
   bool _isFollowing = false;
 
@@ -43,12 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _bloc.getUser().then((value) {
-      setState(() {
-        _id = value.data.id;
-      });
+      _userId = value.data.id;
       widget.user != null
           ? _bloc.doRequestGetPosts(widget.user.id)
-          : _bloc.doRequestGetPosts(_id);
+          : _bloc.doRequestGetPosts(_userId);
     });
     _bloc.getUserData();
 
@@ -68,6 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         case Status.COMPLETED:
           setState(() {
             _isFollowing = true;
+            widget.user.followersCount += 1;
           });
           Navigator.pop(context);
           break;
@@ -88,6 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         case Status.COMPLETED:
           setState(() {
             _isFollowing = false;
+            widget.user.followersCount -= 1;
           });
           Navigator.pop(context);
           break;
@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (widget.user != null) {
                         _doNavigateToFollowerScreen(widget.user.id);
                       } else {
-                        _doNavigateToFollowerScreen(_id);
+                        _doNavigateToFollowerScreen(_userId);
                       }
                     },
                   ),
@@ -272,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (widget.user != null) {
                         _doNavigateToFollowingScreen(widget.user.id);
                       } else {
-                        _doNavigateToFollowingScreen(_id);
+                        _doNavigateToFollowingScreen(_userId);
                       }
                     },
                   ),
