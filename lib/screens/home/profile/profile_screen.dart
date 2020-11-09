@@ -165,34 +165,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return Container();
                   }),
               widget.user != null
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: _buildFollowButton(widget.user.id),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            FeatherIcons.edit,
-                            color: kSkillaPurple,
-                          ),
-                          onPressed: () {
-                            _doNavigateToEditScreen();
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            FeatherIcons.logOut,
-                            color: kSkillaPurple,
-                          ),
-                          onPressed: () async {
-                            await Utils.cleanDataBase();
-                            _doNavigateToSignInScreen();
-                          },
-                        ),
-                      ],
-                    ),
+                  ? widget.user.id != _bloc.user.data.id
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: _buildFollowButton(widget.user.id),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                FeatherIcons.edit,
+                                color: kSkillaPurple,
+                              ),
+                              onPressed: () {
+                                _doNavigateToEditScreen();
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                FeatherIcons.logOut,
+                                color: kSkillaPurple,
+                              ),
+                              onPressed: () async {
+                                await Utils.cleanDataBase();
+                                _doNavigateToSignInScreen();
+                              },
+                            ),
+                          ],
+                        )
+                  : Container(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

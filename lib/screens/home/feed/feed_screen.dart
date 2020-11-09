@@ -28,15 +28,15 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    _blocInit();
-    _eventsSubscribe();
+    _onInit();
+    _onSubscribe();
   }
 
   @override
   void dispose() {
-    _bloc.dispose();
     super.dispose();
-    _eventsUnsubscribe();
+    _bloc.dispose();
+    _onUnsubscribe();
   }
 
   @override
@@ -47,12 +47,12 @@ class _FeedScreenState extends State<FeedScreen> {
           titleImg: 'assets/navlogo.png',
           center: true,
           widgets: [
-            _buildFlatBtn(),
+            _buildFlatButton(),
           ],
         ),
         body: Padding(
           padding: Utils.getPaddingDefault(),
-          child: _StreamBuilderFeed(
+          child: _BuildStreamFeed(
             bloc: _bloc,
           ),
         ),
@@ -60,9 +60,7 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  // >>>>>>>>>> INIT
-
-  _blocInit() {
+  _onInit() {
     _bloc.getUser().then((value) {
       setState(() {
         _bloc.userEmail = value.data.email;
@@ -74,12 +72,12 @@ class _FeedScreenState extends State<FeedScreen> {
 
   // >>>>>>>>>> EVENTS
 
-  _eventsSubscribe() {
+  _onSubscribe() {
     EventCenter.getInstance().newPostEvent.subscribe(_refreshFeed);
     EventCenter.getInstance().deletePostEvent.subscribe(_refreshFeedDelete);
   }
 
-  _eventsUnsubscribe() {
+  _onUnsubscribe() {
     EventCenter.getInstance().newPostEvent.unsubscribe(_refreshFeed);
     EventCenter.getInstance().deletePostEvent.unsubscribe(_refreshFeedDelete);
   }
@@ -98,7 +96,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   // >>>>>>>>>> WIDGETS
 
-  Widget _buildFlatBtn() {
+  Widget _buildFlatButton() {
     return FlatButton(
       onPressed: () {
         _doNavigateToPostScreen();
@@ -121,15 +119,16 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 }
 
-class _StreamBuilderFeed extends StatefulWidget {
+class _BuildStreamFeed extends StatefulWidget {
   final FeedBloc bloc;
 
-  _StreamBuilderFeed({this.bloc});
+  _BuildStreamFeed({this.bloc});
+
   @override
-  __StreamBuilderFeedState createState() => __StreamBuilderFeedState();
+  __BuildStreamFeedState createState() => __BuildStreamFeedState();
 }
 
-class __StreamBuilderFeedState extends State<_StreamBuilderFeed> {
+class __BuildStreamFeedState extends State<_BuildStreamFeed> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<BaseResponse<List<Post>>>(
@@ -150,9 +149,28 @@ class __StreamBuilderFeedState extends State<_StreamBuilderFeed> {
           default:
             if (snapshot.data != null) {
               if (snapshot.data.data.isNotEmpty) {
-                return _SmartRefresher(
-                  bloc: widget.bloc,
-                  snapshot: snapshot,
+                return SmartRefresher(
+                  controller: widget.bloc.refreshController,
+                  enablePullUp: false,
+                  enablePullDown: true,
+                  child: _buildListFeed(snapshot),
+                  physics: BouncingScrollPhysics(),
+                  header: ClassicHeader(
+                    refreshingIcon: NativeLoading(animating: true),
+                    refreshingText:
+                        AppLocalizations.of(context).translate('textLoading'),
+                    completeText: AppLocalizations.of(context)
+                        .translate('textRefreshCompleted'),
+                    idleText: AppLocalizations.of(context)
+                        .translate('textPullToRefresh'),
+                    releaseText: AppLocalizations.of(context)
+                        .translate('textReleaseToRefresh'),
+                    completeIcon: Icon(
+                      Icons.check,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  onRefresh: _onRefresh,
                 );
               } else {
                 return Align(
@@ -175,80 +193,26 @@ class __StreamBuilderFeedState extends State<_StreamBuilderFeed> {
       },
     );
   }
-}
 
-class _SmartRefresher extends StatefulWidget {
-  final FeedBloc bloc;
-  final AsyncSnapshot<BaseResponse<List<Post>>> snapshot;
+  // >>>>>>>>>> WIDGETS
 
-  _SmartRefresher({this.bloc, this.snapshot});
-
-  @override
-  __SmartRefresherState createState() => __SmartRefresherState();
-}
-
-class __SmartRefresherState extends State<_SmartRefresher> {
-  @override
-  Widget build(BuildContext context) {
-    return SmartRefresher(
-      controller: widget.bloc.refreshController,
-      enablePullUp: false,
-      enablePullDown: true,
-      child: _BuildListFeed(
-        bloc: widget.bloc,
-        snapshot: widget.snapshot,
-      ),
-      physics: BouncingScrollPhysics(),
-      header: _classicHeader(),
-      onRefresh: _onRefresh,
-    );
-  }
-
-  Widget _classicHeader() {
-    return ClassicHeader(
-      refreshingIcon: NativeLoading(animating: true),
-      refreshingText: AppLocalizations.of(context).translate('textLoading'),
-      completeText:
-          AppLocalizations.of(context).translate('textRefreshCompleted'),
-      idleText: AppLocalizations.of(context).translate('textPullToRefresh'),
-      releaseText:
-          AppLocalizations.of(context).translate('textReleaseToRefresh'),
-      completeIcon: Icon(
-        Icons.check,
-        color: Colors.grey,
-      ),
+  Widget _buildListFeed(AsyncSnapshot<BaseResponse<List<Post>>> snapshot) {
+    return ListView.builder(
+      itemCount: snapshot.data.data.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 25.0),
+          child: PostItem(
+            post: snapshot.data.data.elementAt(index),
+            user: widget.bloc.user,
+          ),
+        );
+      },
     );
   }
 
   _onRefresh() async {
     await widget.bloc.refreshFeed();
     widget.bloc.refreshController.refreshCompleted();
-  }
-}
-
-class _BuildListFeed extends StatefulWidget {
-  final FeedBloc bloc;
-  final AsyncSnapshot<BaseResponse<List<Post>>> snapshot;
-
-  _BuildListFeed({this.bloc, this.snapshot});
-  @override
-  __BuildListFeedState createState() => __BuildListFeedState();
-}
-
-class __BuildListFeedState extends State<_BuildListFeed> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.snapshot.data.data.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 25.0),
-          child: PostItem(
-            post: widget.snapshot.data.data.elementAt(index),
-            user: widget.bloc.user,
-          ),
-        );
-      },
-    );
   }
 }

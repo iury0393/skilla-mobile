@@ -29,15 +29,74 @@ class PostDetailScreen extends StatefulWidget {
 class _PostDetailScreenState extends State<PostDetailScreen> {
   PostDetailBloc _bloc;
   final _feedBloc = FeedBloc();
-  LikesBloc _likeBloc;
+  LikeBloc _likeBloc;
 
   @override
   void initState() {
     super.initState();
+    _onInit();
+    _doPostDetailStream();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        titleImg: 'assets/navlogo.png',
+        center: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: Utils.getPaddingDefault(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _BuildHeaderPost(
+                post: widget.post,
+                user: widget.user,
+                feedBloc: _feedBloc,
+              ),
+              _BuildFilePost(
+                post: widget.post,
+              ),
+              _BuildLikeBtn(
+                post: widget.post,
+                likeBloc: _likeBloc,
+              ),
+              _BuildCaptionPost(
+                post: widget.post,
+                user: widget.user,
+              ),
+              _BuildCommentArea(
+                post: widget.post,
+                bloc: _bloc,
+              ),
+              _BuildStreamComments(
+                post: widget.post,
+                bloc: _bloc,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _onInit() {
     _bloc = PostDetailBloc(widget.post.comments);
     _bloc.doGetComment();
-    _likeBloc = LikesBloc(widget.user, widget.post);
+    _likeBloc = LikeBloc(widget.user, widget.post);
+  }
 
+  // >>>>>>>>>> STREAMS
+
+  _doPostDetailStream() {
     _likeBloc.toggleLikesController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
@@ -120,217 +179,268 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _bloc.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: CustomAppBar(
-        titleImg: 'assets/navlogo.png',
-        center: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: Utils.getPaddingDefault(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Utils.loadImage(widget.user.avatar, context, true),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        Text(
-                          widget.user.fullname,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyles.paragraph(
-                            TextSize.large,
-                            weight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                    widget.post.isMine
-                        ? IconButton(
-                            icon: Icon(
-                              Icons.more_horiz,
-                              color: kSkillaPurple,
-                            ),
-                            onPressed: () {
-                              _showDialogForDeletePost(context, widget.post);
-                            },
-                          )
-                        : Container(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 15.0),
-                child: Image.network(
-                  widget.post.files[0],
-                  width: width,
-                  height: height / 3,
-                ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      widget.post.isLiked
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: kSkillaPurple,
-                    ),
-                    onPressed: () {
-                      _likeBloc.doRequesttoggleLike(widget.post.id);
-                    },
-                  ),
-                  GestureDetector(
-                    child: Text(
-                      widget.post.likesCount == 1
-                          ? '${widget.post.likesCount} Like'
-                          : '${widget.post.likesCount} Likes',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.paragraph(
-                        TextSize.large,
-                        weight: FontWeight.w400,
-                      ),
-                    ),
-                    onTap: () {
-                      _doNavigateToLikeScreen(widget.post.user, widget.post);
-                    },
-                  ),
-                  SizedBox(
-                    width: 20.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      Utils.convertToDisplayTimeDetail(
-                          widget.post.createdAt.toString(), context),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.paragraph(
-                        TextSize.medium,
-                        weight: FontWeight.w400,
-                        color: kSkillaPurple,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 120,
-                      child: Text(
-                        widget.user.fullname,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.paragraph(
-                          TextSize.large,
-                          weight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
-                    Container(
-                      width: 180,
-                      child: Text(
-                        widget.post.caption,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.paragraph(
-                          TextSize.medium,
-                          weight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Row(
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: _buildCommentTextField(),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: kSkillaPurple,
-                      ),
-                      onPressed: () {
-                        _bloc.doRequestAddComment(widget.post.id);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              StreamBuilder<BaseResponse<List<Comment>>>(
-                  stream: _bloc.commentController.stream,
-                  builder: (context, snapshot) {
-                    switch (snapshot.data?.status) {
-                      case Status.LOADING:
-                        return Center(
-                          child: NativeLoading(animating: true),
-                        );
-                        break;
-                      case Status.ERROR:
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          NativeDialog.showErrorDialog(
-                              context, snapshot.data.message);
-                        });
-                        return Container();
-                        break;
-                      default:
-                        if (snapshot.data != null) {
-                          if (snapshot.data.data.isNotEmpty) {
-                            return _buildPostComments(
-                                width, snapshot.data.data);
-                          }
-                        }
-                        return Container();
-                    }
-                  }),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // >>>>>>>>>> EVENTS
 
   void refreshFeedWithDeletePost(isDeletePost) {
     EventCenter.getInstance()
         .deletePostEvent
         .broadcast(DeletePostEventArgs(isDeletePost));
   }
+}
 
-  TextField _buildCommentTextField() {
+class _BuildHeaderPost extends StatelessWidget {
+  final Post post;
+  final User user;
+  final FeedBloc feedBloc;
+
+  _BuildHeaderPost({this.user, this.post, this.feedBloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Utils.loadImage(user.avatar, context, true),
+              SizedBox(
+                width: 15.0,
+              ),
+              Text(
+                user.fullname,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.paragraph(
+                  TextSize.large,
+                  weight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+          post.isMine
+              ? IconButton(
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: kSkillaPurple,
+                  ),
+                  onPressed: () {
+                    _showDialogForDeletePost(context, post);
+                  },
+                )
+              : Container(),
+        ],
+      ),
+    );
+  }
+
+  // >>>>>>>>>> DIALOGS
+
+  void _showDialogForDeletePost(BuildContext context, Post post) {
+    showNativeDialog(
+      context: context,
+      builder: (context) => NativeDialog(
+        title: AppLocalizations.of(context)
+            .translate('textPostDetailDialogTitlePost'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(AppLocalizations.of(context).translate('textDelete'),
+                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
+            onPressed: () {
+              Navigator.pop(context);
+              feedBloc.doRequestDeletePost(post.id);
+            },
+          ),
+          FlatButton(
+            child: Text(AppLocalizations.of(context).translate('textCancel'),
+                style: TextStyles.paragraph(TextSize.xSmall)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BuildFilePost extends StatelessWidget {
+  final Post post;
+
+  _BuildFilePost({this.post});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 15.0),
+      child: Image.network(
+        post.files[0],
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 3,
+      ),
+    );
+  }
+}
+
+class _BuildLikeBtn extends StatefulWidget {
+  final Post post;
+  final LikeBloc likeBloc;
+
+  _BuildLikeBtn({this.post, this.likeBloc});
+  @override
+  __BuildLikeBtnState createState() => __BuildLikeBtnState();
+}
+
+class __BuildLikeBtnState extends State<_BuildLikeBtn> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
+            color: kSkillaPurple,
+          ),
+          onPressed: () {
+            widget.likeBloc.doRequesttoggleLike(widget.post.id);
+          },
+        ),
+        GestureDetector(
+          child: Text(
+            widget.post.likesCount == 1
+                ? '${widget.post.likesCount} Like'
+                : '${widget.post.likesCount} Likes',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.paragraph(
+              TextSize.large,
+              weight: FontWeight.w400,
+            ),
+          ),
+          onTap: () {
+            _doNavigateToLikeScreen(widget.post.user, widget.post);
+          },
+        ),
+        SizedBox(
+          width: 20.0,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 5.0),
+          child: Text(
+            Utils.convertToDisplayTimeDetail(
+                widget.post.createdAt.toString(), context),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.paragraph(
+              TextSize.medium,
+              weight: FontWeight.w400,
+              color: kSkillaPurple,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // >>>>>>>>>> NAVIGATORS
+
+  _doNavigateToLikeScreen(User user, Post post) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => LikesScreen(
+          user: user,
+          post: post,
+        ),
+      ),
+    );
+  }
+}
+
+class _BuildCaptionPost extends StatelessWidget {
+  final Post post;
+  final User user;
+
+  _BuildCaptionPost({this.post, this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Row(
+        children: [
+          Container(
+            width: 120,
+            child: Text(
+              user.fullname,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.large,
+                weight: FontWeight.w700,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 15.0,
+          ),
+          Container(
+            width: 180,
+            child: Text(
+              post.caption,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.medium,
+                weight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BuildCommentArea extends StatefulWidget {
+  final Post post;
+  final PostDetailBloc bloc;
+
+  _BuildCommentArea({this.post, this.bloc});
+  @override
+  __BuildCommentAreaState createState() => __BuildCommentAreaState();
+}
+
+class __BuildCommentAreaState extends State<_BuildCommentArea> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: Row(
+        children: [
+          Flexible(
+            flex: 2,
+            child: _buildCommentTextField(),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.send,
+              color: kSkillaPurple,
+            ),
+            onPressed: () {
+              widget.bloc.doRequestAddComment(widget.post.id);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // >>>>>>>>>> TEXT FIELD
+  Widget _buildCommentTextField() {
     return TextField(
       maxLines: 1,
       textCapitalization: TextCapitalization.none,
-      controller: _bloc.textCommentController,
+      controller: widget.bloc.textCommentController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context)
@@ -342,21 +452,75 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       ),
     );
   }
+}
 
-  Container _buildPostComments(double width, List<Comment> commentList) {
+class _BuildStreamComments extends StatefulWidget {
+  final Post post;
+  final PostDetailBloc bloc;
+
+  _BuildStreamComments({this.post, this.bloc});
+  @override
+  __BuildStreamCommentsState createState() => __BuildStreamCommentsState();
+}
+
+class __BuildStreamCommentsState extends State<_BuildStreamComments> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<BaseResponse<List<Comment>>>(
+      stream: widget.bloc.commentController.stream,
+      builder: (context, snapshot) {
+        switch (snapshot.data?.status) {
+          case Status.LOADING:
+            return Center(
+              child: NativeLoading(animating: true),
+            );
+            break;
+          case Status.ERROR:
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              NativeDialog.showErrorDialog(context, snapshot.data.message);
+            });
+            return Container();
+            break;
+          default:
+            if (snapshot.data != null) {
+              if (snapshot.data.data.isNotEmpty) {
+                return _buildPostComments(snapshot.data.data);
+              }
+            }
+            return Container();
+        }
+      },
+    );
+  }
+
+  Widget _buildPostComments(List<Comment> commentList) {
     return Container(
-      width: width,
+      width: MediaQuery.of(context).size.width,
       height: 200,
       child: ListView.builder(
         itemCount: commentList.length,
         itemBuilder: (context, index) {
-          return buildComment(commentList, index);
+          return _BuildComment(
+            commentList: commentList,
+            index: index,
+            post: widget.post,
+            bloc: widget.bloc,
+          );
         },
       ),
     );
   }
+}
 
-  Container buildComment(List<Comment> commentList, int index) {
+class _BuildComment extends StatelessWidget {
+  final List<Comment> commentList;
+  final int index;
+  final Post post;
+  final PostDetailBloc bloc;
+
+  _BuildComment({this.commentList, this.index, this.post, this.bloc});
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8.0),
       color: Colors.grey[50],
@@ -394,7 +558,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             onTap: () {
               if (commentList.elementAt(index).isCommentMine) {
                 _showDialogForDeleteComment(
-                    context, widget.post, commentList.elementAt(index));
+                    context, post, commentList.elementAt(index));
               }
             },
           ),
@@ -403,16 +567,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  _doNavigateToLikeScreen(User user, Post post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => LikesScreen(
-          user: user,
-          post: post,
-        ),
-      ),
-    );
-  }
+  // >>>>>>>>>> DIALOGS
 
   void _showDialogForDeleteComment(
       BuildContext context, Post post, Comment comments) {
@@ -427,34 +582,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Navigator.pop(context);
-              _bloc.doRequestDeleteComment(comments.id, post.id);
-            },
-          ),
-          FlatButton(
-            child: Text(AppLocalizations.of(context).translate('textCancel'),
-                style: TextStyles.paragraph(TextSize.xSmall)),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDialogForDeletePost(BuildContext context, Post post) {
-    showNativeDialog(
-      context: context,
-      builder: (context) => NativeDialog(
-        title: AppLocalizations.of(context)
-            .translate('textPostDetailDialogTitlePost'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(AppLocalizations.of(context).translate('textDelete'),
-                style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
-            onPressed: () {
-              Navigator.pop(context);
-              _feedBloc.doRequestDeletePost(post.id);
+              bloc.doRequestDeleteComment(comments.id, post.id);
             },
           ),
           FlatButton(

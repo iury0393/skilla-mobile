@@ -27,7 +27,7 @@ class PostItem extends StatefulWidget {
 
 class _PostItemState extends State<PostItem> {
   final _bloc = FeedBloc();
-  LikesBloc _likeBloc;
+  LikeBloc _likeBloc;
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _PostItemState extends State<PostItem> {
           break;
       }
     });
-    _likeBloc = LikesBloc(widget.user, widget.post);
+    _likeBloc = LikeBloc(widget.user, widget.post);
 
     _likeBloc.toggleLikesController.stream.listen((event) {
       switch (event.status) {
