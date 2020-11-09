@@ -26,6 +26,10 @@
   "textSearchWarning": "There is no one else to follow",
 
   "textFeedWarning": "The feed is empty, follow someone",
+  "textLoading": "Loading...",
+  "textRefreshCompleted": "Update complete",
+  "textPullToRefresh": "Pull to update",
+  "textReleaseToRefresh": "Release to update",
 
   "textLikesWarning": "Nobody liked your post",
 

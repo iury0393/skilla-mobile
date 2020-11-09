@@ -53,6 +53,8 @@ dependencies:
   jiffy: ^3.0.1
   # Used to access the gallery
   image_picker: ^0.6.7+12
+  # Used to handler list view (pull to refresh and load more)
+  pull_to_refresh: ^1.6.1
   
 dev_dependencies:
   flutter_test:

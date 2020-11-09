@@ -7,10 +7,12 @@ import 'package:jiffy/jiffy.dart';
 import 'package:package_info/package_info.dart';
 import 'package:skilla/dao/auth_dao.dart';
 import 'package:skilla/dao/user_dao.dart';
+import 'package:skilla/model/post.dart';
 import 'package:skilla/model/user.dart';
 
 class Utils {
   static String appLanguage;
+  static List<Post> listOfPosts = [];
   static List<User> listOfUsers = [];
 
   static double _height = 120.0;

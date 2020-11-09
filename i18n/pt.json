@@ -26,6 +26,10 @@
   "textSearchWarning": "Não existe mais ninguém para seguir",
 
   "textFeedWarning": "O feed está vazio, siga alguém",
+  "textLoading": "Carregando...",
+  "textRefreshCompleted": "Atualização concluída",
+  "textPullToRefresh": "Puxe para atualizar",
+  "textReleaseToRefresh": "Solte para atualizar",
 
   "textLikesWarning": "Ninguem curtiu sua publicação",
 

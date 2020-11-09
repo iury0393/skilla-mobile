@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
@@ -33,7 +34,7 @@ class _FeedScreenState extends State<FeedScreen> {
         _bloc.user = value.data;
       });
     });
-    _bloc.doRequestGetFeed();
+    _bloc.doRequestGetFeed(true);
     EventCenter.getInstance().newPostEvent.subscribe(_refreshFeed);
     EventCenter.getInstance().deletePostEvent.subscribe(_refreshFeedDelete);
   }
@@ -86,7 +87,29 @@ class _FeedScreenState extends State<FeedScreen> {
                 default:
                   if (snapshot.data != null) {
                     if (snapshot.data.data.isNotEmpty) {
-                      return _buildListFeed(snapshot);
+                      return SmartRefresher(
+                        controller: _bloc.refreshController,
+                        enablePullUp: false,
+                        enablePullDown: true,
+                        child: _buildListFeed(snapshot),
+                        physics: BouncingScrollPhysics(),
+                        header: ClassicHeader(
+                          refreshingIcon: NativeLoading(animating: true),
+                          refreshingText: AppLocalizations.of(context)
+                              .translate('textLoading'),
+                          completeText: AppLocalizations.of(context)
+                              .translate('textRefreshCompleted'),
+                          idleText: AppLocalizations.of(context)
+                              .translate('textPullToRefresh'),
+                          releaseText: AppLocalizations.of(context)
+                              .translate('textReleaseToRefresh'),
+                          completeIcon: Icon(
+                            Icons.check,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onRefresh: _onRefresh,
+                      );
                     } else {
                       return Align(
                         alignment: Alignment.center,
@@ -113,15 +136,20 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
+  _onRefresh() async {
+    await _bloc.refreshFeed();
+    _bloc.refreshController.refreshCompleted();
+  }
+
   _refreshFeed(NewPostEventArgs args) {
     if (args.isNewPost) {
-      _bloc.doRequestGetFeed();
+      _bloc.doRequestGetFeed(false);
     }
   }
 
   _refreshFeedDelete(DeletePostEventArgs args) {
     if (args.isDeletedPost) {
-      _bloc.doRequestGetFeed();
+      _bloc.doRequestGetFeed(false);
     }
   }
 
