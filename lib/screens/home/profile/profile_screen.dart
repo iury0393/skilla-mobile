@@ -194,7 +194,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         )
-                  : Container(),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            FeatherIcons.edit,
+                            color: kSkillaPurple,
+                          ),
+                          onPressed: () {
+                            _doNavigateToEditScreen();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            FeatherIcons.logOut,
+                            color: kSkillaPurple,
+                          ),
+                          onPressed: () async {
+                            await Utils.cleanDataBase();
+                            _doNavigateToSignInScreen();
+                          },
+                        ),
+                      ],
+                    ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
