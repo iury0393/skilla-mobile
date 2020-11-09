@@ -42,6 +42,8 @@
   "textFieldPostHint": "Add a caption",
   "btnPostSubmit": "Publish",
   "textImagePickerWarning": "Image not selected",
+  "textCameraPost": "Select an image from your phone's camera",
+  "textGalleryPost": "Select an image from your phone's gallery",
 
   "textEditBtnImage": "Change your profile picture",
   "btnEditSubmit": "Edit",

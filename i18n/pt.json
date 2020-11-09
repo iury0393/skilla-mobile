@@ -42,6 +42,8 @@
   "textFieldPostHint": "Adicione uma legenda",
   "btnPostSubmit": "Publicar",
   "textImagePickerWarning": "Imagem não selecionada",
+  "textCameraPost": "Selecione uma imagem da câmera do seu celular",
+  "textGalleryPost": "Selecione uma imagem da galeria do seu celular",
 
   "textEditBtnImage": "Troque a imagem do seu perfil",
   "btnEditSubmit": "Editar",
