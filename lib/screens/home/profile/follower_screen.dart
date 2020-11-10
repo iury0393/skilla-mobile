@@ -25,14 +25,8 @@ class _FollowerScreenState extends State<FollowerScreen> {
 
   @override
   void initState() {
-    _bloc = FollowerBloc(widget.id);
     super.initState();
-    _bloc.getUser().then((value) {
-      setState(() {
-        _bloc.userEmail = value.data.email;
-      });
-    });
-    _bloc.doRequestGetUsers();
+    _onInit();
   }
 
   @override
@@ -50,74 +44,119 @@ class _FollowerScreenState extends State<FollowerScreen> {
       ),
       body: Padding(
         padding: Utils.getPaddingDefault(),
-        child: StreamBuilder<BaseResponse<List<User>>>(
-          stream: _bloc.followerController.stream,
-          builder: (context, snapshot) {
-            switch (snapshot.data?.status) {
-              case Status.LOADING:
-                return Center(
-                  child: NativeLoading(animating: true),
-                );
-                break;
-              case Status.ERROR:
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  NativeDialog.showErrorDialog(context, snapshot.data.message);
-                });
-                return Container();
-                break;
-              default:
-                if (snapshot.data != null) {
-                  if (snapshot.data.data.isNotEmpty) {
-                    return _buildListUser(snapshot);
-                  } else {
-                    return Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        AppLocalizations.of(context)
-                            .translate('textFollowerWarning'),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.paragraph(
-                          TextSize.xLarge,
-                          weight: FontWeight.w400,
-                          color: kSkillaPurple,
-                        ),
-                      ),
-                    );
-                  }
-                }
-            }
-            return Container();
-          },
+        child: _BuildStream(
+          bloc: _bloc,
         ),
       ),
     );
   }
 
-  ListView _buildListUser(AsyncSnapshot<BaseResponse<List<User>>> snapshot) {
-    return ListView.builder(
-      itemCount: snapshot.data.data.length,
-      itemBuilder: (context, index) {
-        return _buildRecomendation(user: snapshot.data.data[index]);
+  _onInit() {
+    _bloc = FollowerBloc(widget.id);
+    _bloc.getUser().then((value) {
+      setState(() {
+        _bloc.userEmail = value.data.email;
+      });
+    });
+    _bloc.doRequestGetUsers();
+  }
+}
+
+class _BuildStream extends StatefulWidget {
+  final FollowerBloc bloc;
+
+  _BuildStream({this.bloc});
+  @override
+  __BuildStreamState createState() => __BuildStreamState();
+}
+
+class __BuildStreamState extends State<_BuildStream> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<BaseResponse<List<User>>>(
+      stream: widget.bloc.followerController.stream,
+      builder: (context, snapshot) {
+        switch (snapshot.data?.status) {
+          case Status.LOADING:
+            return Center(
+              child: NativeLoading(animating: true),
+            );
+            break;
+          case Status.ERROR:
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              NativeDialog.showErrorDialog(context, snapshot.data.message);
+            });
+            return Container();
+            break;
+          default:
+            if (snapshot.data != null) {
+              if (snapshot.data.data.isNotEmpty) {
+                return _BuildFollowersList(
+                  snapshot: snapshot,
+                );
+              } else {
+                return Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('textFollowerWarning'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.paragraph(
+                      TextSize.xLarge,
+                      weight: FontWeight.w400,
+                      color: kSkillaPurple,
+                    ),
+                  ),
+                );
+              }
+            }
+        }
+        return Container();
       },
     );
   }
+}
 
-  Column _buildRecomendation({User user}) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 15.0),
-          child: _buildFollowersList(user),
-        ),
-      ],
+class _BuildFollowersList extends StatefulWidget {
+  final AsyncSnapshot<BaseResponse<List<User>>> snapshot;
+
+  _BuildFollowersList({this.snapshot});
+  @override
+  __BuildFollowersListState createState() => __BuildFollowersListState();
+}
+
+class __BuildFollowersListState extends State<_BuildFollowersList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.snapshot.data.data.length,
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 15.0),
+              child: _BuildFollowerCard(
+                user: widget.snapshot.data.data[index],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
+}
 
-  Widget _buildFollowersList(User user) {
+class _BuildFollowerCard extends StatelessWidget {
+  final User user;
+
+  _BuildFollowerCard({this.user});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _doNavigateToProfileScreen(user);
+        _doNavigateToProfileScreen(context, user);
       },
       child: Row(
         children: [
@@ -139,7 +178,9 @@ class _FollowerScreenState extends State<FollowerScreen> {
     );
   }
 
-  _doNavigateToProfileScreen(User user) {
+  // >>>>>>>>>> Navigators
+
+  _doNavigateToProfileScreen(BuildContext context, User user) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => ProfileScreen(
