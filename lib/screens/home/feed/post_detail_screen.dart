@@ -295,47 +295,49 @@ class __BuildLikeBtnState extends State<_BuildLikeBtn> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          icon: Icon(
-            widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
+                color: kSkillaPurple,
+              ),
+              onPressed: () {
+                widget.likeBloc.doRequestToggleLike(widget.post.id);
+              },
+            ),
+            GestureDetector(
+              child: Text(
+                widget.post.likesCount == 1
+                    ? '${widget.post.likesCount} Like'
+                    : '${widget.post.likesCount} Likes',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.paragraph(
+                  TextSize.large,
+                  weight: FontWeight.w400,
+                ),
+              ),
+              onTap: () {
+                _doNavigateToLikeScreen(widget.post.user, widget.post);
+              },
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+          ],
+        ),
+        Text(
+          Utils.convertToDisplayTimeDetail(
+              widget.post.createdAt.toString(), context),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyles.paragraph(
+            TextSize.medium,
+            weight: FontWeight.w400,
             color: kSkillaPurple,
-          ),
-          onPressed: () {
-            widget.likeBloc.doRequestToggleLike(widget.post.id);
-          },
-        ),
-        GestureDetector(
-          child: Text(
-            widget.post.likesCount == 1
-                ? '${widget.post.likesCount} Like'
-                : '${widget.post.likesCount} Likes',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.paragraph(
-              TextSize.large,
-              weight: FontWeight.w400,
-            ),
-          ),
-          onTap: () {
-            _doNavigateToLikeScreen(widget.post.user, widget.post);
-          },
-        ),
-        SizedBox(
-          width: 20.0,
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 5.0),
-          child: Text(
-            Utils.convertToDisplayTimeDetail(
-                widget.post.createdAt.toString(), context),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.paragraph(
-              TextSize.medium,
-              weight: FontWeight.w400,
-              color: kSkillaPurple,
-            ),
           ),
         ),
       ],

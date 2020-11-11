@@ -2,6 +2,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:share/share.dart';
 import 'package:skilla/bloc/profile_bloc.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/components/native_dialog.dart';
@@ -10,7 +11,7 @@ import 'package:skilla/components/rounded_button.dart';
 import 'package:skilla/model/post_detail.dart';
 import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/feed/post_detail_profile_screen.dart';
+import 'package:skilla/screens/home/feed/post_detail_screen.dart';
 import 'package:skilla/screens/home/profile/curriculum_screen.dart';
 import 'package:skilla/screens/home/profile/follower_screen.dart';
 import 'package:skilla/screens/home/profile/following_screen.dart';
@@ -78,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _BuildFullName(user: widget.user),
                     _BuildBio(user: widget.user),
                     _BuildWebsite(user: widget.user),
-                    _BuildCurriculumBtn(),
+                    _BuildCurriculumShareBtn(),
                     Divider(
                       height: 20.0,
                       thickness: 2.0,
@@ -117,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _BuildFullName(user: snapshot.data.data),
                               _BuildBio(user: snapshot.data.data),
                               _BuildWebsite(user: snapshot.data.data),
-                              _BuildCurriculumBtn(),
+                              _BuildCurriculumShareBtn(),
                               Divider(
                                 height: 20.0,
                                 thickness: 2.0,
@@ -468,13 +469,35 @@ class _BuildWebsite extends StatelessWidget {
   }
 }
 
-class _BuildCurriculumBtn extends StatelessWidget {
+class _BuildCurriculumShareBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: _buildCurriculumButton(context),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.share,
+            color: kSkillaPurple,
+          ),
+          onPressed: () {
+            _onShare(context);
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          child: _buildCurriculumButton(context),
+        ),
+      ],
     );
+  }
+
+  _onShare(BuildContext context) {
+    final RenderBox box = context.findRenderObject();
+    Share.share("Faça download do aplicativo Skilla",
+        subject:
+            "Faça o download do app e entre nessa comunidade que não para de crescer.",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   Widget _buildCurriculumButton(BuildContext context) {
