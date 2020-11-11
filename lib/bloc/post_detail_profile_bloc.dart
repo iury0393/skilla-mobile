@@ -62,7 +62,7 @@ class PostDetailBloc {
   doRequestDeleteComment(String commentId, String postId) async {
     deleteCommentController.add(BaseResponse.loading());
     try {
-      await PostDetailNetwork().doRequestDeteleComment(commentId, postId);
+      await PostDetailNetwork().doRequestDeleteComment(commentId, postId);
       commentsList.removeWhere((element) => element.id == commentId);
       commentController.add(BaseResponse.completed(data: commentsList));
       deleteCommentController.add(BaseResponse.completed());

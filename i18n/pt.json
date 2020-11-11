@@ -26,6 +26,10 @@
   "textSearchWarning": "Não existe mais ninguém para seguir",
 
   "textFeedWarning": "O feed está vazio, siga alguém",
+  "textLoading": "Carregando...",
+  "textRefreshCompleted": "Atualização concluída",
+  "textPullToRefresh": "Puxe para atualizar",
+  "textReleaseToRefresh": "Solte para atualizar",
 
   "textLikesWarning": "Ninguem curtiu sua publicação",
 
@@ -38,6 +42,8 @@
   "textFieldPostHint": "Adicione uma legenda",
   "btnPostSubmit": "Publicar",
   "textImagePickerWarning": "Imagem não selecionada",
+  "textCameraPost": "Selecione uma imagem da câmera do seu celular",
+  "textGalleryPost": "Selecione uma imagem da galeria do seu celular",
 
   "textEditBtnImage": "Troque a imagem do seu perfil",
   "btnEditSubmit": "Editar",

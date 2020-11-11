@@ -6,7 +6,7 @@ import 'config/api_service.dart';
 class LikesNetwork {
   final service = APIService();
 
-  Future<List<User>> doRequestgetUsers() async {
+  Future<List<User>> doRequestGetUsers() async {
     final response = await service.doRequest(
       RequestConfig('auth/users', HttpMethod.get),
     );
@@ -14,7 +14,7 @@ class LikesNetwork {
     return Users.fromJson(response).data;
   }
 
-  Future<List<Post>> doRequestgetFeed() async {
+  Future<List<Post>> doRequestGetFeed() async {
     final response = await service.doRequest(
       RequestConfig('users/feed', HttpMethod.get),
     );

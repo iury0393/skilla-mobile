@@ -13,6 +13,7 @@ class ProfileBloc {
   UserNetwork _userService = UserNetwork();
   bool isChecked = false;
   BaseResponse<User> user;
+  StreamController<BaseResponse<User>> profileController;
   StreamController<BaseResponse<void>> followController;
   StreamController<BaseResponse<void>> unFollowController;
   StreamController<BaseResponse<Post>> postController;
@@ -29,10 +30,11 @@ class ProfileBloc {
   List<PostDetail> listPostsUser = List<PostDetail>();
 
   ProfileBloc() {
+    profileController = StreamController();
     followController = StreamController();
     unFollowController = StreamController();
     postController = StreamController();
-    postsController = StreamController();
+    postsController = StreamController.broadcast();
     fullNameController = StreamController();
     userNameController = StreamController();
     emailController = StreamController();
@@ -45,6 +47,7 @@ class ProfileBloc {
   }
 
   dispose() {
+    profileController.close();
     followController.close();
     unFollowController.close();
     postController.close();
@@ -65,18 +68,13 @@ class ProfileBloc {
   }
 
   getUserData() async {
-    user = await UserDAO().get();
-    fullNameController.add(BaseResponse.completed(data: user.data.fullname));
-    userNameController.add(BaseResponse.completed(data: user.data.username));
-    emailController.add(BaseResponse.completed(data: user.data.email));
-    avatarController.add(BaseResponse.completed(data: user.data.avatar));
-    bioController.add(BaseResponse.completed(data: user.data.bio));
-    websiteController.add(BaseResponse.completed(data: user.data.website));
-    postCountController.add(BaseResponse.completed(data: user.data.postCount));
-    followerCountController
-        .add(BaseResponse.completed(data: user.data.followersCount));
-    followingCountController
-        .add(BaseResponse.completed(data: user.data.followingCount));
+    profileController.add(BaseResponse.loading());
+    try {
+      user = await UserDAO().get();
+      profileController.add(BaseResponse.completed(data: user.data));
+    } catch (e) {
+      profileController.add(BaseResponse.error(e.toString()));
+    }
   }
 
   doRequestGetPosts(String id) async {
@@ -108,10 +106,10 @@ class ProfileBloc {
     }
   }
 
-  doRequestUnfollow(String id) async {
+  doRequestUnFollow(String id) async {
     unFollowController.add(BaseResponse.loading());
     try {
-      await ProfileNetwork().doRequestUnfollow(id);
+      await ProfileNetwork().doRequestUnFollow(id);
       _doRequestGetUserLoggedDataUn();
     } catch (e) {
       unFollowController.add(BaseResponse.error(e.toString()));
@@ -177,7 +175,7 @@ class ProfileBloc {
   }
 
   Future<bool> isFollowing(String userId) async {
-    var response = await ProfileNetwork().doRequestgetUsers();
+    var response = await ProfileNetwork().doRequestGetUsers();
     var userSelf = await UserDAO().get();
     response.forEach((user) {
       if (user.id == userId) {

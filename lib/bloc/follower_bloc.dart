@@ -24,10 +24,10 @@ class FollowerBloc {
     return await UserDAO().get();
   }
 
-  doRequestGetUsers() async {
+  doRequestGetFollowers() async {
     followerController.add(BaseResponse.loading());
     try {
-      var response = await FollowerNetwork().doRequestgetUsers();
+      var response = await FollowerNetwork().doRequestGetFollowers();
       response.forEach((element) {
         if (element.following.toString().contains(_id)) {
           listFollowers.add(element);

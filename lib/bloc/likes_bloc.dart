@@ -5,14 +5,14 @@ import 'package:skilla/model/user.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/network/likes_network.dart';
 
-class LikesBloc {
+class LikeBloc {
   StreamController<BaseResponse<List<User>>> likesController;
   StreamController<BaseResponse<void>> toggleLikesController;
   List<User> listUsers = List<User>();
   String userEmail;
   Post _userPost;
 
-  LikesBloc(User user, Post post) {
+  LikeBloc(User user, Post post) {
     _userPost = post;
     likesController = StreamController();
     toggleLikesController = StreamController();
@@ -26,8 +26,8 @@ class LikesBloc {
   doRequestGetLikes() async {
     likesController.add(BaseResponse.loading());
     try {
-      var responseFeed = await LikesNetwork().doRequestgetFeed();
-      var responseUser = await LikesNetwork().doRequestgetUsers();
+      var responseFeed = await LikesNetwork().doRequestGetFeed();
+      var responseUser = await LikesNetwork().doRequestGetUsers();
       responseFeed.forEach((feed) {
         if (feed.caption == _userPost.caption) {
           responseUser.forEach((user) {
@@ -43,7 +43,7 @@ class LikesBloc {
     }
   }
 
-  doRequesttoggleLike(String postId) async {
+  doRequestToggleLike(String postId) async {
     toggleLikesController.add(BaseResponse.loading());
     try {
       await LikesNetwork().doRequestToggleLike(postId);

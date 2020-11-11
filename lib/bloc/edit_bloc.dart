@@ -50,7 +50,11 @@ class EditBloc {
     editController.close();
   }
 
-  doRequestEdit(String secureUrl) async {
+  Future<BaseResponse<User>> getUser() async {
+    return await UserDAO().get();
+  }
+
+  doRequestEdit({String secureUrl}) async {
     editController.add(BaseResponse.loading());
     try {
       var body = User(

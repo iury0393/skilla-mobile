@@ -32,63 +32,13 @@ class _PostScreenState extends State<PostScreen> {
   @override
   void initState() {
     super.initState();
-
-    _bloc.postController.stream.listen((event) {
-      switch (event.status) {
-        case Status.COMPLETED:
-          refreshFeedWithNewPost(true);
-          Navigator.pop(context);
-          Navigator.pop(context);
-          break;
-        case Status.LOADING:
-          NativeDialog.showLoadingDialog(context);
-          break;
-        case Status.ERROR:
-          Navigator.pop(context);
-          NativeDialog.showErrorDialog(context, event.message);
-          break;
-        default:
-          break;
-      }
-    });
+    _doPostStream();
   }
 
   @override
   void dispose() {
     super.dispose();
     _bloc.dispose();
-  }
-
-  Future getImageCamera() async {
-    var pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        NativeDialog.showErrorDialog(context,
-            AppLocalizations.of(context).translate('textImagePickerWarning'));
-      }
-    });
-  }
-
-  Future getImageGallery() async {
-    var pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        NativeDialog.showErrorDialog(context,
-            AppLocalizations.of(context).translate('textImagePickerWarning'));
-      }
-    });
-  }
-
-  void refreshFeedWithNewPost(isNewPost) {
-    EventCenter.getInstance()
-        .newPostEvent
-        .broadcast(NewPostEventArgs(isNewPost));
   }
 
   @override
@@ -124,7 +74,8 @@ class _PostScreenState extends State<PostScreen> {
                                     Container(
                                       width: 210,
                                       child: Text(
-                                        'Selecione uma imagem da câmera do seu celular',
+                                        AppLocalizations.of(context)
+                                            .translate('textCameraPost'),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyles.paragraph(
@@ -153,7 +104,8 @@ class _PostScreenState extends State<PostScreen> {
                                       Container(
                                         width: 210,
                                         child: Text(
-                                          'Selecione uma imagem da galeria do seu celular',
+                                          AppLocalizations.of(context)
+                                              .translate('textGalleryPost'),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
                                           style: TextStyles.paragraph(
@@ -190,7 +142,40 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  TextField _buildCaptionTextField() {
+  // >>>>>>>>>> STREAMS
+
+  _doPostStream() {
+    _bloc.postController.stream.listen((event) {
+      switch (event.status) {
+        case Status.COMPLETED:
+          refreshFeedWithNewPost(true);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          break;
+        case Status.LOADING:
+          NativeDialog.showLoadingDialog(context);
+          break;
+        case Status.ERROR:
+          Navigator.pop(context);
+          NativeDialog.showErrorDialog(context, event.message);
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  // >>>>>>>>>> EVENTS
+
+  void refreshFeedWithNewPost(isNewPost) {
+    EventCenter.getInstance()
+        .newPostEvent
+        .broadcast(NewPostEventArgs(isNewPost));
+  }
+
+  // >>>>>>>>>> WIDGETS
+
+  Widget _buildCaptionTextField() {
     return TextField(
       maxLines: 1,
       textCapitalization: TextCapitalization.none,
@@ -218,6 +203,34 @@ class _PostScreenState extends State<PostScreen> {
         _bloc.doRequestAddPost(response);
       },
     );
+  }
+
+  // >>>>>>>>>> FUNCTIONS
+
+  Future getImageCamera() async {
+    var pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        NativeDialog.showErrorDialog(context,
+            AppLocalizations.of(context).translate('textImagePickerWarning'));
+      }
+    });
+  }
+
+  Future getImageGallery() async {
+    var pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        NativeDialog.showErrorDialog(context,
+            AppLocalizations.of(context).translate('textImagePickerWarning'));
+      }
+    });
   }
 
   Future uploadImage() async {

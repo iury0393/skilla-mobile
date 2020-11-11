@@ -26,6 +26,10 @@
   "textSearchWarning": "There is no one else to follow",
 
   "textFeedWarning": "The feed is empty, follow someone",
+  "textLoading": "Loading...",
+  "textRefreshCompleted": "Update complete",
+  "textPullToRefresh": "Pull to update",
+  "textReleaseToRefresh": "Release to update",
 
   "textLikesWarning": "Nobody liked your post",
 
@@ -38,6 +42,8 @@
   "textFieldPostHint": "Add a caption",
   "btnPostSubmit": "Publish",
   "textImagePickerWarning": "Image not selected",
+  "textCameraPost": "Select an image from your phone's camera",
+  "textGalleryPost": "Select an image from your phone's gallery",
 
   "textEditBtnImage": "Change your profile picture",
   "btnEditSubmit": "Edit",

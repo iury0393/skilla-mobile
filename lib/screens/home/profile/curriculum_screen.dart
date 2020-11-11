@@ -59,19 +59,6 @@ class _CurriculumScreenState extends State<CurriculumScreen> {
                   );
                 },
               ),
-              IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  if (isSampleDoc) {
-                    _pdfController.loadDocument(
-                        PdfDocument.openAsset('assets/dummy.pdf'));
-                  } else {
-                    _pdfController.loadDocument(
-                        PdfDocument.openAsset('assets/sample.pdf'));
-                  }
-                  isSampleDoc = !isSampleDoc;
-                },
-              ),
             ],
           ),
           body: PdfView(
