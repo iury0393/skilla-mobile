@@ -171,7 +171,7 @@ class _TextFormFields extends StatelessWidget {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 78,
+            height: 18,
           ),
           _TextFormField(
               mainController: bloc.textEmailController,
