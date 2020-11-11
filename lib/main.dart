@@ -1,35 +1,54 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sentry/sentry.dart';
 import 'package:skilla/bloc/splash_bloc.dart';
 import 'package:skilla/model/auth.dart';
 import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/intro/splash_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
+import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/utils.dart';
 
+final SentryClient _sentry = SentryClient(dsn: kSentry_DSN);
 final _bloc = SplashBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded<Future<void>>(() async {
+    await _bloc.getDataFromDB();
 
-  await _bloc.getDataFromDB();
-
-  _bloc.authStreamController.stream.listen((event) async {
-    switch (event.status) {
-      case Status.LOADING:
-        break;
-      case Status.ERROR:
-        await Utils.cleanDataBase();
-        _bloc.dispose();
-        runApp(MyApp(event.data));
-        break;
-      case Status.COMPLETED:
-        _bloc.dispose();
-        runApp(MyApp(event.data));
-        break;
+    _bloc.authStreamController.stream.listen((event) async {
+      switch (event.status) {
+        case Status.LOADING:
+          break;
+        case Status.ERROR:
+          await Utils.cleanDataBase();
+          _bloc.dispose();
+          runApp(MyApp(event.data));
+          break;
+        case Status.COMPLETED:
+          _bloc.dispose();
+          runApp(MyApp(event.data));
+          break;
+      }
+    });
+  }, (Object error, StackTrace stackTrace) async {
+    try {
+      throw null;
+    } catch (error, stackTrace) {
+      await _sentry.captureException(
+        exception: error,
+        stackTrace: stackTrace,
+      );
     }
   });
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    Zone.current.handleUncaughtError(details.exception, details.stack);
+  };
 }
 
 class MyApp extends StatelessWidget {

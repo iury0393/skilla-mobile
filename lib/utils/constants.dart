@@ -14,3 +14,6 @@ const kBaseURL = 'https://skilla-backend.herokuapp.com/';
 const kApiBaseUrl = 'https://api.cloudinary.com/v1_1/duujebpq4/image/upload';
 const kUploadPreset = 'otwdwv0m';
 const kCloudName = 'duujebpq4';
+// SENTRY
+const kSentry_DSN =
+    "https://cb87a7a092424e2e88359f621969eeb3@o475394.ingest.sentry.io/5513392";
