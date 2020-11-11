@@ -21,16 +21,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _bloc = SearchBloc();
+  List<User> _searchResult = [];
 
   @override
   void initState() {
     super.initState();
-    _bloc.getUser().then((value) {
-      setState(() {
-        _bloc.userEmail = value.data.email;
-      });
-    });
-    _bloc.doRequestGetUsers();
+    _onInit();
   }
 
   @override
@@ -50,81 +46,63 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: Utils.getPaddingDefault(),
         child: Column(
           children: [
-            ListTile(
-              title: TextField(
-                maxLines: 1,
-                textCapitalization: TextCapitalization.none,
-                controller: _bloc.searchUserController,
-                style: TextStyles.textField(TextSize.medium),
-                decoration: InputDecoration(
-                  hintText: 'Procurar',
-                  hintStyle:
-                      TextStyles.paragraph(TextSize.small, color: Colors.grey),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  fillColor: Colors.white,
-                  filled: true,
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.cancel),
-                    onPressed: () {
-                      _bloc.searchUserController.clear();
-                      onSearchTextChanged('');
-                    },
+            _buildSearchTile(),
+            _searchResult.length != 0 ||
+                    _bloc.searchUserController.text.isNotEmpty
+                ? _BuildStream(
+                    bloc: _bloc,
+                    users: _searchResult,
+                    isSearch: true,
+                  )
+                : _BuildStream(
+                    bloc: _bloc,
+                    isSearch: false,
                   ),
-                  prefixIcon: Icon(Icons.search),
-                ),
-                onChanged: onSearchTextChanged,
-              ),
-            ),
-            StreamBuilder<BaseResponse<List<User>>>(
-              stream: _bloc.recommendedController.stream,
-              builder: (context, snapshot) {
-                switch (snapshot.data?.status) {
-                  case Status.LOADING:
-                    return Center(
-                      child: NativeLoading(animating: true),
-                    );
-                    break;
-                  case Status.ERROR:
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      NativeDialog.showErrorDialog(
-                          context, snapshot.data.message);
-                    });
-                    return Container();
-                    break;
-                  default:
-                    if (snapshot.data != null) {
-                      if (snapshot.data.data.isNotEmpty) {
-                        return _searchResult.length != 0 ||
-                                _bloc.searchUserController.text.isNotEmpty
-                            ? _buildListUser(users: _searchResult)
-                            : _buildListUser(snapshot: snapshot);
-                      } else {
-                        return Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppLocalizations.of(context)
-                                .translate('textSearchWarning'),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyles.paragraph(
-                              TextSize.xLarge,
-                              weight: FontWeight.w400,
-                              color: kSkillaPurple,
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                }
-                return Container();
-              },
-            ),
           ],
         ),
       ),
     );
   }
+
+  _onInit() {
+    _bloc.getUser().then((value) {
+      setState(() {
+        _bloc.userEmail = value.data.email;
+      });
+    });
+    _bloc.doRequestGetUsers();
+  }
+
+  // >>>>>>>>>> WIDGETS
+
+  Widget _buildSearchTile() {
+    return ListTile(
+      title: TextField(
+        maxLines: 1,
+        textCapitalization: TextCapitalization.none,
+        controller: _bloc.searchUserController,
+        style: TextStyles.textField(TextSize.medium),
+        decoration: InputDecoration(
+          hintText: 'Procurar',
+          hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+          fillColor: Colors.white,
+          filled: true,
+          suffixIcon: IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {
+              _bloc.searchUserController.clear();
+              onSearchTextChanged('');
+            },
+          ),
+          prefixIcon: Icon(Icons.search),
+        ),
+        onChanged: onSearchTextChanged,
+      ),
+    );
+  }
+
+  // >>>>>>>>>> FUNCTIONS
 
   onSearchTextChanged(String text) async {
     print(text);
@@ -140,33 +118,119 @@ class _SearchScreenState extends State<SearchScreen> {
 
     setState(() {});
   }
+}
 
-  List<User> _searchResult = [];
+class _BuildStream extends StatefulWidget {
+  final SearchBloc bloc;
+  final List<User> users;
+  final bool isSearch;
 
-  Widget _buildListUser(
-      {AsyncSnapshot<BaseResponse<List<User>>> snapshot, List<User> users}) {
+  _BuildStream({this.bloc, this.isSearch = false, this.users});
+  @override
+  __BuildStreamState createState() => __BuildStreamState();
+}
+
+class __BuildStreamState extends State<_BuildStream> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<BaseResponse<List<User>>>(
+      stream: widget.bloc.recommendedController.stream,
+      builder: (context, snapshot) {
+        switch (snapshot.data?.status) {
+          case Status.LOADING:
+            return Center(
+              child: NativeLoading(animating: true),
+            );
+            break;
+          case Status.ERROR:
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              NativeDialog.showErrorDialog(context, snapshot.data.message);
+            });
+            return Container();
+            break;
+          default:
+            if (snapshot.data != null) {
+              if (snapshot.data.data.isNotEmpty) {
+                return widget.isSearch
+                    ? _BuildList(
+                        users: widget.users,
+                        bloc: widget.bloc,
+                      )
+                    : _BuildList(
+                        snapshot: snapshot,
+                        bloc: widget.bloc,
+                      );
+              } else {
+                return Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    AppLocalizations.of(context).translate('textSearchWarning'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.paragraph(
+                      TextSize.xLarge,
+                      weight: FontWeight.w400,
+                      color: kSkillaPurple,
+                    ),
+                  ),
+                );
+              }
+            }
+        }
+        return Container();
+      },
+    );
+  }
+}
+
+class _BuildList extends StatefulWidget {
+  final AsyncSnapshot<BaseResponse<List<User>>> snapshot;
+  final List<User> users;
+  final SearchBloc bloc;
+
+  _BuildList({this.snapshot, this.users, this.bloc});
+  @override
+  __BuildListState createState() => __BuildListState();
+}
+
+class __BuildListState extends State<_BuildList> {
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        itemCount: users != null ? users.length : snapshot.data.data.length,
+        itemCount: widget.users != null
+            ? widget.users.length
+            : widget.snapshot.data.data.length,
         itemBuilder: (context, index) {
-          return _buildRecomendation(
-              user: users != null ? users[index] : snapshot.data.data[index]);
+          return _BuildRecommendation(
+            user: widget.users != null
+                ? widget.users[index]
+                : widget.snapshot.data.data[index],
+            bloc: widget.bloc,
+          );
         },
       ),
     );
   }
+}
 
-  Column _buildRecomendation({User user}) {
+class _BuildRecommendation extends StatelessWidget {
+  final User user;
+  final SearchBloc bloc;
+
+  _BuildRecommendation({this.user, this.bloc});
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 15.0),
           child: GestureDetector(
-            child: user.email == _bloc.userEmail
+            child: user.email == bloc.userEmail
                 ? Container()
                 : GestureDetector(
                     onTap: () {
-                      _doNavigateToProfileScreen(user);
+                      _doNavigateToProfileScreen(user, context);
                     },
                     child: Row(
                       children: [
@@ -192,7 +256,9 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  _doNavigateToProfileScreen(User user) {
+  // >>>>>>>>>> NAVIGATORS
+
+  _doNavigateToProfileScreen(User user, BuildContext context) {
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => ProfileScreen(
