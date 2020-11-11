@@ -58,7 +58,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
         _bloc.userEmail = value.data.email;
       });
     });
-    _bloc.doRequestGetUsers();
+    _bloc.doRequestGetFollowings();
   }
 }
 

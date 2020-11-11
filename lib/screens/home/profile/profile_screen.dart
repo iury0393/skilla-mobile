@@ -226,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       onPressed: () {
         if (_isFollowing) {
-          _bloc.doRequestUnfollow(id);
+          _bloc.doRequestUnFollow(id);
         } else {
           _bloc.doRequestFollow(id);
         }
@@ -260,16 +260,6 @@ class _BuildUserName extends StatelessWidget {
         weight: FontWeight.w400,
       ),
     );
-  }
-}
-
-class _BuildFollowBtn extends StatelessWidget {
-  final User user;
-
-  _BuildFollowBtn({this.user});
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
 

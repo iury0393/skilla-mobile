@@ -302,7 +302,7 @@ class __BuildLikeBtnState extends State<_BuildLikeBtn> {
             color: kSkillaPurple,
           ),
           onPressed: () {
-            widget.likeBloc.doRequesttoggleLike(widget.post.id);
+            widget.likeBloc.doRequestToggleLike(widget.post.id);
           },
         ),
         GestureDetector(

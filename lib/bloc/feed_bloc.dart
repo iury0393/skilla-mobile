@@ -46,7 +46,7 @@ class FeedBloc {
     }
 
     try {
-      var response = await FeedNetwork().doRequestgetFeed();
+      var response = await FeedNetwork().doRequestGetFeed();
       if (response != null) {
         if (needClearList) {
           needClearList = false;
@@ -74,7 +74,7 @@ class FeedBloc {
   doRequestDeletePost(String postId) async {
     deletePostController.add(BaseResponse.loading());
     try {
-      await FeedNetwork().doRequestDetelePost(postId);
+      await FeedNetwork().doRequestDeletePost(postId);
       deletePostController.add(BaseResponse.completed());
     } catch (e) {
       deletePostController.add(BaseResponse.error(e.toString()));

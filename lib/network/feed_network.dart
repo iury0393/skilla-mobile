@@ -6,7 +6,7 @@ import 'config/api_service.dart';
 class FeedNetwork {
   final service = APIService();
 
-  Future<List<Post>> doRequestgetFeed() async {
+  Future<List<Post>> doRequestGetFeed() async {
     final response = await service.doRequest(
       RequestConfig('users/feed', HttpMethod.get),
     );
@@ -22,7 +22,7 @@ class FeedNetwork {
     return User.fromJson(response['data']);
   }
 
-  Future doRequestDetelePost(String postId) async {
+  Future doRequestDeletePost(String postId) async {
     await service.doRequest(
       RequestConfig('posts/$postId', HttpMethod.delete),
     );

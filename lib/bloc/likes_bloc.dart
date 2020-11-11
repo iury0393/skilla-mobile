@@ -26,8 +26,8 @@ class LikeBloc {
   doRequestGetLikes() async {
     likesController.add(BaseResponse.loading());
     try {
-      var responseFeed = await LikesNetwork().doRequestgetFeed();
-      var responseUser = await LikesNetwork().doRequestgetUsers();
+      var responseFeed = await LikesNetwork().doRequestGetFeed();
+      var responseUser = await LikesNetwork().doRequestGetUsers();
       responseFeed.forEach((feed) {
         if (feed.caption == _userPost.caption) {
           responseUser.forEach((user) {
@@ -43,7 +43,7 @@ class LikeBloc {
     }
   }
 
-  doRequesttoggleLike(String postId) async {
+  doRequestToggleLike(String postId) async {
     toggleLikesController.add(BaseResponse.loading());
     try {
       await LikesNetwork().doRequestToggleLike(postId);

@@ -58,7 +58,7 @@ class _FollowerScreenState extends State<FollowerScreen> {
         _bloc.userEmail = value.data.email;
       });
     });
-    _bloc.doRequestGetUsers();
+    _bloc.doRequestGetFollowers();
   }
 }
 

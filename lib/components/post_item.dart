@@ -160,7 +160,7 @@ class _PostItemState extends State<PostItem> {
                   color: kSkillaPurple,
                 ),
                 onPressed: () {
-                  _likeBloc.doRequesttoggleLike(widget.post.id);
+                  _likeBloc.doRequestToggleLike(widget.post.id);
                 },
               ),
               IconButton(

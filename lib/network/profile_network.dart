@@ -29,13 +29,13 @@ class ProfileNetwork {
     );
   }
 
-  Future doRequestUnfollow(String id) async {
+  Future doRequestUnFollow(String id) async {
     await service.doRequest(
       RequestConfig('users/$id/unfollow', HttpMethod.get),
     );
   }
 
-  Future<List<User>> doRequestgetUsers() async {
+  Future<List<User>> doRequestGetUsers() async {
     final response = await service.doRequest(
       RequestConfig('auth/users', HttpMethod.get),
     );

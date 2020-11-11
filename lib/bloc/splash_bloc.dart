@@ -35,7 +35,6 @@ class SplashBloc {
 
   _checkIfNeedRefreshToken(Auth auth) async {
     print("TOKEN: $auth");
-    print("É necessário se logar novamente");
 
     await _doRequestRefreshToken(currentAccessToken: auth);
   }
