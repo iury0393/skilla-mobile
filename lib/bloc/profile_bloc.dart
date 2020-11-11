@@ -34,7 +34,7 @@ class ProfileBloc {
     followController = StreamController();
     unFollowController = StreamController();
     postController = StreamController();
-    postsController = StreamController();
+    postsController = StreamController.broadcast();
     fullNameController = StreamController();
     userNameController = StreamController();
     emailController = StreamController();

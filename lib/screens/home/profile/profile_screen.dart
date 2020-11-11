@@ -20,6 +20,7 @@ import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'edit_screen.dart';
 
@@ -111,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               _BuildAvatar(user: snapshot.data.data),
                               _BuildUserName(user: snapshot.data.data),
-                              _BuildUserOptions(),
+                              _BuildUserOptions(bloc: _bloc),
                               _BuildUserStatus(user: snapshot.data.data),
                               _BuildFullName(user: snapshot.data.data),
                               _BuildBio(user: snapshot.data.data),
@@ -435,15 +436,35 @@ class _BuildWebsite extends StatelessWidget {
   _BuildWebsite({this.user});
   @override
   Widget build(BuildContext context) {
-    return Text(
-      user.website != null ? user.website : "",
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyles.paragraph(
-        TextSize.large,
-        weight: FontWeight.w400,
+    return GestureDetector(
+      child: Text(
+        user.website != null ? user.website : "",
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyles.paragraph(
+          TextSize.large,
+          weight: FontWeight.w400,
+          isLink: true,
+          color: kSkillaPurple,
+        ),
       ),
+      onTap: () {
+        if (user.website != null) {
+          _launchURL(user.website);
+        } else {
+          print("Sem website");
+        }
+      },
     );
+  }
+
+  _launchURL(String website) async {
+    String url = 'https://$website';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível acessar o site: $url';
+    }
   }
 }
 

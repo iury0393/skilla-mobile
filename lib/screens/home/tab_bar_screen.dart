@@ -1,3 +1,4 @@
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/screens/home/feed/feed_screen.dart';
@@ -16,22 +17,23 @@ class TabBarScreen extends StatefulWidget {
 class _TabBarScreenState extends State<TabBarScreen> {
   List<Widget> tabs;
   PageController _myPage = PageController(initialPage: 3);
-
-  bool isSelectedFeed = false;
-  bool isSelectedOpportunities = false;
-  bool isSelectedSearch = false;
-  bool isSelectedProfile = false;
+  int _currentIndex = 3;
 
   @override
   void initState() {
     super.initState();
-    isSelectedProfile = true;
     tabs = [
       SafeArea(child: FeedScreen()),
       SafeArea(child: OpportunitiesScreen()),
       SafeArea(child: SearchScreen()),
       SafeArea(child: ProfileScreen()),
     ];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _myPage.dispose();
   }
 
   @override
@@ -44,95 +46,38 @@ class _TabBarScreenState extends State<TabBarScreen> {
           children: tabs,
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
-        ),
-        child: BottomAppBar(
-          elevation: 0.0,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0),
-              ),
-            ),
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  iconSize: 28.0,
-                  icon: Icon(
-                    FeatherIcons.home,
-                    color: isSelectedFeed ? kSkillaPurple : kPurpleLighterColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isSelectedFeed = true;
-                      isSelectedOpportunities = false;
-                      isSelectedSearch = false;
-                      isSelectedProfile = false;
-                      _myPage.jumpToPage(0);
-                    });
-                  },
-                ),
-                IconButton(
-                  iconSize: 28.0,
-                  icon: Icon(
-                    FeatherIcons.award,
-                    color: isSelectedOpportunities
-                        ? kSkillaPurple
-                        : kPurpleLighterColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isSelectedFeed = false;
-                      isSelectedOpportunities = true;
-                      isSelectedSearch = false;
-                      isSelectedProfile = false;
-                      _myPage.jumpToPage(1);
-                    });
-                  },
-                ),
-                IconButton(
-                  iconSize: 28.0,
-                  icon: Icon(
-                    FeatherIcons.search,
-                    color:
-                        isSelectedSearch ? kSkillaPurple : kPurpleLighterColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isSelectedFeed = false;
-                      isSelectedOpportunities = false;
-                      isSelectedSearch = true;
-                      isSelectedProfile = false;
-                      _myPage.jumpToPage(2);
-                    });
-                  },
-                ),
-                IconButton(
-                  iconSize: 28.0,
-                  icon: Icon(
-                    FeatherIcons.user,
-                    color:
-                        isSelectedProfile ? kSkillaPurple : kPurpleLighterColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isSelectedFeed = false;
-                      isSelectedOpportunities = false;
-                      isSelectedSearch = false;
-                      isSelectedProfile = true;
-                      _myPage.jumpToPage(3);
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: _currentIndex,
+        onItemSelected: (index) {
+          setState(() => _currentIndex = index);
+          _myPage.jumpToPage(index);
+        },
+        items: <BottomNavyBarItem>[
+          BottomNavyBarItem(
+              title: Text('Feed'),
+              icon: Icon(
+                FeatherIcons.home,
+                color: kSkillaPurple,
+              )),
+          BottomNavyBarItem(
+              title: Text('Jobs'),
+              icon: Icon(
+                FeatherIcons.award,
+                color: kSkillaPurple,
+              )),
+          BottomNavyBarItem(
+              title: Text('Search'),
+              icon: Icon(
+                FeatherIcons.search,
+                color: kSkillaPurple,
+              )),
+          BottomNavyBarItem(
+              title: Text('Profile'),
+              icon: Icon(
+                FeatherIcons.user,
+                color: kSkillaPurple,
+              )),
+        ],
       ),
     );
   }
