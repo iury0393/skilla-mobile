@@ -21,6 +21,7 @@ import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
 import 'package:skilla/utils/firebase_instance.dart';
+import 'package:skilla/utils/push_notification_manager.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,6 +43,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String txtBtnFollow;
   bool _isFollowing = false;
 
+  final pnm = PushNotificationsManager();
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     FirebaseInstance.getFirebaseInstance().setCurrentScreen(
         screenName: kScreenNameProfile,
         screenClassOverride: kScreenClassOverrideProfile);
+    pnm.init();
   }
 
   @override
