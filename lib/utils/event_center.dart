@@ -4,6 +4,7 @@ class EventCenter {
   final editEvent = Event<EditEventArgs>();
   final newPostEvent = Event<NewPostEventArgs>();
   final deletePostEvent = Event<DeletePostEventArgs>();
+  final scrollEvent = Event<ScrollEventArgs>();
 
   static EventCenter _instance = EventCenter();
 
@@ -31,4 +32,10 @@ class DeletePostEventArgs extends EventArgs {
   bool isDeletedPost;
 
   DeletePostEventArgs(this.isDeletedPost);
+}
+
+class ScrollEventArgs extends EventArgs {
+  bool isScrolling;
+
+  ScrollEventArgs(this.isScrolling);
 }

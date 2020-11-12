@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/sign_in_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:skilla/screens/home/tab_bar_screen.dart';
 import 'package:skilla/screens/signFlow/sign_up_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -26,6 +28,9 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
     _doSignInStream();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNameSignIn,
+        screenClassOverride: kScreenClassOverrideSignIn);
   }
 
   @override
@@ -113,6 +118,7 @@ class _BuildSubmitButton extends StatelessWidget {
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
       onPressed: () {
+        FirebaseAnalytics().logEvent(name: kNameSignIn, parameters: null);
         if (bloc.formKey.currentState.validate()) {
           bloc.doRequestLogin();
         }
@@ -126,6 +132,8 @@ class _BuildRegisterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       onPressed: () {
+        FirebaseAnalytics()
+            .logEvent(name: kNameNavigateSignIn, parameters: null);
         _doNavigateToRegisterScreen(context);
       },
       child: RichText(

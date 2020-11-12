@@ -10,6 +10,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -30,6 +31,8 @@ class _LikesScreenState extends State<LikesScreen> {
     super.initState();
     _bloc = LikeBloc(widget.user, widget.post);
     _bloc.doRequestGetLikes();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: "signIn", screenClassOverride: "SignInPage");
   }
 
   @override

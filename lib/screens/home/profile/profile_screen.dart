@@ -1,4 +1,5 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
@@ -19,6 +20,7 @@ import 'package:skilla/screens/signFlow/sign_in_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,6 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _onInit();
     _doProfileStream();
     EventCenter.getInstance().editEvent.subscribe(_refreshPage);
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNameProfile,
+        screenClassOverride: kScreenClassOverrideProfile);
   }
 
   @override
@@ -227,6 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       borderColor: kPurpleColor,
       backgroundColor: Colors.white,
       onPressed: () {
+        FirebaseAnalytics().logEvent(name: kNameProfile, parameters: null);
         if (_isFollowing) {
           _bloc.doRequestUnFollow(id);
         } else {
@@ -280,6 +286,8 @@ class _BuildUserOptions extends StatelessWidget {
             color: kSkillaPurple,
           ),
           onPressed: () {
+            FirebaseAnalytics()
+                .logEvent(name: kNameEditProfile, parameters: null);
             _doNavigateToEditScreen(context);
           },
         ),
@@ -289,6 +297,8 @@ class _BuildUserOptions extends StatelessWidget {
             color: kSkillaPurple,
           ),
           onPressed: () async {
+            FirebaseAnalytics()
+                .logEvent(name: kNameLogOutProfile, parameters: null);
             await Utils.cleanDataBase();
             _doNavigateToSignInScreen(context);
           },
@@ -350,6 +360,8 @@ class _BuildUserStatus extends StatelessWidget {
             ),
           ),
           onTap: () {
+            FirebaseAnalytics()
+                .logEvent(name: kNameNavigateFollowerProfile, parameters: null);
             _doNavigateToFollowerScreen(context, user.id);
           },
         ),
@@ -364,6 +376,8 @@ class _BuildUserStatus extends StatelessWidget {
             ),
           ),
           onTap: () {
+            FirebaseAnalytics().logEvent(
+                name: kNameNavigateFollowingProfile, parameters: null);
             _doNavigateToFollowingScreen(context, user.id);
           },
         ),
@@ -451,6 +465,8 @@ class _BuildWebsite extends StatelessWidget {
       ),
       onTap: () {
         if (user.website != null) {
+          FirebaseAnalytics()
+              .logEvent(name: kNameNavigateWebsiteProfile, parameters: null);
           _launchURL(user.website);
         } else {
           print("Sem website");
@@ -481,6 +497,8 @@ class _BuildCurriculumShareBtn extends StatelessWidget {
             color: kSkillaPurple,
           ),
           onPressed: () {
+            FirebaseAnalytics()
+                .logEvent(name: kNameShareProfile, parameters: null);
             _onShare(context);
           },
         ),
@@ -494,9 +512,9 @@ class _BuildCurriculumShareBtn extends StatelessWidget {
 
   _onShare(BuildContext context) {
     final RenderBox box = context.findRenderObject();
-    Share.share("Faça download do aplicativo Skilla",
-        subject:
-            "Faça o download do app e entre nessa comunidade que não para de crescer.",
+    Share.share(
+        "Faça download do aplicativo Skilla e entre nessa comunidade que não para de crescer.",
+        subject: "LINK DE DOWNLOAD",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -509,6 +527,8 @@ class _BuildCurriculumShareBtn extends StatelessWidget {
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
       onPressed: () {
+        FirebaseAnalytics()
+            .logEvent(name: kNameNavigateCurriculumProfile, parameters: null);
         _doNavigateToCurriculumScreen(context);
       },
     );
@@ -631,6 +651,8 @@ class __BuildStreamPostsState extends State<_BuildStreamPosts> {
         ),
       ),
       onTap: () {
+        FirebaseAnalytics()
+            .logEvent(name: kNameNavigatePostDetailProfile, parameters: null);
         _doNavigateToPostDetailScreen(
           widget.user != null ? widget.user : widget.bloc.user.data,
           post.elementAt(index),

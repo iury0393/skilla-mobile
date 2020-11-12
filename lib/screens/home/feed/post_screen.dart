@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skilla/bloc/post_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -33,6 +35,9 @@ class _PostScreenState extends State<PostScreen> {
   void initState() {
     super.initState();
     _doPostStream();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNamePost,
+        screenClassOverride: kScreenClassOverridePost);
   }
 
   @override
@@ -87,6 +92,8 @@ class _PostScreenState extends State<PostScreen> {
                                   ],
                                 ),
                                 onTap: () {
+                                  FirebaseAnalytics().logEvent(
+                                      name: kNameCameraPost, parameters: null);
                                   getImageCamera();
                                 },
                               ),
@@ -117,6 +124,9 @@ class _PostScreenState extends State<PostScreen> {
                                     ],
                                   ),
                                   onTap: () {
+                                    FirebaseAnalytics().logEvent(
+                                        name: kNameGalleryPost,
+                                        parameters: null);
                                     getImageGallery();
                                   },
                                 ),
@@ -198,6 +208,7 @@ class _PostScreenState extends State<PostScreen> {
       borderColor: Colors.transparent,
       backgroundColor: kPurpleColor,
       onPressed: () async {
+        FirebaseAnalytics().logEvent(name: kNamePost, parameters: null);
         var response = await uploadImage();
 
         _bloc.doRequestAddPost(response);

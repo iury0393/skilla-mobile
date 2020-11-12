@@ -9,6 +9,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -27,6 +28,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _onInit();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: "signIn", screenClassOverride: "SignInPage");
   }
 
   @override
