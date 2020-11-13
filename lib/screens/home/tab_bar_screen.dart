@@ -5,8 +5,10 @@ import 'package:skilla/screens/home/feed/feed_screen.dart';
 import 'package:skilla/screens/home/opportunities_screen.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/screens/home/search_screen.dart';
+import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
+import 'package:skilla/utils/text_styles.dart';
 
 class TabBarScreen extends StatefulWidget {
   TabBarScreen({Key key}) : super(key: key);
@@ -64,34 +66,68 @@ class _TabBarScreenState extends State<TabBarScreen> {
         },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            title: Text('Feed'),
+            title: Text(
+              'Feed',
+              style: TextStyles.paragraph(
+                TextSize.small,
+                weight: FontWeight.bold,
+              ),
+            ),
             icon: Icon(
               FeatherIcons.home,
               color: kSkillaPurple,
             ),
+            textAlign: TextAlign.center,
+            activeColor: kSkillaPurple,
           ),
           BottomNavyBarItem(
-            title: Text('Jobs'),
+            title: Text(
+              AppLocalizations.of(context).translate('titleTabBarJobs'),
+              style: TextStyles.paragraph(
+                TextSize.small,
+                weight: FontWeight.bold,
+              ),
+            ),
             icon: Icon(
               FeatherIcons.award,
               color: kSkillaPurple,
             ),
+            textAlign: TextAlign.center,
+            activeColor: kSkillaPurple,
           ),
           BottomNavyBarItem(
-            title: Text('Search'),
+            title: Text(
+              AppLocalizations.of(context).translate('titleTabBarSearch'),
+              style: TextStyles.paragraph(
+                TextSize.small,
+                weight: FontWeight.bold,
+              ),
+            ),
             icon: Icon(
               FeatherIcons.search,
               color: kSkillaPurple,
             ),
+            textAlign: TextAlign.center,
+            activeColor: kSkillaPurple,
           ),
           BottomNavyBarItem(
-            title: Text('Profile'),
+            title: Text(
+              AppLocalizations.of(context).translate('titleTabBarProfile'),
+              style: TextStyles.paragraph(
+                TextSize.small,
+                weight: FontWeight.bold,
+              ),
+            ),
             icon: Icon(
               FeatherIcons.user,
               color: kSkillaPurple,
             ),
+            textAlign: TextAlign.center,
+            activeColor: kSkillaPurple,
           ),
         ],
+        curve: Curves.easeIn,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
       ),
     );
   }

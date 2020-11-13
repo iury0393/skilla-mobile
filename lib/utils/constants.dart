@@ -93,3 +93,9 @@ const kScreenNameFeed = "feed";
 const kScreenClassOverrideFeed = "FeedScreen";
 //>>>> TRACK CLICK
 const kNameNavigatePostFeed = "do_navigate_like_post_detail";
+//>> SEARCH SCREEN
+//>>>> TRACK PAGE
+const kScreenNameSearch = "search";
+const kScreenClassOverrideSearch = "SearchScreen";
+//>>>> TRACK CLICK
+const kNameNavigateProfileSearch = "do_navigate_profile_search";

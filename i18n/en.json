@@ -67,5 +67,9 @@
   "textProfileCurriculum": "Curriculum",
 
   "textPostItemComment": "Comment",
-  "textPostItemComments": "Comments"
+  "textPostItemComments": "Comments",
+
+  "titleTabBarJobs": "Jobs",
+  "titleTabBarSearch": "Search",
+  "titleTabBarProfile": "Profile"
 }

@@ -88,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _BuildFullName(user: widget.user),
                     _BuildBio(user: widget.user),
                     _BuildWebsite(user: widget.user),
-                    _BuildCurriculumShareBtn(),
+                    _BuildCurriculumBtn(),
                     Divider(
                       height: 20.0,
                       thickness: 2.0,
@@ -127,7 +127,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _BuildFullName(user: snapshot.data.data),
                               _BuildBio(user: snapshot.data.data),
                               _BuildWebsite(user: snapshot.data.data),
-                              _BuildCurriculumShareBtn(),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _BuildShareBtn(),
+                                  _BuildCurriculumBtn(),
+                                ],
+                              ),
                               Divider(
                                 height: 20.0,
                                 thickness: 2.0,
@@ -489,37 +495,13 @@ class _BuildWebsite extends StatelessWidget {
   }
 }
 
-class _BuildCurriculumShareBtn extends StatelessWidget {
+class _BuildCurriculumBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: Icon(
-            Icons.share,
-            color: kSkillaPurple,
-          ),
-          onPressed: () {
-            FirebaseAnalytics()
-                .logEvent(name: kNameShareProfile, parameters: null);
-            _onShare(context);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-          child: _buildCurriculumButton(context),
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      child: _buildCurriculumButton(context),
     );
-  }
-
-  _onShare(BuildContext context) {
-    final RenderBox box = context.findRenderObject();
-    Share.share(
-        "Faça download do aplicativo Skilla e entre nessa comunidade que não para de crescer.",
-        subject: "LINK DE DOWNLOAD",
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   Widget _buildCurriculumButton(BuildContext context) {
@@ -544,6 +526,30 @@ class _BuildCurriculumShareBtn extends StatelessWidget {
         builder: (context) => CurriculumScreen(),
       ),
     );
+  }
+}
+
+class _BuildShareBtn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        Icons.share,
+        color: kSkillaPurple,
+      ),
+      onPressed: () {
+        FirebaseAnalytics().logEvent(name: kNameShareProfile, parameters: null);
+        _onShare(context);
+      },
+    );
+  }
+
+  _onShare(BuildContext context) {
+    final RenderBox box = context.findRenderObject();
+    Share.share(
+        "Faça download do aplicativo Skilla e entre nessa comunidade que não para de crescer.",
+        subject: "LINK DE DOWNLOAD",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
 

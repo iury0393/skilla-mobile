@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/search_bloc.dart';
@@ -29,7 +30,8 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _onInit();
     FirebaseInstance.getFirebaseInstance().setCurrentScreen(
-        screenName: "signIn", screenClassOverride: "SignInPage");
+        screenName: kScreenNameSearch,
+        screenClassOverride: kScreenClassOverrideSearch);
   }
 
   @override
@@ -86,7 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
         controller: _bloc.searchUserController,
         style: TextStyles.textField(TextSize.medium),
         decoration: InputDecoration(
-          hintText: 'Procurar',
+          hintText: AppLocalizations.of(context).translate('titleTabBarSearch'),
           hintStyle: TextStyles.paragraph(TextSize.small, color: Colors.grey),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
           fillColor: Colors.white,
@@ -233,6 +235,8 @@ class _BuildRecommendation extends StatelessWidget {
                 ? Container()
                 : GestureDetector(
                     onTap: () {
+                      FirebaseAnalytics().logEvent(
+                          name: kNameNavigateProfileSearch, parameters: null);
                       _doNavigateToProfileScreen(user, context);
                     },
                     child: Row(

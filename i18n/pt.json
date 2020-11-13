@@ -67,5 +67,9 @@
   "textProfileCurriculum": "Currículo",
 
   "textPostItemComment": "Comentário",
-  "textPostItemComments": "Comentários"
+  "textPostItemComments": "Comentários",
+
+  "titleTabBarJobs": "Empregos",
+  "titleTabBarSearch": "Procura",
+  "titleTabBarProfile": "Perfil"
 }
