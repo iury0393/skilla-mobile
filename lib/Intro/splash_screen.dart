@@ -17,6 +17,7 @@ class _SplashPageState extends State<SplashPage> {
     return Stack(
       children: <Widget>[
         SplashScreen(
+          routeName: "/",
           seconds: 5,
           gradientBackground: LinearGradient(
             begin: Alignment.topRight,
