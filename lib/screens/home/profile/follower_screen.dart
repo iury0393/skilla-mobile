@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/follower_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/screens/home/profile/profile_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -27,6 +29,9 @@ class _FollowerScreenState extends State<FollowerScreen> {
   void initState() {
     super.initState();
     _onInit();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNameFollower,
+        screenClassOverride: kScreenClassOverrideFollower);
   }
 
   @override
@@ -156,6 +161,8 @@ class _BuildFollowerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        FirebaseAnalytics()
+            .logEvent(name: kNameNavigateProfileFollowing, parameters: null);
         _doNavigateToProfileScreen(context, user);
       },
       child: Row(

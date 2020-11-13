@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skilla/bloc/feed_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -36,6 +38,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     super.initState();
     _onInit();
     _doPostDetailStream();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNamePostDetail,
+        screenClassOverride: kScreenClassOverridePostDetail);
   }
 
   @override
@@ -226,6 +231,8 @@ class _BuildHeaderPost extends StatelessWidget {
                     color: kSkillaPurple,
                   ),
                   onPressed: () {
+                    FirebaseAnalytics()
+                        .logEvent(name: kNameDeletePost, parameters: null);
                     _showDialogForDeletePost(context, post);
                   },
                 )
@@ -295,47 +302,53 @@ class __BuildLikeBtnState extends State<_BuildLikeBtn> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          icon: Icon(
-            widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                widget.post.isLiked ? Icons.favorite : Icons.favorite_border,
+                color: kSkillaPurple,
+              ),
+              onPressed: () {
+                FirebaseAnalytics()
+                    .logEvent(name: kNameToggleLikePost, parameters: null);
+                widget.likeBloc.doRequestToggleLike(widget.post.id);
+              },
+            ),
+            GestureDetector(
+              child: Text(
+                widget.post.likesCount == 1
+                    ? '${widget.post.likesCount} Like'
+                    : '${widget.post.likesCount} Likes',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.paragraph(
+                  TextSize.large,
+                  weight: FontWeight.w400,
+                ),
+              ),
+              onTap: () {
+                FirebaseAnalytics()
+                    .logEvent(name: kNameNavigateLikePost, parameters: null);
+                _doNavigateToLikeScreen(widget.post.user, widget.post);
+              },
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+          ],
+        ),
+        Text(
+          Utils.convertToDisplayTimeDetail(
+              widget.post.createdAt.toString(), context),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyles.paragraph(
+            TextSize.medium,
+            weight: FontWeight.w400,
             color: kSkillaPurple,
-          ),
-          onPressed: () {
-            widget.likeBloc.doRequestToggleLike(widget.post.id);
-          },
-        ),
-        GestureDetector(
-          child: Text(
-            widget.post.likesCount == 1
-                ? '${widget.post.likesCount} Like'
-                : '${widget.post.likesCount} Likes',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.paragraph(
-              TextSize.large,
-              weight: FontWeight.w400,
-            ),
-          ),
-          onTap: () {
-            _doNavigateToLikeScreen(widget.post.user, widget.post);
-          },
-        ),
-        SizedBox(
-          width: 20.0,
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 5.0),
-          child: Text(
-            Utils.convertToDisplayTimeDetail(
-                widget.post.createdAt.toString(), context),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.paragraph(
-              TextSize.medium,
-              weight: FontWeight.w400,
-              color: kSkillaPurple,
-            ),
           ),
         ),
       ],
@@ -427,6 +440,8 @@ class __BuildCommentAreaState extends State<_BuildCommentArea> {
               color: kSkillaPurple,
             ),
             onPressed: () {
+              FirebaseAnalytics()
+                  .logEvent(name: kNameAddComment, parameters: null);
               widget.bloc.doRequestAddComment(widget.post.id);
             },
           ),
@@ -557,6 +572,8 @@ class _BuildComment extends StatelessWidget {
             ),
             onTap: () {
               if (commentList.elementAt(index).isCommentMine) {
+                FirebaseAnalytics()
+                    .logEvent(name: kNameDeleteComment, parameters: null);
                 _showDialogForDeleteComment(
                     context, post, commentList.elementAt(index));
               }

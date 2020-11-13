@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:skilla/components/custom_app_bar.dart';
+import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 
 class CurriculumScreen extends StatefulWidget {
   @override
@@ -18,6 +20,9 @@ class _CurriculumScreenState extends State<CurriculumScreen> {
       document: PdfDocument.openAsset('assets/my-cv.pdf'),
     );
     super.initState();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNameCurriculum,
+        screenClassOverride: kScreenClassOverrideCurriculum);
   }
 
   @override

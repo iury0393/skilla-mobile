@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,7 @@ import 'package:skilla/network/config/base_response.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -39,6 +41,8 @@ class _EditScreenState extends State<EditScreen> {
     super.initState();
     _bloc = EditBloc(widget.user);
     _doEditStream();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNameEdit, screenClassOverride: kScreenClassOverrideEdit);
   }
 
   @override
@@ -183,6 +187,7 @@ class _EditScreenState extends State<EditScreen> {
         borderColor: Colors.transparent,
         backgroundColor: kPurpleColor,
         onPressed: () async {
+          FirebaseAnalytics().logEvent(name: kNameEdit, parameters: null);
           if (isAvatar) {
             var response = await uploadImage();
             _bloc.doRequestEdit(secureUrl: response);
@@ -247,6 +252,7 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
           onTap: () {
+            FirebaseAnalytics().logEvent(name: kNameEditAvatar, parameters: null);
             isAvatar = true;
             _showDialogForUser(context);
           },
@@ -254,6 +260,8 @@ class _EditScreenState extends State<EditScreen> {
       ],
     );
   }
+
+  // >>>>>>>>>> DIALOGS
 
   void _showDialogForUser(BuildContext context) {
     showNativeDialog(

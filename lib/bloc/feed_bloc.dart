@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skilla/dao/user_dao.dart';
 import 'package:skilla/model/post.dart';
@@ -14,6 +15,7 @@ class FeedBloc {
   StreamController<BaseResponse<void>> deletePostController;
   StreamController<BaseResponse<User>> userController;
   RefreshController refreshController;
+  ScrollController scrollController;
   String userEmail;
   User user;
   bool needClearList = true;
@@ -23,6 +25,7 @@ class FeedBloc {
     deletePostController = StreamController();
     feedController = StreamController();
     refreshController = RefreshController(initialRefresh: false);
+    scrollController = ScrollController();
   }
 
   dispose() {
@@ -30,6 +33,7 @@ class FeedBloc {
     deletePostController.close();
     feedController.close();
     refreshController.dispose();
+    scrollController.dispose();
   }
 
   Future<BaseResponse<User>> getUser() async {

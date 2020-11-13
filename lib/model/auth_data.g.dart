@@ -6,7 +6,6 @@ part of 'auth_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-// ignore: unused_element
 AuthData _$AuthDataFromJson(Map<String, dynamic> json) {
   return AuthData(
     email: json['email'] as String,

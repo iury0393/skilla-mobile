@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skilla/components/custom_app_bar.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -12,6 +13,13 @@ class OpportunitiesScreen extends StatefulWidget {
 }
 
 class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: "signIn", screenClassOverride: "SignInPage");
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;

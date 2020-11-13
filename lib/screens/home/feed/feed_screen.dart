@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -12,6 +13,7 @@ import 'package:skilla/screens/home/feed/post_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/event_center.dart';
+import 'package:skilla/utils/firebase_instance.dart';
 import 'package:skilla/utils/text_styles.dart';
 import 'package:skilla/utils/utils.dart';
 
@@ -30,6 +32,9 @@ class _FeedScreenState extends State<FeedScreen> {
     super.initState();
     _onInit();
     _onSubscribe();
+    FirebaseInstance.getFirebaseInstance().setCurrentScreen(
+        screenName: kScreenNameFeed,
+        screenClassOverride: kScreenClassOverrideFeed);
   }
 
   @override
@@ -75,11 +80,13 @@ class _FeedScreenState extends State<FeedScreen> {
   _onSubscribe() {
     EventCenter.getInstance().newPostEvent.subscribe(_refreshFeed);
     EventCenter.getInstance().deletePostEvent.subscribe(_refreshFeedDelete);
+    EventCenter.getInstance().scrollEvent.subscribe(_scrollToTheTop);
   }
 
   _onUnsubscribe() {
     EventCenter.getInstance().newPostEvent.unsubscribe(_refreshFeed);
     EventCenter.getInstance().deletePostEvent.unsubscribe(_refreshFeedDelete);
+    EventCenter.getInstance().scrollEvent.unsubscribe(_scrollToTheTop);
   }
 
   _refreshFeed(NewPostEventArgs args) {
@@ -94,11 +101,23 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
+  _scrollToTheTop(ScrollEventArgs args) {
+    if (args.isScrolling) {
+      _bloc.scrollController.animateTo(
+        0.0,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
+      );
+    }
+  }
+
   // >>>>>>>>>> WIDGETS
 
   Widget _buildFlatButton() {
     return FlatButton(
       onPressed: () {
+        FirebaseAnalytics()
+            .logEvent(name: kNameNavigatePostFeed, parameters: null);
         _doNavigateToPostScreen();
       },
       child: Icon(
@@ -198,6 +217,7 @@ class __BuildStreamFeedState extends State<_BuildStreamFeed> {
 
   Widget _buildListFeed(AsyncSnapshot<BaseResponse<List<Post>>> snapshot) {
     return ListView.builder(
+      controller: widget.bloc.scrollController,
       itemCount: snapshot.data.data.length,
       itemBuilder: (context, index) {
         return Padding(
