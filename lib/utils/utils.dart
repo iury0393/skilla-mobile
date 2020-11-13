@@ -5,10 +5,10 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:package_info/package_info.dart';
-import 'package:skilla/dao/auth_dao.dart';
-import 'package:skilla/dao/user_dao.dart';
-import 'package:skilla/model/post.dart';
-import 'package:skilla/model/user.dart';
+import 'package:skilla/utils/dao/auth_dao.dart';
+import 'package:skilla/utils/dao/user_dao.dart';
+import 'package:skilla/utils/model/post.dart';
+import 'package:skilla/utils/model/user.dart';
 
 class Utils {
   static String appLanguage;

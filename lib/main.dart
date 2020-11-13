@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sentry/sentry.dart';
-import 'package:skilla/bloc/splash_bloc.dart';
-import 'package:skilla/model/auth.dart';
-import 'package:skilla/network/config/base_response.dart';
-import 'package:skilla/screens/home/tab_bar_screen.dart';
-import 'package:skilla/screens/intro/splash_screen.dart';
+import 'package:skilla/Intro/splash_bloc.dart';
+import 'package:skilla/Intro/splash_screen.dart';
+import 'package:skilla/screens/tab_bar_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/constants.dart';
+import 'package:skilla/utils/model/auth.dart';
+import 'package:skilla/utils/network/base_response.dart';
 import 'package:skilla/utils/utils.dart';
 
 final SentryClient _sentry = SentryClient(dsn: kSentry_DSN);

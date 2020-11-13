@@ -1,4 +1,4 @@
-import 'package:skilla/model/auth.dart';
+import 'package:skilla/utils/model/auth.dart';
 
 class UserAuth {
   static Auth auth;
