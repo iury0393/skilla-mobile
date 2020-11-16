@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextSize {
   static const double xSmall = 12.0;
@@ -11,8 +12,7 @@ class TextSize {
 
 class TextStyles {
   static TextStyle appBarTitle({Color textColor}) {
-    return TextStyle(
-        fontFamily: 'Roboto',
+    return GoogleFonts.roboto(
         fontSize: TextSize.large,
         color: textColor != null ? textColor : Colors.black,
         fontWeight: FontWeight.bold);
@@ -24,8 +24,7 @@ class TextStyles {
       Color color,
       double lineHeight,
       bool isLink = false}) {
-    return TextStyle(
-        fontFamily: fontName != null ? fontName : 'Roboto',
+    return GoogleFonts.roboto(
         decoration: isLink ? TextDecoration.underline : TextDecoration.none,
         fontSize: size,
         height: lineHeight != null ? lineHeight : 1.30,
@@ -34,16 +33,14 @@ class TextStyles {
   }
 
   static TextStyle textField(double size, {FontWeight weight, Color color}) {
-    return TextStyle(
-        fontFamily: 'Roboto',
+    return GoogleFonts.roboto(
         fontSize: size,
         color: color != null ? color : Colors.black,
         fontWeight: weight != null ? weight : FontWeight.normal);
   }
 
   static TextStyle btnTitle(Color color) {
-    return TextStyle(
-      fontFamily: 'Roboto',
+    return GoogleFonts.roboto(
       fontSize: TextSize.medium,
       fontWeight: FontWeight.bold,
       color: color != null ? color : Colors.black,

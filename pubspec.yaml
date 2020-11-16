@@ -18,7 +18,7 @@ dependencies:
   cupertino_icons: ^0.1.3
   # Used to generating files 
   build_runner: ^1.10.0
-  # Used to make the onboard Screen
+  # Used to make the on board Screen
   introduction_screen: ^1.0.7
   # Used to make the splash Screen
   splashscreen: ^1.2.0
@@ -29,7 +29,7 @@ dependencies:
   intl: ^0.16.1
   # Used to handler events on app
   event: ^1.1.4
-  # Used to create snackbar without context
+  # Used to create snack bar without context
   flushbar: ^1.10.4
   # Used to get the feather icons
   feather_icons_flutter: ^4.7.4
@@ -67,6 +67,8 @@ dependencies:
   sentry: ">=3.0.0 <4.0.0"
   # Used to share posts
   share: ^0.6.5+4
+  # Used to get the Google fonts
+  google_fonts: ^1.1.1
   
 dev_dependencies:
   flutter_test:
@@ -81,19 +83,3 @@ flutter:
     - i18n/pt.json
     - i18n/es.json
     - assets/
-
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: fonts/Roboto-Regular.ttf
-        - asset: fonts/Roboto-Thin.ttf
-          weight: 100
-        - asset: fonts/Roboto-Light.ttf
-          weight: 300
-        - asset: fonts/Roboto-Medium.ttf
-          weight: 500
-        - asset: fonts/Roboto-Bold.ttf
-          weight: 700
-        - asset: fonts/Roboto-Black.ttf
-          weight: 900
-
