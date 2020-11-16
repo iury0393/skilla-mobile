@@ -99,7 +99,7 @@ class _ImageSkillaLogo extends StatelessWidget {
     return Flexible(
       child: Hero(
         tag: 'logo',
-        child: Image.asset('assets/logo.png'),
+        child: Image.network(kLogo),
       ),
     );
   }

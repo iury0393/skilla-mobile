@@ -44,7 +44,7 @@ class _FollowerScreenState extends State<FollowerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        titleImg: 'assets/navlogo.png',
+        titleImg: kAppBarImg,
         center: true,
       ),
       body: Padding(

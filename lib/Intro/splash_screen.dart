@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/logo.png"),
+                image: NetworkImage(kLogo),
                 fit: BoxFit.none,
               ),
             ),

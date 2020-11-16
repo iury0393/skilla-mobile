@@ -87,7 +87,7 @@ class _ImageSkillaLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: 'logo',
-      child: Image.asset('assets/logo.png'),
+      child: Image.network(kLogo),
     );
   }
 }

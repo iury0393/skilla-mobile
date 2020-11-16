@@ -27,7 +27,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     return Container(
       child: Scaffold(
         appBar: CustomAppBar(
-          titleImg: 'assets/navlogo.png',
+          titleImg: kAppBarImg,
           center: true,
         ),
         body: SingleChildScrollView(
@@ -38,17 +38,17 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 buildPost(
                   width,
                   height,
-                  'assets/google.jpeg',
+                  kGoogle,
                   'Google',
-                  'assets/googleDev.png',
+                  kGoogleDev,
                   'Oportunidade para ser um desenvolvedor na Google\nResponda esse comentário para se inscrever.',
                 ),
                 buildPost(
                   width,
                   height,
-                  'assets/ibm.jpeg',
+                  kIbm,
                   'IBM',
-                  'assets/ibmDev.png',
+                  kIbmDev,
                   'Seja um DevOpsSec na IBM!\nResponda esse comentário para se inscrever.',
                 ),
               ],
@@ -72,7 +72,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
               GestureDetector(
                 child: Row(
                   children: [
-                    Image.asset(
+                    Image.network(
                       authorImg,
                       width: 40.0,
                       height: 40.0,
@@ -104,7 +104,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
         ),
         Padding(
           padding: EdgeInsets.only(left: 70.0, bottom: 15.0),
-          child: Image.asset(
+          child: Image.network(
             postImg,
             width: width / 2,
             height: height / 3,

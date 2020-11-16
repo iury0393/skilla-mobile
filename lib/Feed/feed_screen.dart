@@ -49,7 +49,7 @@ class _FeedScreenState extends State<FeedScreen> {
     return Container(
       child: Scaffold(
         appBar: CustomAppBar(
-          titleImg: 'assets/navlogo.png',
+          titleImg: kAppBarImg,
           center: true,
           widgets: [
             _buildFlatButton(),
