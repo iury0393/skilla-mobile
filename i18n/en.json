@@ -71,5 +71,8 @@
 
   "titleTabBarJobs": "Jobs",
   "titleTabBarSearch": "Search",
-  "titleTabBarProfile": "Profile"
+  "titleTabBarProfile": "Profile",
+
+  "EditDrawer": "Edit",
+  "LogOutDrawer": "Log Out"
 }
