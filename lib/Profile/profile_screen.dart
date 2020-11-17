@@ -68,10 +68,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        titleImg: 'assets/navlogo.png',
-        center: true,
-      ),
+      appBar: widget.user != null
+          ? CustomAppBar(
+              titleImg: kAppBarImg,
+              center: true,
+            )
+          : AppBar(
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              title: Container(
+                child: Image.network(kAppBarImg),
+              ),
+              centerTitle: true,
+              actions: [
+                Builder(
+                  builder: (context) => IconButton(
+                    icon: Icon(
+                      Icons.settings,
+                      color: kSkillaPurple,
+                    ),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  ),
+                ),
+              ],
+            ),
+      drawer: widget.user != null
+          ? null
+          : _BuildDrawer(
+              bloc: _bloc,
+            ),
       body: SingleChildScrollView(
         child: Padding(
           padding: Utils.getPaddingDefault(),
@@ -122,7 +148,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               _BuildAvatar(user: snapshot.data.data),
                               _BuildUserName(user: snapshot.data.data),
-                              _BuildUserOptions(bloc: _bloc),
                               _BuildUserStatus(user: snapshot.data.data),
                               _BuildFullName(user: snapshot.data.data),
                               _BuildBio(user: snapshot.data.data),
@@ -269,53 +294,83 @@ class _BuildUserName extends StatelessWidget {
   _BuildUserName({this.user});
   @override
   Widget build(BuildContext context) {
-    return Text(
-      user.username,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyles.paragraph(
-        TextSize.xxLarge,
-        weight: FontWeight.w400,
+    return Padding(
+      padding: EdgeInsets.only(top: 15.0),
+      child: Text(
+        user.username,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyles.paragraph(
+          TextSize.xxLarge,
+          weight: FontWeight.w400,
+        ),
       ),
     );
   }
 }
 
-class _BuildUserOptions extends StatelessWidget {
+class _BuildDrawer extends StatelessWidget {
   final ProfileBloc bloc;
 
-  _BuildUserOptions({this.bloc});
+  _BuildDrawer({this.bloc});
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: Icon(
-            FeatherIcons.edit,
-            color: kSkillaPurple,
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(top: 50, left: 8, right: 8, bottom: 8),
+            color: Colors.white,
+            child: Image.network(kLogo),
           ),
-          onPressed: () {
-            FirebaseAnalytics()
-                .logEvent(name: kNameEditProfile, parameters: null);
-            _doNavigateToEditScreen(context);
-          },
-        ),
-        IconButton(
-          icon: Icon(
-            FeatherIcons.logOut,
-            color: kSkillaPurple,
+          Divider(height: 1, thickness: 1, color: Colors.blueGrey[900]),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  dense: true,
+                  title: Text(
+                    AppLocalizations.of(context).translate('EditDrawer'),
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  leading: Icon(
+                    FeatherIcons.edit,
+                    color: kSkillaPurple,
+                  ),
+                  onTap: () {
+                    FirebaseAnalytics()
+                        .logEvent(name: kNameEditProfile, parameters: null);
+                    _doNavigateToEditScreen(context);
+                  },
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text(
+                    AppLocalizations.of(context).translate('LogOutDrawer'),
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  leading: Icon(
+                    FeatherIcons.logOut,
+                    color: kSkillaPurple,
+                  ),
+                  onTap: () async {
+                    FirebaseAnalytics()
+                        .logEvent(name: kNameLogOutProfile, parameters: null);
+                    await Utils.cleanDataBase();
+                    _doNavigateToSignInScreen(context);
+                  },
+                ),
+              ],
+            ),
           ),
-          onPressed: () async {
-            FirebaseAnalytics()
-                .logEvent(name: kNameLogOutProfile, parameters: null);
-            await Utils.cleanDataBase();
-            _doNavigateToSignInScreen(context);
-          },
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+  // >>>>>>>>>> NAVIGATORS
 
   _doNavigateToSignInScreen(BuildContext context) {
     Navigator.pushAndRemoveUntil(
@@ -343,25 +398,15 @@ class _BuildUserStatus extends StatelessWidget {
   _BuildUserStatus({this.user});
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text(
-          user.postCount != 1
-              ? '${user.postCount} Posts'
-              : '${user.postCount} Post',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyles.paragraph(
-            TextSize.medium,
-            weight: FontWeight.w400,
-          ),
-        ),
-        GestureDetector(
-          child: Text(
-            user.followersCount != 1
-                ? '${user.followersCount} ${AppLocalizations.of(context).translate('textProfileFollowers')}'
-                : '${user.followersCount} ${AppLocalizations.of(context).translate('textProfileFollower')}',
+    return Padding(
+      padding: EdgeInsets.only(top: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            user.postCount != 1
+                ? '${user.postCount} Posts'
+                : '${user.postCount} Post',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyles.paragraph(
@@ -369,29 +414,42 @@ class _BuildUserStatus extends StatelessWidget {
               weight: FontWeight.w400,
             ),
           ),
-          onTap: () {
-            FirebaseAnalytics()
-                .logEvent(name: kNameNavigateFollowerProfile, parameters: null);
-            _doNavigateToFollowerScreen(context, user.id);
-          },
-        ),
-        GestureDetector(
-          child: Text(
-            '${user.followingCount} ${AppLocalizations.of(context).translate('textProfileFollowing')}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.paragraph(
-              TextSize.medium,
-              weight: FontWeight.w400,
+          GestureDetector(
+            child: Text(
+              user.followersCount != 1
+                  ? '${user.followersCount} ${AppLocalizations.of(context).translate('textProfileFollowers')}'
+                  : '${user.followersCount} ${AppLocalizations.of(context).translate('textProfileFollower')}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.medium,
+                weight: FontWeight.w400,
+              ),
             ),
+            onTap: () {
+              FirebaseAnalytics().logEvent(
+                  name: kNameNavigateFollowerProfile, parameters: null);
+              _doNavigateToFollowerScreen(context, user.id);
+            },
           ),
-          onTap: () {
-            FirebaseAnalytics().logEvent(
-                name: kNameNavigateFollowingProfile, parameters: null);
-            _doNavigateToFollowingScreen(context, user.id);
-          },
-        ),
-      ],
+          GestureDetector(
+            child: Text(
+              '${user.followingCount} ${AppLocalizations.of(context).translate('textProfileFollowing')}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.medium,
+                weight: FontWeight.w400,
+              ),
+            ),
+            onTap: () {
+              FirebaseAnalytics().logEvent(
+                  name: kNameNavigateFollowingProfile, parameters: null);
+              _doNavigateToFollowingScreen(context, user.id);
+            },
+          ),
+        ],
+      ),
     );
   }
 

@@ -53,7 +53,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        titleImg: 'assets/navlogo.png',
+        titleImg: kAppBarImg,
         center: true,
       ),
       body: SingleChildScrollView(

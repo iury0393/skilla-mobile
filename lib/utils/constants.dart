@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
 
+// IMAGES
+const kAppBarImg =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/vgwp9nhciqeuiqieevpe.png';
+const kIntro1 =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546383/App/rndhn6wikxwo4vsupexz.png';
+const kIntro2 =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546378/App/ezmtsy4nupyin3t8bmrn.png';
+const kIntro3 =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546374/App/ian9tmkbqwg3jgbgz6gu.png';
+const kLogo =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546365/App/oyqhsohhve0ny19uwssx.png';
+const kGoogle =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/duwvq0nx8nu1ipssxzsz.jpg';
+const kGoogleDev =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546365/App/wjyodpiqhffpldq01zvc.png';
+const kIbm =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/hs7ofanrsg6rtnj8peu9.jpg';
+const kIbmDev =
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/wazvggsssgjpvuieqk2h.png';
 // COLORS
 const kPurpleColor = Color(0xFF5931BF);
 const kPurpleLightColor = Color(0xFF6945C5);

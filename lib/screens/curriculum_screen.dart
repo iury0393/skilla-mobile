@@ -36,7 +36,7 @@ class _CurriculumScreenState extends State<CurriculumScreen> {
         theme: ThemeData(primaryColor: Colors.white),
         home: Scaffold(
           appBar: CustomAppBar(
-            titleImg: 'assets/navlogo.png',
+            titleImg: kAppBarImg,
             center: true,
             widgets: [
               IconButton(

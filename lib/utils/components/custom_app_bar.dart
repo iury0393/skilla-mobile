@@ -40,7 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: center != null ? center : false,
       title: Padding(
         padding: EdgeInsets.all(10.0),
-        child: Image.asset(titleImg, fit: BoxFit.cover),
+        child: Image.network(titleImg, fit: BoxFit.cover),
       ),
       backgroundColor: backgroundColor != null ? backgroundColor : Colors.white,
       elevation: 0.0,

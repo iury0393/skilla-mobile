@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:skilla/SignIn/sign_in_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
+import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/text_styles.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
   Widget _buildImage(String assetName) {
     return Align(
-      child: Image.asset('assets/$assetName.png', width: 350.0),
+      child: Image.network(assetName, width: 350.0),
       alignment: Alignment.bottomCenter,
     );
   }
@@ -56,20 +57,20 @@ class _IntroScreenState extends State<IntroScreen> {
               AppLocalizations.of(context).translate('introOpportunitiesTitle'),
           body:
               AppLocalizations.of(context).translate('introOpportunitiesText'),
-          image: _buildImage('intro1'),
+          image: _buildImage(kIntro1),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title:
               AppLocalizations.of(context).translate('introPublicationsTitle'),
           body: AppLocalizations.of(context).translate('introPublicationsText'),
-          image: _buildImage('intro2'),
+          image: _buildImage(kIntro2),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: AppLocalizations.of(context).translate('introCoursesTitle'),
           body: AppLocalizations.of(context).translate('introCoursesText'),
-          image: _buildImage('intro3'),
+          image: _buildImage(kIntro3),
           decoration: pageDecoration,
         ),
       ],
