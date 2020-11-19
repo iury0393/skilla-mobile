@@ -74,5 +74,7 @@
   "titleTabBarProfile": "Perfil",
 
   "EditDrawer": "Editar",
-  "LogOutDrawer": "Sal"
+  "LogOutDrawer": "Sal",
+
+  "CropImage": "Cortar"
 }

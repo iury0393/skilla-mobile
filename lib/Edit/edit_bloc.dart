@@ -57,15 +57,21 @@ class EditBloc {
   doRequestEdit({String secureUrl}) async {
     editController.add(BaseResponse.loading());
     try {
+      var user = await getUser();
       var body = User(
         avatar: secureUrl,
         fullname: textFullNameController.text == ""
-            ? ""
+            ? user.data.fullname
             : textFullNameController.text,
-        username: textUserNameController.text,
-        website:
-            textWebsiteController.text == "" ? "" : textWebsiteController.text,
-        bio: textBioController.text == "" ? "" : textBioController.text,
+        username: textUserNameController.text == ""
+            ? user.data.username
+            : textUserNameController.text,
+        website: textWebsiteController.text == ""
+            ? user.data.website
+            : textWebsiteController.text,
+        bio: textBioController.text == ""
+            ? user.data.bio
+            : textBioController.text,
       ).toJson();
       await EditNetwork().doRequestEdit(body);
       _doRequestGetUserLoggedData();
