@@ -32,7 +32,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
   Widget _buildImage(String assetName) {
     return Align(
-      child: Image.network(assetName, width: 350.0),
+      child: Image.network(assetName, width: 400.0),
       alignment: Alignment.bottomCenter,
     );
   }

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 const kAppBarImg =
     'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/vgwp9nhciqeuiqieevpe.png';
 const kIntro1 =
-    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546383/App/rndhn6wikxwo4vsupexz.png';
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605803044/App/fwpk5uvv3fh6vtoiuuu7.jpg';
 const kIntro2 =
-    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546378/App/ezmtsy4nupyin3t8bmrn.png';
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1605803038/App/gcuoefncza7nrsvzckty.jpg';
 const kIntro3 =
     'https://res.cloudinary.com/duujebpq4/image/upload/v1605546374/App/ian9tmkbqwg3jgbgz6gu.png';
 const kLogo =

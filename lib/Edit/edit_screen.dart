@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skilla/Edit/edit_bloc.dart';
 import 'package:skilla/utils/appLocalizations.dart';
@@ -32,6 +33,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   EditBloc _bloc;
   File _image;
+  File _croppedFile;
   final picker = ImagePicker();
   bool isLoading = false;
   bool isAvatar = false;
@@ -126,27 +128,52 @@ class _EditScreenState extends State<EditScreen> {
   Future getImageCamera() async {
     var pickedFile = await picker.getImage(source: ImageSource.camera);
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        NativeDialog.showErrorDialog(context,
-            AppLocalizations.of(context).translate('textImagePickerWarning'));
-      }
-    });
+    if (pickedFile != null) {
+      var result = await cropImage(File(pickedFile.path));
+      setState(() {
+        _image = File(result);
+      });
+    } else {
+      NativeDialog.showErrorDialog(context,
+          AppLocalizations.of(context).translate('textImagePickerWarning'));
+    }
   }
 
   Future getImageGallery() async {
     var pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      var result = await cropImage(File(pickedFile.path));
+      setState(() {
+        _image = File(result);
+      });
+    } else {
+      NativeDialog.showErrorDialog(context,
+          AppLocalizations.of(context).translate('textImagePickerWarning'));
+    }
+  }
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        NativeDialog.showErrorDialog(context,
-            AppLocalizations.of(context).translate('textImagePickerWarning'));
-      }
-    });
+  Future cropImage(File imageFile) async {
+    _croppedFile = await ImageCropper.cropImage(
+      sourcePath: imageFile.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      androidUiSettings: AndroidUiSettings(
+          toolbarTitle: AppLocalizations.of(context).translate('CropImage'),
+          toolbarColor: kSkillaPurple,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false),
+      iosUiSettings: IOSUiSettings(
+        minimumAspectRatio: 1.0,
+        showCancelConfirmationDialog: true,
+      ),
+    );
+    return _croppedFile.path;
   }
 
   Future uploadImage() async {
