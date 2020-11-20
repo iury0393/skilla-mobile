@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skilla/Feed/feed_bloc.dart';
 import 'package:skilla/Like/likes_bloc.dart';
 import 'package:skilla/Like/likes_screen.dart';
@@ -35,14 +36,14 @@ class _PostItemState extends State<PostItem> {
     _bloc.userController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
-          Navigator.pop(context);
+          Get.back();
           _doNavigateToProfileScreen(event.data);
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -54,7 +55,7 @@ class _PostItemState extends State<PostItem> {
     _likeBloc.toggleLikesController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
-          Navigator.pop(context);
+          Get.back();
           setState(() {
             widget.post.isLiked = !widget.post.isLiked;
             if (widget.post.isLiked) {
@@ -68,7 +69,7 @@ class _PostItemState extends State<PostItem> {
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -80,13 +81,13 @@ class _PostItemState extends State<PostItem> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
-          Navigator.pop(context);
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -279,36 +280,36 @@ class _PostItemState extends State<PostItem> {
   }
 
   _doNavigateToLikeScreen(User user, Post post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => LikesScreen(
-          user: user,
-          post: post,
-        ),
+    Get.to(
+      LikesScreen(
+        user: user,
+        post: post,
       ),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 
   _doNavigateToPostDetailScreen(User user, Post post) {
     _bloc.doRequestGetPost(post.id).then((value) {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (context) => PostDetailScreen(
-            user: user,
-            post: value,
-          ),
+      Get.to(
+        PostDetailScreen(
+          user: user,
+          post: value,
         ),
+        transition: Transition.native,
+        duration: Duration(milliseconds: 500),
       );
     });
   }
 
   _doNavigateToProfileScreen(User user) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => ProfileScreen(
-          user: user,
-        ),
+    Get.to(
+      ProfileScreen(
+        user: user,
       ),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 
@@ -323,7 +324,7 @@ class _PostItemState extends State<PostItem> {
             child: Text(AppLocalizations.of(context).translate('textDelete'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
               _bloc.doRequestDeletePost(post.id);
             },
           ),
@@ -331,7 +332,7 @@ class _PostItemState extends State<PostItem> {
             child: Text(AppLocalizations.of(context).translate('textCancel'),
                 style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
             },
           ),
         ],

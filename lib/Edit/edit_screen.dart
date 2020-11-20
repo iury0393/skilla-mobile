@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skilla/Edit/edit_bloc.dart';
@@ -98,7 +99,7 @@ class _EditScreenState extends State<EditScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshProfileWhenEdit(true);
-          Navigator.pop(context);
+          Get.back();
           _bloc.textFullNameController.clear();
           _bloc.textUserNameController.clear();
           _bloc.textWebsiteController.clear();
@@ -108,7 +109,7 @@ class _EditScreenState extends State<EditScreen> {
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -303,7 +304,7 @@ class _EditScreenState extends State<EditScreen> {
             child: Text(AppLocalizations.of(context).translate('textCamera'),
                 style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
               getImageCamera();
             },
           ),
@@ -311,7 +312,7 @@ class _EditScreenState extends State<EditScreen> {
             child: Text(AppLocalizations.of(context).translate('textGallery'),
                 style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
               getImageGallery();
             },
           ),
@@ -319,7 +320,7 @@ class _EditScreenState extends State<EditScreen> {
             child: Text(AppLocalizations.of(context).translate('textCancel'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
             },
           ),
         ],

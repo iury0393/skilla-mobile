@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:sentry/sentry.dart';
 import 'package:skilla/Intro/splash_bloc.dart';
 import 'package:skilla/Intro/splash_screen.dart';
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       builder: (context, child) {
         return MediaQuery(
           child: child,

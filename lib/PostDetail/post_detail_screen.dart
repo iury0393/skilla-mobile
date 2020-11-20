@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:skilla/Feed/feed_bloc.dart';
 import 'package:skilla/Like/likes_bloc.dart';
@@ -106,7 +107,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     _likeBloc.toggleLikesController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
-          Navigator.pop(context);
+          Get.back();
           setState(() {
             widget.post.isLiked = !widget.post.isLiked;
             if (widget.post.isLiked) {
@@ -120,7 +121,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -132,14 +133,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
-          Navigator.pop(context);
+          Get.back();
           _bloc.textCommentController.clear();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -151,13 +152,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
-          Navigator.pop(context);
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -169,14 +170,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithDeletePost(true);
-          Navigator.pop(context);
-          Navigator.pop(context);
+          Get.back();
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -256,7 +257,7 @@ class _BuildHeaderPost extends StatelessWidget {
             child: Text(AppLocalizations.of(context).translate('textDelete'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
               feedBloc.doRequestDeletePost(post.id);
             },
           ),
@@ -264,7 +265,7 @@ class _BuildHeaderPost extends StatelessWidget {
             child: Text(AppLocalizations.of(context).translate('textCancel'),
                 style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
             },
           ),
         ],
@@ -364,13 +365,13 @@ class __BuildLikeBtnState extends State<_BuildLikeBtn> {
   // >>>>>>>>>> NAVIGATORS
 
   _doNavigateToLikeScreen(User user, Post post) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => LikesScreen(
-          user: user,
-          post: post,
-        ),
+    Get.to(
+      LikesScreen(
+        user: user,
+        post: post,
       ),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }
@@ -619,7 +620,7 @@ class _BuildComment extends StatelessWidget {
             child: Text(AppLocalizations.of(context).translate('textDelete'),
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
               bloc.doRequestDeleteComment(comments.id, post.id);
             },
           ),
@@ -627,7 +628,7 @@ class _BuildComment extends StatelessWidget {
             child: Text(AppLocalizations.of(context).translate('textCancel'),
                 style: TextStyles.paragraph(TextSize.xSmall)),
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
             },
           ),
         ],

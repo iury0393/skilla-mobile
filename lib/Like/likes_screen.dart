@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skilla/Like/likes_bloc.dart';
 import 'package:skilla/Profile/profile_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
@@ -173,12 +174,12 @@ class __BuildListLikesState extends State<_BuildListLikes> {
   // >>>>>>>>>> NAVIGATORS
 
   _doNavigateToProfileScreen(User user) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => ProfileScreen(
-          user: user,
-        ),
+    Get.to(
+      ProfileScreen(
+        user: user,
       ),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }
