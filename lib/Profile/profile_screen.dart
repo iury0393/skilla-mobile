@@ -2,6 +2,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:share/share.dart';
 import 'package:skilla/Follower/follower_screen.dart';
@@ -208,13 +209,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _isFollowing = true;
             widget.user.followersCount += 1;
           });
-          Navigator.pop(context);
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -229,13 +230,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _isFollowing = false;
             widget.user.followersCount -= 1;
           });
-          Navigator.pop(context);
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -347,6 +348,7 @@ class _BuildDrawer extends StatelessWidget {
                     FirebaseAnalytics()
                         .logEvent(name: kNameEditProfile, parameters: null);
                     _doNavigateToEditScreen(context);
+                    Get.back();
                   },
                 ),
                 ListTile(
@@ -364,6 +366,7 @@ class _BuildDrawer extends StatelessWidget {
                         .logEvent(name: kNameLogOutProfile, parameters: null);
                     await Utils.cleanDataBase();
                     _doNavigateToSignInScreen(context);
+                    Get.back();
                   },
                 ),
               ],
@@ -377,20 +380,17 @@ class _BuildDrawer extends StatelessWidget {
   // >>>>>>>>>> NAVIGATORS
 
   _doNavigateToSignInScreen(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(builder: (context) => SignInScreen()),
-        (route) => false);
+    Get.off(SignInScreen());
   }
 
   _doNavigateToEditScreen(BuildContext context) async {
     bloc.getUser().then((value) {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (context) => EditScreen(
-            user: value.data,
-          ),
+      Get.to(
+        EditScreen(
+          user: value.data,
         ),
+        transition: Transition.native,
+        duration: Duration(milliseconds: 500),
       );
     });
   }
@@ -458,22 +458,22 @@ class _BuildUserStatus extends StatelessWidget {
   }
 
   _doNavigateToFollowerScreen(BuildContext context, String id) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => FollowerScreen(
-          id: id,
-        ),
+    Get.to(
+      FollowerScreen(
+        id: id,
       ),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 
   _doNavigateToFollowingScreen(BuildContext context, String id) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => FollowingScreen(
-          id: id,
-        ),
+    Get.to(
+      FollowingScreen(
+        id: id,
       ),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }
@@ -583,10 +583,10 @@ class _BuildCurriculumBtn extends StatelessWidget {
   }
 
   _doNavigateToCurriculumScreen(BuildContext context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => CurriculumScreen(),
-      ),
+    Get.to(
+      CurriculumScreen(),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }
@@ -609,8 +609,8 @@ class _BuildShareBtn extends StatelessWidget {
   _onShare(BuildContext context) {
     final RenderBox box = context.findRenderObject();
     Share.share(
-        "Faça download do aplicativo Skilla e entre nessa comunidade que não para de crescer.",
-        subject: "LINK DE DOWNLOAD",
+        "Você já tem o Skilla? Quer saber o que é? Clica no link abaixo!",
+        subject: "https://skilla.page.link/app",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
@@ -742,13 +742,13 @@ class __BuildStreamPostsState extends State<_BuildStreamPosts> {
 
   _doNavigateToPostDetailScreen(User user, PostDetail post) {
     widget.bloc.doRequestGetPost(post.id).then((value) {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (context) => PostDetailScreen(
-            user: user,
-            post: value,
-          ),
+      Get.to(
+        PostDetailScreen(
+          user: user,
+          post: value,
         ),
+        transition: Transition.native,
+        duration: Duration(milliseconds: 500),
       );
     });
   }

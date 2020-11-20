@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skilla/SignIn/sign_in_bloc.dart';
 import 'package:skilla/SignUp/sign_up_screen.dart';
 import 'package:skilla/screens/tab_bar_screen.dart';
@@ -74,7 +75,7 @@ class _SignInScreenState extends State<SignInScreen> {
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -86,10 +87,11 @@ class _SignInScreenState extends State<SignInScreen> {
   // >>>>>>>>>> NAVIGATOR
 
   _doNavigateToMainScreen() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(builder: (context) => TabBarScreen()),
-        (route) => false);
+    Get.off(
+      TabBarScreen(),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
+    );
   }
 }
 
@@ -159,10 +161,10 @@ class _BuildRegisterButton extends StatelessWidget {
   }
 
   _doNavigateToRegisterScreen(BuildContext context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => SignUpScreen(),
-      ),
+    Get.to(
+      SignUpScreen(),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }

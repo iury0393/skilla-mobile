@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skilla/Profile/profile_screen.dart';
 import 'package:skilla/Search/search_bloc.dart';
 import 'package:skilla/utils/appLocalizations.dart';
@@ -266,12 +267,10 @@ class _BuildRecommendation extends StatelessWidget {
   // >>>>>>>>>> NAVIGATORS
 
   _doNavigateToProfileScreen(User user, BuildContext context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => ProfileScreen(
-          user: user,
-        ),
-      ),
+    Get.to(
+      ProfileScreen(user: user),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }

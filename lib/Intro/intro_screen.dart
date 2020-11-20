@@ -1,5 +1,7 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:skilla/SignIn/sign_in_screen.dart';
 import 'package:skilla/utils/appLocalizations.dart';
@@ -14,19 +16,53 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _retrieveDynamicLink(context);
+  }
+
+  Future<void> _retrieveDynamicLink(BuildContext context) async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+      if (deepLink != null) {
+        print(deepLink.queryParameters['code']);
+        Get.to(
+          IntroScreen(),
+          transition: Transition.native,
+          duration: Duration(milliseconds: 500),
+        );
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+    if (deepLink != null) {
+      Get.to(
+        IntroScreen(),
+        transition: Transition.native,
+        duration: Duration(milliseconds: 500),
+      );
+    }
+  }
+
   void _onIntroEnd(context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => SignInScreen(),
-      ),
+    Get.to(
+      SignInScreen(),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 
   void _onSkip(context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => SignInScreen(),
-      ),
+    Get.to(
+      SignInScreen(),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 

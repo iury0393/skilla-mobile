@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skilla/SignUp/sign_up_bloc.dart';
 import 'package:skilla/utils/appLocalizations.dart';
 import 'package:skilla/utils/components/custom_flushbar.dart';
@@ -65,14 +66,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _bloc.registerController.stream.listen((event) {
       switch (event.status) {
         case Status.COMPLETED:
-          Navigator.pop(context);
-          Navigator.pop(context);
+          Get.back();
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:
@@ -121,7 +122,7 @@ class _BuildLoginButton extends StatelessWidget {
       onPressed: () {
         FirebaseAnalytics()
             .logEvent(name: kNameNavigateSignIn, parameters: null);
-        Navigator.pop(context);
+        Get.back();
       },
       child: RichText(
         overflow: TextOverflow.ellipsis,

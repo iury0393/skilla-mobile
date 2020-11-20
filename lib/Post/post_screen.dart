@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skilla/Post/post_bloc.dart';
@@ -161,14 +162,14 @@ class _PostScreenState extends State<PostScreen> {
       switch (event.status) {
         case Status.COMPLETED:
           refreshFeedWithNewPost(true);
-          Navigator.pop(context);
-          Navigator.pop(context);
+          Get.back();
+          Get.back();
           break;
         case Status.LOADING:
           NativeDialog.showLoadingDialog(context);
           break;
         case Status.ERROR:
-          Navigator.pop(context);
+          Get.back();
           NativeDialog.showErrorDialog(context, event.message);
           break;
         default:

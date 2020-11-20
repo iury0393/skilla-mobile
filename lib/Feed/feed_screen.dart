@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:skilla/Feed/feed_bloc.dart';
 import 'package:skilla/Post/post_screen.dart';
@@ -130,10 +131,10 @@ class _FeedScreenState extends State<FeedScreen> {
   // >>>>>>>>>> NAVIGATORS
 
   _doNavigateToPostScreen() {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => PostScreen(),
-      ),
+    Get.to(
+      PostScreen(),
+      transition: Transition.native,
+      duration: Duration(milliseconds: 500),
     );
   }
 }
