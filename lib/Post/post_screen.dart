@@ -190,7 +190,7 @@ class _PostScreenState extends State<PostScreen> {
   Widget _buildCaptionTextField() {
     return TextField(
       maxLines: 1,
-      textCapitalization: TextCapitalization.none,
+      textCapitalization: TextCapitalization.sentences,
       controller: _bloc.textCaptionController,
       style: TextStyles.textField(TextSize.medium),
       decoration: InputDecoration(

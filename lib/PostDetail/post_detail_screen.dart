@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:skilla/Feed/feed_bloc.dart';
 import 'package:skilla/Like/likes_bloc.dart';
 import 'package:skilla/PostDetail/post_detail_bloc.dart';
@@ -278,12 +279,17 @@ class _BuildFilePost extends StatelessWidget {
   _BuildFilePost({this.post});
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 3,
       padding: EdgeInsets.only(bottom: 15.0),
-      child: Image.network(
-        post.files[0],
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 3,
+      child: PhotoView(
+        backgroundDecoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        imageProvider: NetworkImage(
+          post.files[0],
+        ),
       ),
     );
   }
@@ -369,11 +375,18 @@ class __BuildLikeBtnState extends State<_BuildLikeBtn> {
   }
 }
 
-class _BuildCaptionPost extends StatelessWidget {
+class _BuildCaptionPost extends StatefulWidget {
   final Post post;
   final User user;
 
   _BuildCaptionPost({this.post, this.user});
+
+  @override
+  __BuildCaptionPostState createState() => __BuildCaptionPostState();
+}
+
+class __BuildCaptionPostState extends State<_BuildCaptionPost> {
+  bool isClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -382,9 +395,9 @@ class _BuildCaptionPost extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 120,
+            width: 100,
             child: Text(
-              user.fullname,
+              widget.user.username,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyles.paragraph(
@@ -396,17 +409,25 @@ class _BuildCaptionPost extends StatelessWidget {
           SizedBox(
             width: 15.0,
           ),
-          Container(
-            width: 180,
-            child: Text(
-              post.caption,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyles.paragraph(
-                TextSize.medium,
-                weight: FontWeight.w400,
+          GestureDetector(
+            child: Container(
+              width: 180,
+              child: Text(
+                widget.post.caption,
+                maxLines: isClicked ? 5 : 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.paragraph(
+                  TextSize.medium,
+                  weight: FontWeight.w400,
+                ),
               ),
             ),
+            onTap: () {
+              setState(() {
+                isClicked = !isClicked;
+              });
+              print(isClicked);
+            },
           ),
         ],
       ),

@@ -249,6 +249,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _refreshPage(EditEventArgs args) {
     if (args.isEdited) {
       _bloc.getUserData();
+      _bloc.getUser().then((value) {
+        _userId = value.data.id;
+        _bloc.doRequestGetPosts(_userId);
+      });
     }
   }
 
@@ -670,19 +674,8 @@ class __BuildStreamPostsState extends State<_BuildStreamPosts> {
               if (snapshot.data.data.isNotEmpty) {
                 return Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 5,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.data.length,
-                    itemBuilder: (context, index) {
-                      return _buildPostItem(
-                        MediaQuery.of(context).size.width,
-                        MediaQuery.of(context).size.height,
-                        post: snapshot.data.data,
-                        index: index,
-                      );
-                    },
-                  ),
+                  height: MediaQuery.of(context).size.height,
+                  child: _buildPostList(snapshot),
                 );
               } else {
                 return Align(
@@ -703,6 +696,24 @@ class __BuildStreamPostsState extends State<_BuildStreamPosts> {
             }
             return Container();
         }
+      },
+    );
+  }
+
+  Widget _buildPostList(
+      AsyncSnapshot<BaseResponse<List<PostDetail>>> snapshot) {
+    return GridView.builder(
+      itemCount: snapshot.data.data.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ),
+      itemBuilder: (context, index) {
+        return _buildPostItem(
+          MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height,
+          post: snapshot.data.data,
+          index: index,
+        );
       },
     );
   }
