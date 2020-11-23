@@ -250,10 +250,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _refreshPage(EditEventArgs args) {
     if (args.isEdited) {
       _bloc.getUserData();
-      _bloc.getUser().then((value) {
-        _userId = value.data.id;
-        _bloc.doRequestGetPosts(_userId);
-      });
     }
   }
 
@@ -609,7 +605,7 @@ class _BuildShareBtn extends StatelessWidget {
   _onShare(BuildContext context) {
     final RenderBox box = context.findRenderObject();
     Share.share(
-        "Você já tem o Skilla? Quer saber o que é? Clica no link abaixo!",
+        "Você já tem o Skilla? Quer saber o que é? Clica no link! https://skilla.page.link/app",
         subject: "https://skilla.page.link/app",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
