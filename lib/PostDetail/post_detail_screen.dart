@@ -549,13 +549,20 @@ class __BuildStreamCommentsState extends State<_BuildStreamComments> {
   }
 }
 
-class _BuildComment extends StatelessWidget {
+class _BuildComment extends StatefulWidget {
   final List<Comment> commentList;
   final int index;
   final Post post;
   final PostDetailBloc bloc;
 
   _BuildComment({this.commentList, this.index, this.post, this.bloc});
+
+  @override
+  __BuildCommentState createState() => __BuildCommentState();
+}
+
+class __BuildCommentState extends State<_BuildComment> {
+  bool isCommentClicked = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -567,7 +574,7 @@ class _BuildComment extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  commentList.elementAt(index).user.username,
+                  widget.commentList.elementAt(widget.index).user.username,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.paragraph(
@@ -578,26 +585,33 @@ class _BuildComment extends StatelessWidget {
                 SizedBox(
                   width: 15.0,
                 ),
-                Container(
-                  width: 180,
-                  child: Text(
-                    commentList.elementAt(index).text,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyles.paragraph(
-                      TextSize.medium,
-                      weight: FontWeight.w400,
+                GestureDetector(
+                  child: Container(
+                    width: 180,
+                    child: Text(
+                      widget.commentList.elementAt(widget.index).text,
+                      maxLines: isCommentClicked ? 5 : 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.paragraph(
+                        TextSize.medium,
+                        weight: FontWeight.w400,
+                      ),
                     ),
                   ),
+                  onTap: () {
+                    setState(() {
+                      isCommentClicked = !isCommentClicked;
+                    });
+                  },
                 ),
               ],
             ),
             onTap: () {
-              if (commentList.elementAt(index).isCommentMine) {
+              if (widget.commentList.elementAt(widget.index).isCommentMine) {
                 FirebaseAnalytics()
                     .logEvent(name: kNameDeleteComment, parameters: null);
-                _showDialogForDeleteComment(
-                    context, post, commentList.elementAt(index));
+                _showDialogForDeleteComment(context, widget.post,
+                    widget.commentList.elementAt(widget.index));
               }
             },
           ),
@@ -605,8 +619,6 @@ class _BuildComment extends StatelessWidget {
       ),
     );
   }
-
-  // >>>>>>>>>> DIALOGS
 
   void _showDialogForDeleteComment(
       BuildContext context, Post post, Comment comments) {
@@ -621,7 +633,7 @@ class _BuildComment extends StatelessWidget {
                 style: TextStyles.paragraph(TextSize.xSmall, color: kRedColor)),
             onPressed: () {
               Get.back();
-              bloc.doRequestDeleteComment(comments.id, post.id);
+              widget.bloc.doRequestDeleteComment(comments.id, post.id);
             },
           ),
           FlatButton(
