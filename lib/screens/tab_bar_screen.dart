@@ -36,16 +36,16 @@ class _TabBarScreenState extends State<TabBarScreen> {
       SafeArea(child: ProfileScreen()),
     ];
 
-    FirebaseAdMob.instance.initialize(appId: kAppId);
-
-    startBanner();
-    displayBanner();
+    // FirebaseAdMob.instance.initialize(appId: kAppId);
+    //
+    // startBanner();
+    // displayBanner();
   }
 
   @override
   void dispose() {
-    myBanner?.dispose();
-    myInterstitial?.dispose();
+    // myBanner?.dispose();
+    // myInterstitial?.dispose();
     super.dispose();
     _myPage.dispose();
   }
@@ -132,14 +132,14 @@ class _TabBarScreenState extends State<TabBarScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 50),
+        // margin: const EdgeInsets.only(bottom: 50),
         child: BottomNavyBar(
           selectedIndex: _currentIndex,
           onItemSelected: (index) {
             if (index == 0) {
               scrollTop(true);
             }
-            shouldDisplayTheAd();
+            // shouldDisplayTheAd();
             setState(() => _currentIndex = index);
             _myPage.jumpToPage(index);
           },
