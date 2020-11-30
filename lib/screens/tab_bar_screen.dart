@@ -2,6 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:skilla/Cart/store_screen.dart';
 import 'package:skilla/Feed/feed_screen.dart';
 import 'package:skilla/Profile/profile_screen.dart';
 import 'package:skilla/Search/search_screen.dart';
@@ -20,8 +21,8 @@ class TabBarScreen extends StatefulWidget {
 
 class _TabBarScreenState extends State<TabBarScreen> {
   List<Widget> tabs;
-  PageController _myPage = PageController(initialPage: 3);
-  int _currentIndex = 3;
+  PageController _myPage = PageController(initialPage: 4);
+  int _currentIndex = 4;
   BannerAd myBanner;
   InterstitialAd myInterstitial;
   int clicks = 0;
@@ -32,6 +33,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
     tabs = [
       SafeArea(child: FeedScreen()),
       SafeArea(child: OpportunitiesScreen()),
+      SafeArea(child: StoreScreen()),
       SafeArea(child: SearchScreen()),
       SafeArea(child: ProfileScreen()),
     ];
@@ -169,6 +171,21 @@ class _TabBarScreenState extends State<TabBarScreen> {
               ),
               icon: Icon(
                 FeatherIcons.award,
+                color: kSkillaPurple,
+              ),
+              textAlign: TextAlign.center,
+              activeColor: kSkillaPurple,
+            ),
+            BottomNavyBarItem(
+              title: Text(
+                AppLocalizations.of(context).translate('titleTabBarStore'),
+                style: TextStyles.paragraph(
+                  TextSize.small,
+                  weight: FontWeight.bold,
+                ),
+              ),
+              icon: Icon(
+                Icons.store,
                 color: kSkillaPurple,
               ),
               textAlign: TextAlign.center,
