@@ -33,6 +33,10 @@ const kBaseURL = 'https://skilla-backend.herokuapp.com/';
 const kApiBaseUrl = 'https://api.cloudinary.com/v1_1/duujebpq4/image/upload';
 const kUploadPreset = 'otwdwv0m';
 const kCloudName = 'duujebpq4';
+// ADMOB
+const kAppId = "ca-app-pub-4141782822403935~9208221709";
+const kBannerId = "ca-app-pub-4141782822403935/6530087476";
+const kInterstitialId = "ca-app-pub-4141782822403935/5837976420";
 // SENTRY
 const kSentry_DSN =
     "https://cb87a7a092424e2e88359f621969eeb3@o475394.ingest.sentry.io/5513392";

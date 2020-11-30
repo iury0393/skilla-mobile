@@ -78,6 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               elevation: 0,
               automaticallyImplyLeading: false,
               backgroundColor: Colors.transparent,
+              leading: _BuildShareBtn(),
               title: Container(
                 child: Image.network(kAppBarImg),
               ),
@@ -89,12 +90,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Icons.settings,
                       color: kSkillaPurple,
                     ),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    onPressed: () => Scaffold.of(context).openEndDrawer(),
                   ),
                 ),
               ],
             ),
-      drawer: widget.user != null
+      endDrawer: widget.user != null
           ? null
           : _BuildDrawer(
               bloc: _bloc,
@@ -115,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _BuildFullName(user: widget.user),
                     _BuildBio(user: widget.user),
                     _BuildWebsite(user: widget.user),
-                    _BuildCurriculumBtn(),
+                    // _BuildCurriculumBtn(),
                     Divider(
                       height: 20.0,
                       thickness: 2.0,
@@ -153,15 +154,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _BuildFullName(user: snapshot.data.data),
                               _BuildBio(user: snapshot.data.data),
                               _BuildWebsite(user: snapshot.data.data),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _BuildShareBtn(),
-                                  _BuildCurriculumBtn(),
-                                ],
-                              ),
+                              // _BuildCurriculumBtn(),
                               Divider(
-                                height: 20.0,
+                                height: 50.0,
                                 thickness: 2.0,
                               ),
                               _BuildPostInfo(),
@@ -250,10 +245,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _refreshPage(EditEventArgs args) {
     if (args.isEdited) {
       _bloc.getUserData();
-      _bloc.getUser().then((value) {
-        _userId = value.data.id;
-        _bloc.doRequestGetPosts(_userId);
-      });
     }
   }
 
@@ -609,7 +600,7 @@ class _BuildShareBtn extends StatelessWidget {
   _onShare(BuildContext context) {
     final RenderBox box = context.findRenderObject();
     Share.share(
-        "Você já tem o Skilla? Quer saber o que é? Clica no link abaixo!",
+        "Você já tem o Skilla? Quer saber o que é? Clica no link! https://skilla.page.link/app",
         subject: "https://skilla.page.link/app",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
