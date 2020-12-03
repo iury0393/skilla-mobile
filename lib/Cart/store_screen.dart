@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:skilla/utils/components/custom_app_bar.dart';
+import 'package:get/get.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/model/course.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -110,10 +110,10 @@ class _StoreScreenState extends State<StoreScreen> {
         ),
         onTap: () {
           if (_cartList.isNotEmpty)
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => CartScreen(_cartList),
-              ),
+            Get.to(
+              CartScreen(_cartList),
+              transition: Transition.native,
+              duration: Duration(milliseconds: 500),
             );
         },
       ),

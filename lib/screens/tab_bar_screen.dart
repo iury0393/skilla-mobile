@@ -26,6 +26,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
   BannerAd myBanner;
   InterstitialAd myInterstitial;
   int clicks = 0;
+  double paddingBottom = 48.0;
 
   @override
   void initState() {
@@ -38,16 +39,16 @@ class _TabBarScreenState extends State<TabBarScreen> {
       SafeArea(child: ProfileScreen()),
     ];
 
-    // FirebaseAdMob.instance.initialize(appId: kAppId);
-    //
-    // startBanner();
-    // displayBanner();
+    FirebaseAdMob.instance.initialize(appId: kAppId);
+
+    startBanner();
+    displayBanner();
   }
 
   @override
   void dispose() {
-    // myBanner?.dispose();
-    // myInterstitial?.dispose();
+    myBanner?.dispose();
+    myInterstitial?.dispose();
     super.dispose();
     _myPage.dispose();
   }
@@ -83,6 +84,10 @@ class _TabBarScreenState extends State<TabBarScreen> {
           // MobileAdEvent.failedToLoad
           // MobileAdEvent.impression
           // MobileAdEvent.leftApplication
+        } else if (event == MobileAdEvent.failedToLoad) {
+          setState(() {
+            paddingBottom = 0.0;
+          });
         }
         print("BannerAd event is $event");
       },
@@ -134,14 +139,14 @@ class _TabBarScreenState extends State<TabBarScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        // margin: const EdgeInsets.only(bottom: 50),
+        padding: new EdgeInsets.only(bottom: paddingBottom),
         child: BottomNavyBar(
           selectedIndex: _currentIndex,
           onItemSelected: (index) {
             if (index == 0) {
               scrollTop(true);
             }
-            // shouldDisplayTheAd();
+            shouldDisplayTheAd();
             setState(() => _currentIndex = index);
             _myPage.jumpToPage(index);
           },
