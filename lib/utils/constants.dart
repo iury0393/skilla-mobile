@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // IMAGES
 const kAppBarImg =
-    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/vgwp9nhciqeuiqieevpe.png';
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1607356876/App/bymtauzwrkjfrqkzxqwq.svg';
 const kIntro1 =
     'https://res.cloudinary.com/duujebpq4/image/upload/v1605803044/App/fwpk5uvv3fh6vtoiuuu7.jpg';
 const kIntro2 =
@@ -10,7 +10,7 @@ const kIntro2 =
 const kIntro3 =
     'https://res.cloudinary.com/duujebpq4/image/upload/v1605546374/App/ian9tmkbqwg3jgbgz6gu.png';
 const kLogo =
-    'https://res.cloudinary.com/duujebpq4/image/upload/v1605546365/App/oyqhsohhve0ny19uwssx.png';
+    'https://res.cloudinary.com/duujebpq4/image/upload/v1607356876/App/ayghsnyrliireyinvjzj.svg';
 const kGoogle =
     'https://res.cloudinary.com/duujebpq4/image/upload/v1605546364/App/duwvq0nx8nu1ipssxzsz.jpg';
 const kGoogleDev =

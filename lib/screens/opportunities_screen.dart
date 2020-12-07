@@ -27,6 +27,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     return Container(
       child: Scaffold(
         appBar: CustomAppBar(
+          leading: Container(),
           titleImg: kAppBarImg,
           center: true,
         ),
