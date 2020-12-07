@@ -26,7 +26,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
   BannerAd myBanner;
   InterstitialAd myInterstitial;
   int clicks = 0;
-  double paddingBottom = 48.0;
+  double paddingBottom = 50.0;
 
   @override
   void initState() {
@@ -61,8 +61,8 @@ class _TabBarScreenState extends State<TabBarScreen> {
 
   MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     keywords: <String>[
-      'technology',
-      'mobile',
+      'Fun',
+      'flutter',
       'study',
       'udemy',
       'alura',
@@ -74,17 +74,16 @@ class _TabBarScreenState extends State<TabBarScreen> {
   void startBanner() {
     myBanner = BannerAd(
       adUnitId: kBannerId,
-      size: AdSize.smartBanner,
+      size: AdSize.banner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        if (event == MobileAdEvent.opened) {
+        if (event == MobileAdEvent.failedToLoad) {
           // MobileAdEvent.opened
           // MobileAdEvent.clicked
           // MobileAdEvent.closed
           // MobileAdEvent.failedToLoad
           // MobileAdEvent.impression
           // MobileAdEvent.leftApplication
-        } else if (event == MobileAdEvent.failedToLoad) {
           setState(() {
             paddingBottom = 0.0;
           });
@@ -120,7 +119,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
 
   void shouldDisplayTheAd() {
     clicks++;
-    if (clicks >= 5) {
+    if (clicks >= 2) {
       myInterstitial = buildInterstitial()
         ..load()
         ..show();
