@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:skilla/utils/components/custom_app_bar.dart';
+import 'package:get/get.dart';
 import 'package:skilla/utils/constants.dart';
 import 'package:skilla/utils/model/course.dart';
 import 'package:skilla/utils/text_styles.dart';
@@ -110,10 +110,10 @@ class _StoreScreenState extends State<StoreScreen> {
         ),
         onTap: () {
           if (_cartList.isNotEmpty)
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => CartScreen(_cartList),
-              ),
+            Get.to(
+              CartScreen(_cartList),
+              transition: Transition.native,
+              duration: Duration(milliseconds: 500),
             );
         },
       ),
@@ -141,13 +141,25 @@ class _StoreScreenState extends State<StoreScreen> {
                     item.icon,
                     color:
                         (_cartList.contains(item)) ? Colors.grey : item.color,
-                    size: 100.0,
+                    size: 60.0,
                   ),
-                  Text(
-                    item.name,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  )
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        item.name,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Text(
+                        item.price,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ],
+                  ),
                 ],
               ),
               Padding(
@@ -206,13 +218,25 @@ class _StoreScreenState extends State<StoreScreen> {
                     item.icon,
                     color:
                         (_cartList.contains(item)) ? Colors.grey : item.color,
-                    size: 100.0,
+                    size: 60.0,
                   ),
-                  Text(
-                    item.name,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  )
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        item.name,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Text(
+                        item.price,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ],
+                  ),
                 ],
               ),
               Padding(
@@ -254,31 +278,37 @@ class _StoreScreenState extends State<StoreScreen> {
     var list = <Course>[
       Course(
         name: 'Curso Javascript',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.jsSquare,
         color: Colors.amber,
       ),
       Course(
         name: 'Curso Android',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.android,
         color: Colors.green,
       ),
       Course(
         name: 'Curso Swift',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.swift,
         color: Colors.orange,
       ),
       Course(
         name: 'Curso React',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.react,
         color: Colors.blue,
       ),
       Course(
         name: 'Curso SQLServer',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.database,
         color: Colors.orangeAccent,
       ),
       Course(
         name: 'Curso Node.JS',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.nodeJs,
         color: Colors.greenAccent,
       ),
@@ -293,21 +323,25 @@ class _StoreScreenState extends State<StoreScreen> {
     var list = <Course>[
       Course(
         name: 'Introdução a inteligência Artificial',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.robot,
         color: Colors.amber,
       ),
       Course(
         name: 'AgroNegócio e Tecnologia, como conciliar?',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.tree,
         color: Colors.green,
       ),
       Course(
         name: 'Home-Office, uma nova realidade',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.houseUser,
         color: Colors.blue,
       ),
       Course(
         name: 'Aumente sua produtividade em 100%',
+        price: 'R\$ 0,00',
         icon: FontAwesomeIcons.arrowUp,
         color: Colors.red,
       ),

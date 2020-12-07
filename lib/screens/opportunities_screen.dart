@@ -27,6 +27,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
     return Container(
       child: Scaffold(
         appBar: CustomAppBar(
+          leading: Container(),
           titleImg: kAppBarImg,
           center: true,
         ),
@@ -115,28 +116,54 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
           children: [
             IconButton(
               icon: Icon(
-                Icons.favorite_border,
+                Icons.favorite,
                 color: kSkillaPurple,
               ),
               onPressed: () {},
             ),
             IconButton(
               icon: Icon(
-                Icons.chat_bubble_outline,
+                Icons.message_outlined,
                 color: kSkillaPurple,
               ),
               onPressed: () {},
             ),
+            Text(
+              '3 meses atrás',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.medium,
+                weight: FontWeight.w400,
+                color: kSkillaPurple,
+              ),
+            ),
           ],
         ),
-        Text(
-          '7 Likes',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyles.paragraph(
-            TextSize.large,
-            weight: FontWeight.w400,
-          ),
+        Row(
+          children: [
+            Text(
+              '7 Likes',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.large,
+                weight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(
+              width: 15.0,
+            ),
+            Text(
+              '2 Comentários',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.paragraph(
+                TextSize.large,
+                weight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
         Container(
           padding: EdgeInsets.all(8.0),
@@ -158,7 +185,7 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 width: 180,
                 child: Text(
                   postText,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.paragraph(
                     TextSize.medium,
@@ -167,25 +194,6 @@ class _OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 ),
               ),
             ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 15.0, bottom: 25.0),
-          child: Text(
-            '3 meses atrás',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.paragraph(
-              TextSize.medium,
-              weight: FontWeight.w400,
-              color: kSkillaPurple,
-            ),
-          ),
-        ),
-        TextField(
-          maxLines: 8,
-          decoration: InputDecoration.collapsed(
-            hintText: "Adicione um comentário",
           ),
         ),
       ],

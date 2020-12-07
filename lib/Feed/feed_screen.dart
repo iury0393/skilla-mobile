@@ -50,6 +50,7 @@ class _FeedScreenState extends State<FeedScreen> {
     return Container(
       child: Scaffold(
         appBar: CustomAppBar(
+          leading: Container(),
           titleImg: kAppBarImg,
           center: true,
           widgets: [

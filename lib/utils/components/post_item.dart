@@ -117,7 +117,7 @@ class _PostItemState extends State<PostItem> {
                         width: 15.0,
                       ),
                       Text(
-                        widget.post.user.fullname,
+                        widget.post.user.username,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyles.paragraph(
@@ -241,7 +241,7 @@ class _PostItemState extends State<PostItem> {
                 Container(
                   width: 120,
                   child: Text(
-                    widget.post.user.fullname,
+                    widget.post.user.username,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.paragraph(

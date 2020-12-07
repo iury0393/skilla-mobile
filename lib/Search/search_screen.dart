@@ -45,6 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+        leading: Container(),
         titleImg: kAppBarImg,
         center: true,
       ),

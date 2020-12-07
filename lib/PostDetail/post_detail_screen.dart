@@ -590,7 +590,7 @@ class __BuildCommentState extends State<_BuildComment> {
                     width: 180,
                     child: Text(
                       widget.commentList.elementAt(widget.index).text,
-                      maxLines: isCommentClicked ? 5 : 2,
+                      maxLines: isCommentClicked ? 10 : 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyles.paragraph(
                         TextSize.medium,

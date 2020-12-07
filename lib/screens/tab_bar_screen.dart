@@ -26,6 +26,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
   BannerAd myBanner;
   InterstitialAd myInterstitial;
   int clicks = 0;
+  double paddingBottom = 50.0;
 
   @override
   void initState() {
@@ -38,16 +39,16 @@ class _TabBarScreenState extends State<TabBarScreen> {
       SafeArea(child: ProfileScreen()),
     ];
 
-    // FirebaseAdMob.instance.initialize(appId: kAppId);
-    //
-    // startBanner();
-    // displayBanner();
+    FirebaseAdMob.instance.initialize(appId: kAppId);
+
+    startBanner();
+    displayBanner();
   }
 
   @override
   void dispose() {
-    // myBanner?.dispose();
-    // myInterstitial?.dispose();
+    myBanner?.dispose();
+    myInterstitial?.dispose();
     super.dispose();
     _myPage.dispose();
   }
@@ -60,8 +61,8 @@ class _TabBarScreenState extends State<TabBarScreen> {
 
   MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     keywords: <String>[
-      'technology',
-      'mobile',
+      'Fun',
+      'flutter',
       'study',
       'udemy',
       'alura',
@@ -73,16 +74,19 @@ class _TabBarScreenState extends State<TabBarScreen> {
   void startBanner() {
     myBanner = BannerAd(
       adUnitId: kBannerId,
-      size: AdSize.smartBanner,
+      size: AdSize.banner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        if (event == MobileAdEvent.opened) {
+        if (event == MobileAdEvent.failedToLoad) {
           // MobileAdEvent.opened
           // MobileAdEvent.clicked
           // MobileAdEvent.closed
           // MobileAdEvent.failedToLoad
           // MobileAdEvent.impression
           // MobileAdEvent.leftApplication
+          setState(() {
+            paddingBottom = 0.0;
+          });
         }
         print("BannerAd event is $event");
       },
@@ -115,7 +119,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
 
   void shouldDisplayTheAd() {
     clicks++;
-    if (clicks >= 5) {
+    if (clicks >= 2) {
       myInterstitial = buildInterstitial()
         ..load()
         ..show();
@@ -134,14 +138,14 @@ class _TabBarScreenState extends State<TabBarScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        // margin: const EdgeInsets.only(bottom: 50),
+        padding: new EdgeInsets.only(bottom: paddingBottom),
         child: BottomNavyBar(
           selectedIndex: _currentIndex,
           onItemSelected: (index) {
             if (index == 0) {
               scrollTop(true);
             }
-            // shouldDisplayTheAd();
+            shouldDisplayTheAd();
             setState(() => _currentIndex = index);
             _myPage.jumpToPage(index);
           },
