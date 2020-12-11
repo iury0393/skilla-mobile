@@ -74,7 +74,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           break;
         case Status.ERROR:
           Get.back();
-          NativeDialog.showErrorDialog(context, event.message);
+          NativeDialog.showErrorDialog(
+            context,
+            AppLocalizations.of(context).translate('btnRegisterError'),
+          );
           break;
         default:
           break;

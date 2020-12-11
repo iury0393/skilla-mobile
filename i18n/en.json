@@ -1,9 +1,11 @@
 {
   "btnLogin": "Submit",
   "btnLoginText": "Already have an account?",
+  "btnLoginError": "Incorrect username or password",
   "btnRegister": "Register",
-  "btnRegisterText" : "No registration?",
+  "btnRegisterText" : "Don't have an account?",
   "btnLoginRegisterLink": "click here",
+  "btnRegisterError": "Incorrect password format",
 
   "fieldsEmpty": "Fields cannot be empty",
   "fieldLoginRegisterEmail": "E-mail",
