@@ -698,12 +698,11 @@ class __BuildStreamPostsState extends State<_BuildStreamPosts> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
       ),
-      reverse: true,
       itemBuilder: (context, index) {
         return _buildPostItem(
           MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height,
-          post: snapshot.data.data,
+          post: snapshot.data.data.reversed.toList(),
           index: index,
         );
       },
