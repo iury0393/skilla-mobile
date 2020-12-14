@@ -76,7 +76,10 @@ class _SignInScreenState extends State<SignInScreen> {
           break;
         case Status.ERROR:
           Get.back();
-          NativeDialog.showErrorDialog(context, event.message);
+          NativeDialog.showErrorDialog(
+            context,
+            AppLocalizations.of(context).translate('btnLoginError'),
+          );
           break;
         default:
           break;

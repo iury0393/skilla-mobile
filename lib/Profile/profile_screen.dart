@@ -702,7 +702,7 @@ class __BuildStreamPostsState extends State<_BuildStreamPosts> {
         return _buildPostItem(
           MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height,
-          post: snapshot.data.data,
+          post: snapshot.data.data.reversed.toList(),
           index: index,
         );
       },

@@ -1,9 +1,11 @@
 {
   "btnLogin": "Entrar",
   "btnLoginText": "Já possui uma conta?",
+  "btnLoginError": "Usuário ou Senha incorretos",
   "btnRegister": "Registrar",
-  "btnRegisterText" : "Não tem registro?",
+  "btnRegisterText" : "Não possui conta?",
   "btnLoginRegisterLink": "clique aqui",
+  "btnRegisterError": "Formato de senha incorreta",
 
   "fieldsEmpty": "O campos não podem estar vazios",
   "fieldLoginRegisterEmail": "E-mail",
