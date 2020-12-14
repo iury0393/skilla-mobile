@@ -297,8 +297,7 @@ class _EditScreenState extends State<EditScreen> {
     showNativeDialog(
       context: context,
       builder: (context) => NativeDialog(
-        title: AppLocalizations.of(context)
-            .translate('textPostDetailDialogTitlePost'),
+        title: AppLocalizations.of(context).translate('textEditBtnImageTitle'),
         actions: <Widget>[
           FlatButton(
             child: Text(AppLocalizations.of(context).translate('textCamera'),

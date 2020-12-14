@@ -48,6 +48,7 @@
   "textGalleryPost": "Select an image from your phone's gallery",
 
   "textEditBtnImage": "Change your profile picture",
+  "textEditBtnImageTitle": "Choose from where do you want to select the image",
   "btnEditSubmit": "Edit",
   "textFieldEditNameHint": "Name",
   "textFieldEditUserHint": "User",
